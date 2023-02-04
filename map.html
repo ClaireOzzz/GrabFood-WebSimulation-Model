@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display a map on a webpage</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+<style>
+body { margin: 0; padding: 0; }
+#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+#marker {
+        position:absolute;
+        margin-top:-25px;
+        margin-left:-25px;
+        width:50px;
+        height:50px;
+        display:none;
+        pointer-events:all;
+    }
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<script>
+	
+	mapboxgl.accessToken = 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
+    const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+        style: 'mapbox://styles/mapbox/streets-v12', // style URL
+        center: [103.8, 1.35], // starting position [lng, lat]
+        zoom: 11.5 // starting zoom 11.5
+        
+    });
+
+      // Load an image from an external URL.
+      map.on('load', () => {
+      // Load an image from an external URL.
+      map.loadImage(
+      '/images/driver.png',
+      (error, image) => {
+      if (error) throw error;
+      
+      // Add the image to the map style.
+      map.addImage('taxi', image);
+      
+      // Add a data source containing one point feature.
+      map.addSource('point', {
+        'type': 'geojson',
+        'data': {
+        'type': 'FeatureCollection',
+        'features': [
+        {
+        'type': 'Feature',
+        'geometry': {
+        'type': 'Point',
+        'coordinates': [103.8, 1.35]
+        }}
+      ]}
+      });
+      
+      // Add a layer to use the image to represent the data.
+      map.addLayer({
+        'id': 'points',
+        'type': 'symbol',
+        'source': 'point', // reference the data source
+        'layout': {
+        'icon-image': 'taxi', // reference the image
+        'icon-size': 0.07
+        }
+        });
+      }
+      );
+      });
+  
+    
+    // // Request the next frame of the animation.
+    // requestAnimationFrame(animateMarker);
+    // }
+    
+    // Start the animation.
+    // requestAnimationFrame(animateMarker);
+</script>
+
+</body>
+</html>
+
+<!-- https://docs.mapbox.com/mapbox-gl-js/example/custom-marker-icons/ -->
