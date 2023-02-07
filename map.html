@@ -56,7 +56,7 @@ body { margin: 0; padding: 0; }
         'type': 'Feature',
         'geometry': {
         'type': 'Point',
-        'coordinates': [103.8, 1.35]
+        'coordinates': [103.8, 1.35] 
         }}
       ]}
       });
@@ -82,6 +82,30 @@ body { margin: 0; padding: 0; }
     
     // Start the animation.
     // requestAnimationFrame(animateMarker);
+    map.on("load", () => {
+      map.addSource('routes', {
+        'type': 'geojson',
+        'data': "./mygeodata2/road_line.geojson"
+      })
+      map.addLayer({
+      'id': 'routes',
+      'type': 'line',
+      'source': 'routes',
+
+      'layout':{
+        'line-join': "round",
+        'line-cap': 'round'
+      },
+
+      'paint': {
+        'line-color': '#888',
+        'line-width': 5
+      }
+      })
+    });
+
+
+    
 </script>
 
 </body>
