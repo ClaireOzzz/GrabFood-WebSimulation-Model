@@ -2,10 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Display a map on a webpage</title>
+<title>GrabFoodDelivery</title>
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+
 <style>
 body { margin: 0; padding: 0; }
 #map { position: absolute; top: 0; bottom: 0; width: 100%; }
@@ -81,22 +83,28 @@ body { margin: 0; padding: 0; }
       );
       });
   
-    
-    // // Request the next frame of the animation.
-    // requestAnimationFrame(animateMarker);
-    // }
-    
-    // Start the animation.
-    // requestAnimationFrame(animateMarker);
+    // var route = {
+    //   'type': 'FeatureCollection',
+    //   'features': [
+    //       {
+    //           'type': 'Feature',
+    //           'geometry': {
+    //               'type': 'LineString',
+    //               'data': "./mygeodata2/road_line.geojson"
+    //           }
+    //       }
+    //   ]
+    // };
+  
     map.on("load", () => {
-      map.addSource('routes', {
+      map.addSource('route', {
         'type': 'geojson',
         'data': "./mygeodata2/road_line.geojson"
       })
       map.addLayer({
-      'id': 'routes',
+      'id': 'route',
       'type': 'line',
-      'source': 'routes',
+      'source': 'route',
 
       'layout':{
         'line-join': "round",
@@ -109,6 +117,8 @@ body { margin: 0; padding: 0; }
       }
       })
     });
+    // var lineDistance = turf.lineDistance(route.features[0], 'kilometers');
+    // console.log(lineDistance)
 
 
     
