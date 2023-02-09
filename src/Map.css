@@ -1,0 +1,76 @@
+.map-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sidebarStyle {
+  /* display: inline-block; */
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 1%;
+  height: 97%;
+  background-color: #413249;
+  border-radius: 10px;
+  justify-content:center;
+  align-items:center;
+  color: #ffffff;
+  z-index: 1 !important;
+  padding: 20px 60px 6px 30px;
+  font-weight: bold;
+}
+
+.title {
+  line-height: 1.2em;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 40px;
+  margin-top: 10px;
+}
+
+.option {
+  line-height: 1.5em;
+  height: 1.5em;
+  color: #ffffff;
+  font-weight:normal;
+  font-size: 15px;
+  margin-top: 12%;
+  text-align: left;
+  
+}
+
+.optionSection {
+  padding-top: 100px;
+}
+
+select{
+  width: 140px;
+  padding: 8px 20px;
+  border-radius:5px;
+  margin-left: 10px;
+  float: right;
+}
+
+select:focus{
+  outline:none;
+}
+
+.dropdown {
+  /* display: inline-block; */
+  position: relative;
+}
+
+
+/* height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px; */
