@@ -1,7 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import myImage from './icons/rider.png'; 
+import motoIcon from './icons/moto.png'; 
+import userIcon from './icons/user.png'; 
 import myData from './data/road_line.geojson';
+import myTemp from './data/road.geojson';
+import * as turf from '@turf/turf';
+
 import './Map.css';
 
 mapboxgl.accessToken =
@@ -9,10 +13,6 @@ mapboxgl.accessToken =
 
 const Map = () => {
   const mapContainerRef = useRef(null);
-
-  const [lng, setLng] = useState(5);
-  const [lat, setLat] = useState(34);
-  const [zoom, setZoom] = useState(1.5);
 
   // Initialize map when component mounts
   useEffect(() => {
@@ -23,12 +23,166 @@ const Map = () => {
       zoom: 16
     });
 
-    // Add navigation control (the +/- zoom buttons)
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    const origin = [103.855906, 1.300603];
+
+    const route = 
+    {
+      'type': 'FeatureCollection',
+      'features': [
+          {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': [
+                [103.855906, 1.300603],
+                [103.855811, 1.300499],
+                [103.85577, 1.300454],
+                [103.85577, 1.300454],
+                [103.855681, 1.300357],
+                [103.85533, 1.299919],
+                [103.855308, 1.299892],
+                [103.854814, 1.299326]
+                ]
+            }
+          }
+      ]
+    };
+   
+    // A single point that animates along the route.
+    // Coordinates are initially set to origin.
+    const point = {
+      'type': 'FeatureCollection',
+      'features': [
+        {
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+              'type': 'Point',
+              'coordinates': origin
+          }
+        }
+      ]
+    };
+
+    // Calculate the distance in kilometers between route start/end point.
+    const lineDistance = turf.length(route.features[0]);
+    console.log(myTemp);
+    // console.log(route.features[0].geometry.coordinates );
+    const arc = [];
+
+    // Number of steps to use in the arc and animation, more steps means
+    // a smoother arc and animation, but too many steps will result in a
+    // low frame rate
+    const steps = 500;
+
+    // Draw an arc between the `origin` & `destination` of the two points
+    for (let i = 0; i < lineDistance; i += lineDistance / steps) {
+        const segment = turf.along(route.features[0], i);
+        arc.push(segment.geometry.coordinates);
+    }
+
+    // Update the route with calculated arc coordinates
+    route.features[0].geometry.coordinates = arc;
+
+    // Used to increment the value of the point measurement against the route.
+    let counter = 0;
+
+    //MOTOCYCLE ADDING & ANIMATION /////////////////////////////////////////////////////////////
+    map.on("load", function () {
+      // Add an image to use as a custom marker
+      map.loadImage(motoIcon, (error, image) =>{
+        if (error) throw error;
+        map.addImage("taxi", image);
+        // Add a GeoJSON source with multiple points
+        map.addSource('route', {
+          'type': 'geojson',
+          'data': myData
+        });
+        map.addSource('point', {
+          'type': 'geojson',
+          'data': point
+        });
+        // Add a symbol layer
+        map.addLayer({
+          'id': 'route',
+          'source': 'route',
+          'type': 'line',
+          'paint': {
+              'line-width': 4,
+              'line-color': '#4C00b0'
+          }
+        });
+
+        map.addLayer({
+          'id': 'point',
+          'source': 'point',
+          'type': 'symbol',
+          'layout': {
+              
+              'icon-image': 'taxi',
+              'icon-size': 0.1,
+              'icon-rotate': ['get', 'bearing'],
+              'icon-rotation-alignment': 'map',
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true
+          }
+        });
+
+        function animate() {
+          const start =
+              route.features[0].geometry.coordinates[
+                  counter >= steps ? counter - 1 : counter
+              ];
+          const end =
+              route.features[0].geometry.coordinates[
+                  counter >= steps ? counter : counter + 1
+              ];
+          if (!start || !end) return;
+
+          // Update point geometry to a new position based on counter denoting
+          // the index to access the arc
+          point.features[0].geometry.coordinates =
+              route.features[0].geometry.coordinates[counter];
+
+          // Calculate the bearing to ensure the icon is rotated to match the route arc
+          // The bearing is calculated between the current point and the next point, except
+          // at the end of the arc, which uses the previous point and the current point
+          point.features[0].properties.bearing = turf.bearing(
+              turf.point(start),
+              turf.point(end)
+          );
+
+          // Update the source with this new data
+          map.getSource('point').setData(point);
+
+          // Request the next frame of animation as long as the end has not been reached
+          if (counter < steps) {
+              requestAnimationFrame(animate);
+          }
+
+          counter = counter + 1;
+        }
+        document.getElementById('reset').addEventListener('click', () => {
+          // Set the coordinates of the original point back to origin
+          point.features[0].geometry.coordinates = origin;
+
+          // Update the source layer
+          map.getSource('point').setData(point);
+
+          // Reset the counter
+          counter = 0;
+
+          // Restart the animation
+          animate(counter);
+          });
+
+        // Start the animation
+        animate(counter);
+    });});
 
     map.on("load", function () {
       // Add an image to use as a custom marker
-      map.loadImage(myImage, (error, image) =>{
+      map.loadImage(userIcon, (error, image) =>{
           if (error) throw error;
           map.addImage("custom-marker", image);
           // Add a GeoJSON source with multiple points
@@ -63,28 +217,6 @@ const Map = () => {
       );
     });
 
-    //add routes from geojson
-    map.on("load", () => {
-      map.addSource('route', {
-        'type': 'geojson',
-        'data': myData
-      })
-      map.addLayer({
-      'id': 'route',
-      'type': 'line',
-      'source': 'route',
-
-      'layout':{
-        'line-join': "round",
-        'line-cap': 'round'
-      },
-
-      'paint': {
-        'line-color': '#4C00b0',
-        'line-width': 4
-      }
-      })
-    });
 
     // Clean up on unmount
     return () => map.remove();
@@ -102,7 +234,7 @@ const Map = () => {
           <div className="option">
             <label for="time">Time of Day:</label>
             <select name="time" id="time" >
-              <option value="Morning" selected>Morning</option>
+              <option value="Morning" >Morning</option>
               <option value="Afternoon" >Afternoon</option>
               <option value="Night" >Night</option>
             </select>
@@ -112,7 +244,7 @@ const Map = () => {
             <label for="weather">Weather:</label>
             <select name="weather" id="weather" >
               <option value="Rainy">Rainy</option>
-              <option value="Normal" selected>Normal</option>
+              <option value="Normal" >Normal</option>
             </select>
           </div>
 
@@ -120,15 +252,20 @@ const Map = () => {
             <label for="transport">Transport:</label>
             <select name="transport" id="transport">
               <option value="Ebicycle">E-bicycle</option>
-              <option value="Motocycle" selected>Motocycle</option>
+              <option value="Motocycle" >Motocycle</option>
             </select>
           </div>
         </div>
-        
+        <div className = 'header'>
+          Average Waiting Time:
+        </div>
+        <div className ="overlay">
+          <button className ="resetbutton" id="reset">Reset</button>
+        </div>
       </div>
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );
-};
+}
 
 export default Map;

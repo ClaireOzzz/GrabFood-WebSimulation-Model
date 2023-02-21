@@ -7,7 +7,6 @@
 }
 
 .sidebarStyle {
-  /* display: inline-block; */
   position: absolute;
   top: 0;
   left: 0;
@@ -29,6 +28,14 @@
   font-weight: bold;
   font-size: 40px;
   margin-top: 10px;
+}
+
+.header {
+  line-height: 1.2em;
+  color: #ffffff;
+  font-weight:400;
+  font-size: 16px;
+  margin-top: 200px;
 }
 
 .option {
@@ -63,14 +70,23 @@ select:focus{
   position: relative;
 }
 
+.overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
 
-/* height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    background-color: #111;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px; */
+.resetbutton {
+  font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  background-color: #251831;
+  color: #fff;
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.overlay button:hover {
+  background-color: #4ea0da;
+}

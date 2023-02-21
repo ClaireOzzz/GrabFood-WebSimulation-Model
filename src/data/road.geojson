@@ -1,0 +1,59 @@
+var route2 = {
+  "type": "FeatureCollection",
+  "features": [
+      {
+    "type": "Feature",
+    "properties": {
+      "sidewalk": null,
+      "motor_vehicle": null,
+      "maxspeed": "60",
+      "access": null,
+      "parking:condition:right:vehicles": null,
+      "lanes": "3",
+      "tunnel": null,
+      "oneway": "yes",
+      "turn:lanes": null,
+      "name": "Victoria Street",
+      "maxheight": null,
+      "noname": null,
+      "lanes:bus": "1",
+      "surface": "asphalt",
+      "highway": "primary",
+      "bus:lanes": null,
+      "parking:lane:both": null,
+      "foot": null,
+      "parking:lane:right": null,
+      "busway:left": "lane",
+      "lanes:forward": null,
+      "turn:lanes:backward": null,
+      "parking:lane:left": null,
+      "turn:lanes:forward": null,
+      "service": null,
+      "lanes:backward": null,
+      "lit": null,
+      "cycleway:left": null,
+      "name:en": null,
+      "parking:condition:left:vehicles": null,
+      "lanes:bus:conditional": "1 @ (Mo-Sa 07:30-23:00)",
+      "toll": "yes",
+      "name:zh": null,
+      "horse": null,
+      "parking:condition:both:vehicles": null,
+      "bicycle": null
+    },
+    "geometry": {
+      "coordinates": [
+        [103.855906, 1.300603],
+        [103.855811, 1.300499],
+        [103.85577, 1.300454],
+        [103.85577, 1.300454],
+        [103.855681, 1.300357],
+        [103.85533, 1.299919],
+        [103.855308, 1.299892],
+        [103.854814, 1.299326]
+      ],
+      "type": "LineString"
+    }
+  }
+]
+}
