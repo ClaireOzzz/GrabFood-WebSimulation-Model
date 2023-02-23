@@ -3,10 +3,8 @@
 npm cache clean --force  (run only if there are errors after npm i)
 
 npm i
-<<<<<<< Updated upstream
-=======
+
 npm i @turf/turf
->>>>>>> Stashed changes
 
 npm start
 
