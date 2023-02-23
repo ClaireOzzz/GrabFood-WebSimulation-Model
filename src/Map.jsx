@@ -1,9 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
+//icons
 import motoIcon from './icons/moto.png'; 
 import userIcon from './icons/user.png'; 
-import myData from './data/road_line.geojson';
-import myTemp from './data/road.geojson';
+
+import myData from './data/road_line.js';
+// drivable roads
+import help from './data/road.js';
+//all lines on the map 
+import mapLines from './data/road_line.geojson';
 import * as turf from '@turf/turf';
 
 import './Map.css';
@@ -20,10 +25,10 @@ const Map = () => {
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [103.85299393647626, 1.3005577339241654],
-      zoom: 16
+      zoom: 15
     });
 
-    const origin = [103.855906, 1.300603];
+    const origin = [ 103.8523476, 1.3054701 ];
 
     const route = 
     {
@@ -33,16 +38,7 @@ const Map = () => {
             'type': 'Feature',
             'geometry': {
                 'type': 'LineString',
-                'coordinates': [
-                [103.855906, 1.300603],
-                [103.855811, 1.300499],
-                [103.85577, 1.300454],
-                [103.85577, 1.300454],
-                [103.855681, 1.300357],
-                [103.85533, 1.299919],
-                [103.855308, 1.299892],
-                [103.854814, 1.299326]
-                ]
+                'coordinates': help.features[0].geometry.coordinates
             }
           }
       ]
@@ -66,7 +62,7 @@ const Map = () => {
 
     // Calculate the distance in kilometers between route start/end point.
     const lineDistance = turf.length(route.features[0]);
-    console.log(myTemp);
+
     // console.log(route.features[0].geometry.coordinates );
     const arc = [];
 
@@ -87,8 +83,11 @@ const Map = () => {
     // Used to increment the value of the point measurement against the route.
     let counter = 0;
 
-    //MOTOCYCLE ADDING & ANIMATION /////////////////////////////////////////////////////////////
+
+    //MOTOCYCLE ICON ADDING & ANIMATION /////////////////////////////////////////////////////////////
     map.on("load", function () {
+      // const coordinates = help.features[0].geometry.coordinates;
+      // console.log("geojson " + coordinates);
       // Add an image to use as a custom marker
       map.loadImage(motoIcon, (error, image) =>{
         if (error) throw error;
@@ -96,7 +95,7 @@ const Map = () => {
         // Add a GeoJSON source with multiple points
         map.addSource('route', {
           'type': 'geojson',
-          'data': myData
+          'data': mapLines
         });
         map.addSource('point', {
           'type': 'geojson',
@@ -194,10 +193,7 @@ const Map = () => {
                 'type': 'Feature',
                 'geometry': {
                 'type': 'Point',
-                'coordinates': [
-              103.85499393647626,
-              1.3005577339241654
-            ]
+                'coordinates': [ 103.8523476, 1.3054701 ]
                 }
               }]
               
@@ -222,6 +218,12 @@ const Map = () => {
     return () => map.remove();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+
+
+
+
+
+//SIDE BAR ///////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <div className='sidebarStyle'>
@@ -256,8 +258,17 @@ const Map = () => {
             </select>
           </div>
         </div>
-        <div className = 'header'>
-          Average Waiting Time:
+        {/* output */}
+        <div className = 'output'>
+          <div className = 'header'>
+            Average Waiting Time: 
+          </div>
+          <div className = 'header'>
+            Occupied to Unoccupied Drivers:
+          </div>
+          <div className = 'header'>
+            Average Customers Served/h:
+          </div>
         </div>
         <div className ="overlay">
           <button className ="resetbutton" id="reset">Reset</button>

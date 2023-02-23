@@ -30,12 +30,16 @@
   margin-top: 10px;
 }
 
+.output {
+  margin-top: 100px;
+}
+
 .header {
   line-height: 1.2em;
   color: #ffffff;
   font-weight:400;
   font-size: 16px;
-  margin-top: 200px;
+  margin-bottom: 50px;
 }
 
 .option {
