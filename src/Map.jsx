@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
+import PathFinder, { pathToGeoJSON } from "geojson-path-finder";
+import { point } from "@turf/helpers";
+
 //icons
 import motoIcon from './icons/moto.png'; 
 import userIcon from './icons/user.png'; 
@@ -8,7 +11,7 @@ import myData from './data/road_line.js';
 // drivable roads
 import help from './data/road.js';
 //all lines on the map 
-import mapLines from './data/road_line.geojson';
+import mapLines from './data/road_line.json';
 import * as turf from '@turf/turf';
 
 import './Map.css';
@@ -25,10 +28,19 @@ const Map = () => {
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [103.85299393647626, 1.3005577339241654],
-      zoom: 15
+      zoom: 15.5
     });
 
-    const origin = [ 103.8523476, 1.3054701 ];
+    // var PathFinder = require('geojson-path-finder'),
+    // geojson = require('./data/road_lines.geojson');
+
+    var pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
+
+    const start = [ 103.8523476, 1.3054701 ];
+    const finish = [103.850603, 1.297765];
+    
+    var path = pathFinder.findPath(point(start), point(finish));
+    console.log(path.path);
 
     const route = 
     {
@@ -38,15 +50,15 @@ const Map = () => {
             'type': 'Feature',
             'geometry': {
                 'type': 'LineString',
-                'coordinates': help.features[0].geometry.coordinates
-            }
-          }
+                'coordinates': path.path
+          }}
       ]
     };
+    console.log("features" + route.features[0].geometry.coordinates);
    
     // A single point that animates along the route.
     // Coordinates are initially set to origin.
-    const point = {
+    const point2 = {
       'type': 'FeatureCollection',
       'features': [
         {
@@ -54,15 +66,15 @@ const Map = () => {
           'properties': {},
           'geometry': {
               'type': 'Point',
-              'coordinates': origin
+              'coordinates': start
           }
         }
       ]
     };
 
     // Calculate the distance in kilometers between route start/end point.
-    const lineDistance = turf.length(route.features[0]);
-
+    const lineDistance = path.weight;
+    
     // console.log(route.features[0].geometry.coordinates );
     const arc = [];
 
@@ -75,10 +87,12 @@ const Map = () => {
     for (let i = 0; i < lineDistance; i += lineDistance / steps) {
         const segment = turf.along(route.features[0], i);
         arc.push(segment.geometry.coordinates);
+       
     }
 
     // Update the route with calculated arc coordinates
     route.features[0].geometry.coordinates = arc;
+    
 
     // Used to increment the value of the point measurement against the route.
     let counter = 0;
@@ -99,7 +113,7 @@ const Map = () => {
         });
         map.addSource('point', {
           'type': 'geojson',
-          'data': point
+          'data': point2
         });
         // Add a symbol layer
         map.addLayer({
@@ -129,30 +143,30 @@ const Map = () => {
 
         function animate() {
           const start =
-              route.features[0].geometry.coordinates[
+          route.features[0].geometry.coordinates[
                   counter >= steps ? counter - 1 : counter
               ];
           const end =
-              route.features[0].geometry.coordinates[
+          route.features[0].geometry.coordinates[
                   counter >= steps ? counter : counter + 1
               ];
           if (!start || !end) return;
 
           // Update point geometry to a new position based on counter denoting
           // the index to access the arc
-          point.features[0].geometry.coordinates =
-              route.features[0].geometry.coordinates[counter];
+          point2.features[0].geometry.coordinates =
+          route.features[0].geometry.coordinates[counter];
 
           // Calculate the bearing to ensure the icon is rotated to match the route arc
           // The bearing is calculated between the current point and the next point, except
           // at the end of the arc, which uses the previous point and the current point
-          point.features[0].properties.bearing = turf.bearing(
+          point2.features[0].properties.bearing = turf.bearing(
               turf.point(start),
               turf.point(end)
           );
 
           // Update the source with this new data
-          map.getSource('point').setData(point);
+          map.getSource('point').setData(point2);
 
           // Request the next frame of animation as long as the end has not been reached
           if (counter < steps) {
@@ -163,10 +177,10 @@ const Map = () => {
         }
         document.getElementById('reset').addEventListener('click', () => {
           // Set the coordinates of the original point back to origin
-          point.features[0].geometry.coordinates = origin;
+          point2.features[0].geometry.coordinates = start;
 
           // Update the source layer
-          map.getSource('point').setData(point);
+          map.getSource('point').setData(point2);
 
           // Reset the counter
           counter = 0;
