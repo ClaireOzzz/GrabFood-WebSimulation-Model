@@ -31,16 +31,19 @@ const Map = () => {
       zoom: 15.5
     });
 
-    // var PathFinder = require('geojson-path-finder'),
-    // geojson = require('./data/road_lines.geojson');
 
     var pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
 
-    const start = [ 103.8523476, 1.3054701 ];
+    // const start = [ 103.8523476, 1.3054701 ];
     const finish = [103.850603, 1.297765];
+
+    // Get a random feature index
+    const randomIndex = Math.floor(Math.random() * myData.features.length);
+    // Get a random coordinate from the selected feature
+    const start = myData.features[randomIndex].geometry.coordinates[0];
     
     var path = pathFinder.findPath(point(start), point(finish));
-    console.log(path.path);
+    
 
     const route = 
     {
@@ -54,10 +57,8 @@ const Map = () => {
           }}
       ]
     };
-    console.log("features" + route.features[0].geometry.coordinates);
    
     // A single point that animates along the route.
-    // Coordinates are initially set to origin.
     const point2 = {
       'type': 'FeatureCollection',
       'features': [
