@@ -42,7 +42,9 @@ const Map = () => {
     // Get a random coordinate from the selected feature
     const start = myData.features[randomIndex].geometry.coordinates[0];
     
+    
     var path = pathFinder.findPath(point(start), point(finish));
+    console.log(start);
     
 
     const route = 
@@ -82,7 +84,7 @@ const Map = () => {
     // Number of steps to use in the arc and animation, more steps means
     // a smoother arc and animation, but too many steps will result in a
     // low frame rate
-    const steps = 500;
+    const steps = 500*lineDistance;
 
     // Draw an arc between the `origin` & `destination` of the two points
     for (let i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -208,7 +210,7 @@ const Map = () => {
                 'type': 'Feature',
                 'geometry': {
                 'type': 'Point',
-                'coordinates': [ 103.8523476, 1.3054701 ]
+                'coordinates': finish
                 }
               }]
               
