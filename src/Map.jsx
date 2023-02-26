@@ -9,7 +9,7 @@ import userIcon from './icons/user.png';
 
 import myData from './data/road_line.js';
 // drivable roads
-import help from './data/road.js';
+import user from './data/userPositions.js';
 //all lines on the map 
 import mapLines from './data/road_line.json';
 import * as turf from '@turf/turf';
@@ -31,21 +31,40 @@ const Map = () => {
       zoom: 15.5
     });
 
-
-    var pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-
-    // const start = [ 103.8523476, 1.3054701 ];
-    const finish = [103.850603, 1.297765];
-
-    // Get a random feature index
-    const randomIndex = Math.floor(Math.random() * myData.features.length);
+    // Generating random start & end point ///////////////////////////////////////////////////////////////////////////////////////////////////
+    const startrandomIndex = Math.floor(Math.random() * myData.features.length);
     // Get a random coordinate from the selected feature
-    const start = myData.features[randomIndex].geometry.coordinates[0];
+    const start = myData.features[startrandomIndex].geometry.coordinates[0];
+
+    // GETTING 5 RANDOM USER COORDINATES ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // console.log("endCoordinates " + user.features[0].geometry.coordinates[1]);
+    const endCoordinates = [];
+    for (let i = 0; i < 5; i++) {
+      const endRandomIndex = Math.floor(Math.random() * user.features[0].geometry.coordinates.length);
+      const endRandomCoordinate = user.features[0].geometry.coordinates[endRandomIndex];
+      endCoordinates.push(endRandomCoordinate);
+    } 
+    console.log("endCoordinates " + endCoordinates);
+
+
+    // Finding closest road coordinate to the user /////////////////////////////////////////////////////////////////////////////////////
+    const userPosition = [103.85213017208162,1.298779620518431];
+    const distances = myData.features.map(feature => {
+      const [x, y] = feature.geometry.coordinates[0];
+      return Math.sqrt(Math.pow(userPosition[0] - x, 2) + Math.pow(userPosition[1] - y, 2));
+    });
     
+    // Find the minimum distance and its index in the distances array
+    const minDistance = Math.min(...distances);
+    const minDistanceIndex = distances.indexOf(minDistance);
     
+    // Get the closest coordinate
+    const finish = myData.features[minDistanceIndex].geometry.coordinates[0];
+
+
+    // Getting shortest route ///////////////////////////////////////////////////////////////////////////////////////////////////
+    var pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
     var path = pathFinder.findPath(point(start), point(finish));
-    console.log(start);
-    
 
     const route = 
     {
@@ -196,39 +215,47 @@ const Map = () => {
         animate(counter);
     });});
 
+
     map.on("load", function () {
       // Add an image to use as a custom marker
-      map.loadImage(userIcon, (error, image) =>{
-          if (error) throw error;
-          map.addImage("custom-marker", image);
-          // Add a GeoJSON source with multiple points
-          map.addSource("points", {
-            type: "geojson",
-            data: {
-              type: "FeatureCollection",
-              features: [{
-                'type': 'Feature',
-                'geometry': {
-                'type': 'Point',
-                'coordinates': finish
-                }
-              }]
-              
-            },
-          });
-          // Add a symbol layer
-          map.addLayer({
-            id: "points",
-            type: "symbol",
-            source: "points",
-            layout: {
-              "icon-image": "custom-marker",
-              "icon-size" : 0.07
-            },
-          });
-        }
-      );
+      map.loadImage(userIcon, (error, image) => {
+        if (error) throw error;
+        map.addImage("custom-marker", image);
+    
+        // Define an array of coordinates for the markers
+        const coordinates = user.features[0].geometry.coordinates;
+    
+        // Add a GeoJSON source with multiple points
+        const geojson = {
+          type: "FeatureCollection",
+          features: coordinates.map((coord) => {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: coord,
+              },
+            };
+          }),
+        };
+        map.addSource("points", {
+          type: "geojson",
+          data: geojson,
+        });
+    
+        // Add a symbol layer
+        map.addLayer({
+          id: "points",
+          type: "symbol",
+          source: "points",
+          layout: {
+            "icon-image": "custom-marker",
+            "icon-size": 0.05,
+          },
+        });
+      });
     });
+    
 
 
     // Clean up on unmount
