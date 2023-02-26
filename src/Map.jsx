@@ -31,24 +31,36 @@ const Map = () => {
       zoom: 15.5
     });
 
-    // Generating random start & end point ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // Generating random start point ///////////////////////////////////////////////////////////////////////////////////////////////////
     const startrandomIndex = Math.floor(Math.random() * myData.features.length);
     // Get a random coordinate from the selected feature
     const start = myData.features[startrandomIndex].geometry.coordinates[0];
 
-    // GETTING 5 RANDOM USER COORDINATES ///////////////////////////////////////////////////////////////////////////////////////////////////
-    // console.log("endCoordinates " + user.features[0].geometry.coordinates[1]);
+    // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS ///////////////////////////////////////////////////////////////////////////////////////////////////
     const endCoordinates = [];
-    for (let i = 0; i < 5; i++) {
+    while (endCoordinates.length < 5) {
       const endRandomIndex = Math.floor(Math.random() * user.features[0].geometry.coordinates.length);
       const endRandomCoordinate = user.features[0].geometry.coordinates[endRandomIndex];
-      endCoordinates.push(endRandomCoordinate);
-    } 
-    console.log("endCoordinates " + endCoordinates);
+      // ensuring no duplicates occur
+      if (!endCoordinates.some(coord => coord.toString() === endRandomCoordinate.toString())) {
+        endCoordinates.push(endRandomCoordinate);
+      }
+    }
+    // console.log("endCoordinates " + endCoordinates);
+
+    // FINDING CLOSEST USER (out of random list) TO DRIVER /////////////////////////////////////////////////////////////////////////////////////////////////////
+    const pickDistances = endCoordinates.map(feature => {
+      const [x, y] = feature;
+      return Math.sqrt(Math.pow(start[0] - x, 2) + Math.pow(start[1] - y, 2));
+    });
+    const shortest = Math.min(...pickDistances);
+    const shortestIndex = pickDistances.indexOf(shortest);
+    const userPosition = endCoordinates[shortestIndex];
+    // console.log("userPosition" + userPosition);
 
 
     // Finding closest road coordinate to the user /////////////////////////////////////////////////////////////////////////////////////
-    const userPosition = [103.85213017208162,1.298779620518431];
+    // const userPosition = [103.85213017208162,1.298779620518431];
     const distances = myData.features.map(feature => {
       const [x, y] = feature.geometry.coordinates[0];
       return Math.sqrt(Math.pow(userPosition[0] - x, 2) + Math.pow(userPosition[1] - y, 2));
@@ -60,7 +72,6 @@ const Map = () => {
     
     // Get the closest coordinate
     const finish = myData.features[minDistanceIndex].geometry.coordinates[0];
-
 
     // Getting shortest route ///////////////////////////////////////////////////////////////////////////////////////////////////
     var pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
@@ -102,8 +113,8 @@ const Map = () => {
 
     // Number of steps to use in the arc and animation, more steps means
     // a smoother arc and animation, but too many steps will result in a
-    // low frame rate
-    const steps = 500*lineDistance;
+    // low frame rate. multiplied by lineDistance for consistancy
+    const steps = 400*lineDistance;
 
     // Draw an arc between the `origin` & `destination` of the two points
     for (let i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -120,7 +131,7 @@ const Map = () => {
     let counter = 0;
 
 
-    //MOTOCYCLE ICON ADDING & ANIMATION /////////////////////////////////////////////////////////////
+    //MOTOCYCLE ICON ADDING & ANIMATION ////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
       // const coordinates = help.features[0].geometry.coordinates;
       // console.log("geojson " + coordinates);
@@ -223,7 +234,7 @@ const Map = () => {
         map.addImage("custom-marker", image);
     
         // Define an array of coordinates for the markers
-        const coordinates = user.features[0].geometry.coordinates;
+        const coordinates = endCoordinates;
     
         // Add a GeoJSON source with multiple points
         const geojson = {
@@ -267,7 +278,7 @@ const Map = () => {
 
 
 
-//SIDE BAR ///////////////////////////////////////////////////////////////////////////////////////
+//SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <div className='sidebarStyle'>
