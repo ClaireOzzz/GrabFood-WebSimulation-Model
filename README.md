@@ -6,8 +6,6 @@ npm i
 
 npm i @turf/turf
 
-npm i @turf/helpers
-
 npm install --save geojson-path-finder
 
 npm start

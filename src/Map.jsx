@@ -5,7 +5,7 @@ import { point } from "@turf/helpers";
 
 //icons
 import motoIcon from './icons/moto.png'; 
-import userIcon from './icons/user.png'; 
+import userIcon from './icons/user (7).png'; 
 
 import myData from './data/road_line.js';
 // drivable roads
@@ -117,7 +117,7 @@ const Map = () => {
     const steps = 400*lineDistance;
 
     // Draw an arc between the `origin` & `destination` of the two points
-    for (let i = 0; i < lineDistance; i += lineDistance / steps) {
+    for (let i = 0; i < lineDistance; i += 1 / steps) {
         const segment = turf.along(route.features[0], i);
         arc.push(segment.geometry.coordinates);
        
@@ -130,6 +130,48 @@ const Map = () => {
     // Used to increment the value of the point measurement against the route.
     let counter = 0;
 
+
+    // CUSTOMER ICONS //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    map.on("load", function () {
+      // Add an image to use as a custom marker
+      map.loadImage(userIcon, (error, image) => {
+        if (error) throw error;
+        map.addImage("custom-marker", image);
+    
+        // Define an array of coordinates for the markers
+        const coordinates = endCoordinates;
+    
+        // Add a GeoJSON source with multiple points
+        const geojson = {
+          type: "FeatureCollection",
+          features: coordinates.map((coord) => {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: coord,
+              },
+            };
+          }),
+        };
+        map.addSource("points", {
+          type: "geojson",
+          data: geojson,
+        });
+    
+        // Add a symbol layer
+        map.addLayer({
+          id: "points",
+          type: "symbol",
+          source: "points",
+          layout: {
+            "icon-image": "custom-marker",
+            "icon-size": 0.035,
+          },
+        });
+      });
+    });
+    
 
     //MOTOCYCLE ICON ADDING & ANIMATION ////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -164,13 +206,14 @@ const Map = () => {
           'source': 'point',
           'type': 'symbol',
           'layout': {
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-image': 'taxi',
+            'icon-size': 0.1,
+            'icon-rotate': ['get', 'bearing'],
+            'icon-rotation-alignment': 'map',
+
               
-              'icon-image': 'taxi',
-              'icon-size': 0.1,
-              'icon-rotate': ['get', 'bearing'],
-              'icon-rotation-alignment': 'map',
-              'icon-allow-overlap': true,
-              'icon-ignore-placement': true
           }
         });
 
@@ -227,50 +270,9 @@ const Map = () => {
     });});
 
 
-    map.on("load", function () {
-      // Add an image to use as a custom marker
-      map.loadImage(userIcon, (error, image) => {
-        if (error) throw error;
-        map.addImage("custom-marker", image);
-    
-        // Define an array of coordinates for the markers
-        const coordinates = endCoordinates;
-    
-        // Add a GeoJSON source with multiple points
-        const geojson = {
-          type: "FeatureCollection",
-          features: coordinates.map((coord) => {
-            return {
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: coord,
-              },
-            };
-          }),
-        };
-        map.addSource("points", {
-          type: "geojson",
-          data: geojson,
-        });
-    
-        // Add a symbol layer
-        map.addLayer({
-          id: "points",
-          type: "symbol",
-          source: "points",
-          layout: {
-            "icon-image": "custom-marker",
-            "icon-size": 0.05,
-          },
-        });
-      });
-    });
-    
-
 
     // Clean up on unmount
-    return () => map.remove();
+    return () => map.update();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
