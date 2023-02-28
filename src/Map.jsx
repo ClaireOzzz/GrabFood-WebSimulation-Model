@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import PathFinder, { pathToGeoJSON } from "geojson-path-finder";
 import { point } from "@turf/helpers";
+import SideBar from './Sidebar';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -28,13 +29,18 @@ const Map = () => {
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [103.85299393647626, 1.3005577339241654],
-      zoom: 15.5
+      zoom: 15.5,
+      fadeDuration: 0
     });
 
     // Generating random start point ///////////////////////////////////////////////////////////////////////////////////////////////////
     const startrandomIndex = Math.floor(Math.random() * myData.features.length);
     // Get a random coordinate from the selected feature
     const start = myData.features[startrandomIndex].geometry.coordinates[0];
+
+    // 1. 3 radnom start coordinates for 3 drivers //////
+
+   
 
     // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS ///////////////////////////////////////////////////////////////////////////////////////////////////
     const endCoordinates = [];
@@ -47,6 +53,9 @@ const Map = () => {
       }
     }
     // console.log("endCoordinates " + endCoordinates);
+
+    /// 2. return 3 closest customers to those 3 driver ///// has to loop and compare mimnimum dist out of 15 distances
+
 
     // FINDING CLOSEST USER (out of random list) TO DRIVER /////////////////////////////////////////////////////////////////////////////////////////////////////
     const pickDistances = endCoordinates.map(feature => {
@@ -117,7 +126,7 @@ const Map = () => {
     const steps = 400*lineDistance;
 
     // Draw an arc between the `origin` & `destination` of the two points
-    for (let i = 0; i < lineDistance; i += 1 / steps) {
+    for (let i = 0; i < lineDistance; i += lineDistance / steps) {
         const segment = turf.along(route.features[0], i);
         arc.push(segment.geometry.coordinates);
        
@@ -175,8 +184,6 @@ const Map = () => {
 
     //MOTOCYCLE ICON ADDING & ANIMATION ////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
-      // const coordinates = help.features[0].geometry.coordinates;
-      // console.log("geojson " + coordinates);
       // Add an image to use as a custom marker
       map.loadImage(motoIcon, (error, image) =>{
         if (error) throw error;
@@ -212,10 +219,11 @@ const Map = () => {
             'icon-size': 0.1,
             'icon-rotate': ['get', 'bearing'],
             'icon-rotation-alignment': 'map',
-
-              
           }
         });
+
+
+        // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
 
         function animate() {
           const start =
@@ -278,59 +286,11 @@ const Map = () => {
 
 
 
-
-
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
-      <div className='sidebarStyle'>
-        <div className = 'title'>
-          Critical <br/> Checkpoints
-        </div>
-          {/* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */}
-        <div className = "optionSection">
-
-          <div className="option">
-            <label htmlFor="time">Time of Day:</label>
-            <select name="time" id="time" >
-              <option value="Morning" >Morning</option>
-              <option value="Afternoon" >Afternoon</option>
-              <option value="Night" >Night</option>
-            </select>
-          </div>
-
-          <div className="option">
-            <label htmlFor="weather">Weather:</label>
-            <select name="weather" id="weather" >
-              <option value="Rainy">Rainy</option>
-              <option value="Normal" >Normal</option>
-            </select>
-          </div>
-
-          <div className="option">
-            <label htmlFor="transport">Transport:</label>
-            <select name="transport" id="transport">
-              <option value="Ebicycle">E-bicycle</option>
-              <option value="Motocycle" >Motocycle</option>
-            </select>
-          </div>
-        </div>
-        {/* output */}
-        <div className = 'output'>
-          <div className = 'header'>
-            Average Waiting Time: 
-          </div>
-          <div className = 'header'>
-            Occupied to Unoccupied Drivers:
-          </div>
-          <div className = 'header'>
-            Average Customers Served/h:
-          </div>
-        </div>
-        <div className ="overlay">
-          <button className ="resetbutton" id="reset">Reset</button>
-        </div>
-      </div>
+      <SideBar/>
+      
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );
