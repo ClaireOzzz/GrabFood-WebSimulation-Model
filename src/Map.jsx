@@ -291,7 +291,7 @@ const Map = () => {
         <div className = "optionSection">
 
           <div className="option">
-            <label for="time">Time of Day:</label>
+            <label htmlFor="time">Time of Day:</label>
             <select name="time" id="time" >
               <option value="Morning" >Morning</option>
               <option value="Afternoon" >Afternoon</option>
@@ -300,7 +300,7 @@ const Map = () => {
           </div>
 
           <div className="option">
-            <label for="weather">Weather:</label>
+            <label htmlFor="weather">Weather:</label>
             <select name="weather" id="weather" >
               <option value="Rainy">Rainy</option>
               <option value="Normal" >Normal</option>
@@ -308,7 +308,7 @@ const Map = () => {
           </div>
 
           <div className="option">
-            <label for="transport">Transport:</label>
+            <label htmlFor="transport">Transport:</label>
             <select name="transport" id="transport">
               <option value="Ebicycle">E-bicycle</option>
               <option value="Motocycle" >Motocycle</option>
