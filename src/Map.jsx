@@ -5,11 +5,13 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { start, finish, path, endCoordinates } from './Calculations';
+import { start, path, endCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
 import userIcon from './icons/user (7).png'; 
+import user from './data/userPositions.js';
+import myData from './data/road_line.js';
 
 import './Map.css';
 
@@ -27,7 +29,7 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
-
+    console.log("test"+myData.features[0].geometry.coordinates.length);
     const route = 
     {
       'type': 'FeatureCollection',
@@ -70,9 +72,8 @@ const Map = () => {
     // Draw an arc between the `origin` & `destination` of the two points
     for (let i = 0; i < lineDistance; i += lineDistance / steps) {
         const segment = turf.along(route.features[0], i);
-        arc.push(segment.geometry.coordinates);
-       
-    }
+        arc.push(segment.geometry.coordinates);  
+    };
 
     // Update the route with calculated arc coordinates
     route.features[0].geometry.coordinates = arc;
