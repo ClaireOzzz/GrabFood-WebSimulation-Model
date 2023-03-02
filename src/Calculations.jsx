@@ -16,21 +16,20 @@ export const start = myData.features[startrandomIndex].geometry.coordinates[0];
 
 
 // 1. 3 radnom start coordinates for 3 drivers //////
-    // const getStartCoordinates = () => {
-      // const startCoordinates = [];
-      // while (startCoordinates.length < 3) {
-      //     const startRandomIndex = Math.floor(Math.random() * user.features[0].geometry.coordinates.length);
-      //     const startRandomCoordinate = user.features[0].geometry.coordinates[startRandomIndex];
-      //     // ensuring no duplicates occur
-      //     if (!startCoordinates.some(coord => coord.toString() === startCoordinates.toString())) {
-      //         startCoordinates.push(startRandomCoordinate);
-      //     }
-      // }
-      // return startCoordinates;
-    // }
-    // export const startCoordinates = getStartCoordinates();
-    // 
-    // console.log("startCoordinates " +startCoordinates);
+    const getDriverCoordinates = () => {
+      const driverCoordinates = [];
+      while (driverCoordinates.length < 4) {
+          const driverRandomIndex = Math.floor(Math.random() * myData.features.length);
+          const driverRandomCoordinate = myData.features[driverRandomIndex].geometry.coordinates[0];
+          driverCoordinates.push(driverRandomCoordinate);
+          }
+      
+      return driverCoordinates;
+    };
+    export const driverCoordinates = getDriverCoordinates();
+    
+
+
 
 // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS ///////////////////////////////////////////////////////////////////////////////////////////////////
 const getEndCoordinates = () => {

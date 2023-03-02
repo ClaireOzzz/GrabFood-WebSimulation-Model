@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { start, path, endCoordinates } from './Calculations';
+import { start, path, endCoordinates, driverCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -20,6 +20,7 @@ mapboxgl.accessToken =
 
 const Map = () => {
   const mapContainerRef = useRef(null);
+
   // Initialize map when component mounts
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -29,7 +30,11 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
-    console.log("test"+myData.features[0].geometry.coordinates.length);
+
+    
+
+    console.log("driverCoordinates "+driverCoordinates);
+
     const route = 
     {
       'type': 'FeatureCollection',
