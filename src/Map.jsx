@@ -5,11 +5,14 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { start, path, endCoordinates, driverCoordinates } from './Calculations';
+import { start, path, endCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
 import userIcon from './icons/user (7).png'; 
+import restaurantIcon from './icons/restaurant.png'; 
+
+import restaurantCoords from './data/restaurants.js';
 import user from './data/userPositions.js';
 import myData from './data/road_line.js';
 
@@ -30,10 +33,6 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
-
-    
-
-    console.log("driverCoordinates "+driverCoordinates);
 
     const route = 
     {
@@ -87,6 +86,47 @@ const Map = () => {
     // Used to increment the value of the point measurement against the route.
     let counter = 0;
 
+    // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
+    map.on("load", function () {
+      // Add an image to use as a custom marker
+      map.loadImage(restaurantIcon, (error, image) => {
+        if (error) throw error;
+        map.addImage("eatery", image);
+    
+        // Define an array of coordinates for the markers
+        const eatCoordinates = restaurantCoords.features[0].geometry.coordinates;
+    
+        // Add a GeoJSON source with multiple points
+        const geojson = {
+          type: "FeatureCollection",
+          features: eatCoordinates.map((eatcoord) => {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: eatcoord,
+              },
+            };
+          }),
+        };
+        map.addSource("markers", {
+          type: "geojson",
+          data: geojson,
+        });
+    
+        // Add a symbol layer
+        map.addLayer({
+          id: "markers",
+          type: "symbol",
+          source: "markers",
+          layout: {
+            "icon-image": "eatery",
+            "icon-size": 0.035,
+          },
+        });
+      });
+    });
+    
 
     // CUSTOMER ICONS //////////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -151,7 +191,7 @@ const Map = () => {
           'source': 'route',
           'type': 'line',
           'paint': {
-              'line-width': 4,
+              'line-width': 2,
               'line-color': '#4C00b0'
           }
         });
