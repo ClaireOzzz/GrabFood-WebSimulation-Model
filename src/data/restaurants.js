@@ -1,4 +1,4 @@
-const restaurants = {
+const restaurantCoords = {
   "type": "FeatureCollection",
   "features": [
       {
@@ -47,4 +47,4 @@ const restaurants = {
 ]
 };
 
-export default restaurants;
+export default restaurantCoords;

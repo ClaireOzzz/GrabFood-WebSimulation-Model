@@ -5,11 +5,11 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { start, path, endCoordinates } from './Calculations';
+import { begin, path, endCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
-import userIcon from './icons/user (7).png'; 
+import userIcon from './icons/user.png'; 
 import restaurantIcon from './icons/restaurant.png'; 
 
 import restaurantCoords from './data/restaurants.js';
@@ -56,7 +56,7 @@ const Map = () => {
           'properties': {},
           'geometry': {
               'type': 'Point',
-              'coordinates': start
+              'coordinates': begin
           }
         }
       ]
@@ -249,7 +249,7 @@ const Map = () => {
         }
         document.getElementById('reset').addEventListener('click', () => {
           // Set the coordinates of the original point back to origin
-          point2.features[0].geometry.coordinates = start;
+          point2.features[0].geometry.coordinates = begin;
 
           // Update the source layer
           map.getSource('point').setData(point2);
