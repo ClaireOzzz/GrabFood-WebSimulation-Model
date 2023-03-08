@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { shortestPath1, shortestPath2, driverSpawn, endCoordinates } from './Calculations';
+import { shortestPath1, shortestPath2, driverSpawn, userCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -145,7 +145,7 @@ const Map = () => {
         map.addImage("custom-marker", image);
     
         // Define an array of coordinates for the markers
-        const coordinates = endCoordinates;
+        const coordinates = userCoordinates;
     
         // Add a GeoJSON source with multiple points
         const geojson = {
@@ -259,13 +259,13 @@ const Map = () => {
           if (counter === Math.floor(steps) && driverState === 'food_attaining') {
             // Set the animation to run again with a different path and update the driver state
             driverState = 'food_delivering';
-            console.log('food_delivering')
             setTimeout(() => {
               prepAnimate(shortestPath2, driverSpawn)
               steps = route.features[0].geometry.coordinates.length - 1;
               counter = 0;
               animate();
             }, 5000);
+            console.log('food_delivering now');
           } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
             // Update the driver state when the second animation is complete
             driverState = 'done';
@@ -305,7 +305,6 @@ const Map = () => {
   return (
     <div>
       <SideBar/>
-      
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );

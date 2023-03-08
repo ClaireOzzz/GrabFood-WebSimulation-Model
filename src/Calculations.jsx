@@ -16,12 +16,28 @@ export const driverSpawn = myData.features[beginrandomIndex].geometry.coordinate
 
 
 
+// 1. 3 radnom begin coordinates for 3 drivers //////
+    // const getDriverCoordinates = () => {
+    //   const driverCoordinates = [];
+    //   while (driverCoordinates.length < 4) {
+    //       const driverRandomIndex = Math.floor(Math.random() * myData.features.length);
+    //       const driverRandomCoordinate = myData.features[driverRandomIndex].geometry.coordinates[0];
+    //       driverCoordinates.push(driverRandomCoordinate);
+    //       }
+      
+    //   return driverCoordinates;
+    // };
+    // export const driverCoordinates = getDriverCoordinates();
+
 // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS AND GETTING ITS CLOSEST ROAD COORDINATE FROM ALL ROADS ///////////////////////////////////////////////////////////////////////////////////////////////////
-export const endCoordinates = [];
+
+export const endCoordinates = []; //The closest road coordinate to the customers  
+export const userCoordinates = []; // The actual coordinate of the customers, to be used in map.jsx for icon placement
 for (let i = 0; i < 5; i++) {
     // Generate a random user coordinate
     const endRandomIndex = Math.floor(Math.random() * user.features[0].geometry.coordinates.length);
     const endRandomCoordinate = user.features[0].geometry.coordinates[endRandomIndex];
+    userCoordinates.push(endRandomCoordinate);
 
     // Find the closest road coordinate to the user coordinate
     const distances = myData.features.map(feature => {
@@ -34,6 +50,7 @@ for (let i = 0; i < 5; i++) {
 
     endCoordinates.push(closestRoadCoordinate);
 }
+
 
 /// GETTING A RANDO EATERY FOR EACH USER, CAN BE REPEATED //////////////////////////////////////////////////////////////////////////////////////////////
 const eateryCoords = restaurantClosest.features[0].geometry.coordinates;
