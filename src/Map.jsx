@@ -5,7 +5,7 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { begin, path, endCoordinates } from './Calculations';
+import { shortestPath1, shortestPath2, driverSpawn, endCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -13,8 +13,6 @@ import userIcon from './icons/user.png';
 import restaurantIcon from './icons/restaurant.png'; 
 
 import restaurantCoords from './data/restaurants.js';
-import user from './data/userPositions.js';
-import myData from './data/road_line.js';
 
 import './Map.css';
 
@@ -33,58 +31,70 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
+    let driverState = 'food_attaining';
 
-    const route = 
-    {
-      'type': 'FeatureCollection',
-      'features': [
+    // console.log("shortestPath2 " + shortestPath1.weight);
+
+    var point2, route, counter, steps;
+
+    function prepAnimate(path, begin) {
+      // A single point that animates along the route.
+      console.log("wtf is happening");
+      point2 = {
+        'type': 'FeatureCollection',
+        'features': [
           {
             'type': 'Feature',
+            'properties': {},
             'geometry': {
-                'type': 'LineString',
-                'coordinates': path.path
-          }}
-      ]
-    };
-   
-    // A single point that animates along the route.
-    const point2 = {
-      'type': 'FeatureCollection',
-      'features': [
-        {
-          'type': 'Feature',
-          'properties': {},
-          'geometry': {
-              'type': 'Point',
-              'coordinates': begin
+                'type': 'Point',
+                'coordinates': begin
+            }
           }
-        }
-      ]
+        ]
+      };
+
+      route = 
+      {
+        'type': 'FeatureCollection',
+        'features': [
+            {
+              'type': 'Feature',
+              'geometry': {
+                  'type': 'LineString',
+                  'coordinates': path.path
+            }}
+        ]
+      };
+
+      // Calculate the distance in kilometers between route start/end point.
+      const lineDistance = path.weight;
+      
+      // console.log(route.features[0].geometry.coordinates );
+      const arc = [];
+
+      steps = 400*lineDistance;
+
+      // Draw an arc between the `origin` & `destination` of the two points
+      for (let i = 0; i < lineDistance; i += lineDistance / steps) {
+          const segment = turf.along(route.features[0], i);
+          arc.push(segment.geometry.coordinates);  
+      };
+
+      // Update the route with calculated arc coordinates
+      route.features[0].geometry.coordinates = arc;
+      
+
+      // Used to increment the value of the point measurement against the route.
+      counter = 0;
+
+    }
+
+    if (driverState === 'food_attaining') {
+      prepAnimate(shortestPath1, driverSpawn)
+      console.log('food_attaining')
     };
 
-    // Calculate the distance in kilometers between route start/end point.
-    const lineDistance = path.weight;
-    
-    // console.log(route.features[0].geometry.coordinates );
-    const arc = [];
-
-    // Number of steps to use in the arc and animation, more steps means
-    // a smoother arc and animation, but too many steps will result in a
-    // low frame rate. multiplied by lineDistance for consistancy
-    const steps = 400*lineDistance;
-
-    // Draw an arc between the `origin` & `destination` of the two points
-    for (let i = 0; i < lineDistance; i += lineDistance / steps) {
-        const segment = turf.along(route.features[0], i);
-        arc.push(segment.geometry.coordinates);  
-    };
-
-    // Update the route with calculated arc coordinates
-    route.features[0].geometry.coordinates = arc;
-    
-
-    // Used to increment the value of the point measurement against the route.
-    let counter = 0;
 
     // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -246,10 +256,25 @@ const Map = () => {
           }
 
           counter = counter + 1;
+
+          if (counter === Math.floor(steps) && driverState === 'food_attaining') {
+            // Set the animation to run again with a different path and update the driver state
+            driverState = 'food_delivering';
+            console.log('food_delivering')
+            prepAnimate(shortestPath2, driverSpawn)
+            steps = route.features[0].geometry.coordinates.length - 1;
+            counter = 0;
+            animate();
+          } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
+            // Update the driver state when the second animation is complete
+            driverState = 'done';
+            console.log('done');
+          }
+
         }
         document.getElementById('reset').addEventListener('click', () => {
           // Set the coordinates of the original point back to origin
-          point2.features[0].geometry.coordinates = begin;
+          point2.features[0].geometry.coordinates = driverSpawn;
 
           // Update the source layer
           map.getSource('point').setData(point2);
@@ -263,7 +288,8 @@ const Map = () => {
 
         // Start the animation
         animate(counter);
-    });});
+
+      });});
 
 
 
