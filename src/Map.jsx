@@ -39,7 +39,7 @@ const Map = () => {
 
     function prepAnimate(path, begin) {
       // A single point that animates along the route.
-      console.log("wtf is happening");
+      console.log("prep animate was run");
       point2 = {
         'type': 'FeatureCollection',
         'features': [
@@ -70,7 +70,6 @@ const Map = () => {
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
       
-      // console.log(route.features[0].geometry.coordinates );
       const arc = [];
 
       steps = 400*lineDistance;
@@ -261,10 +260,12 @@ const Map = () => {
             // Set the animation to run again with a different path and update the driver state
             driverState = 'food_delivering';
             console.log('food_delivering')
-            prepAnimate(shortestPath2, driverSpawn)
-            steps = route.features[0].geometry.coordinates.length - 1;
-            counter = 0;
-            animate();
+            setTimeout(() => {
+              prepAnimate(shortestPath2, driverSpawn)
+              steps = route.features[0].geometry.coordinates.length - 1;
+              counter = 0;
+              animate();
+            }, 5000);
           } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
             // Update the driver state when the second animation is complete
             driverState = 'done';

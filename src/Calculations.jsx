@@ -56,8 +56,8 @@ for (let i = 0; i < endCoordinates.length; i++) {
 //userAssignments is a dict with restaurant coords as its keys
 // console.log(userAssignments["103.8537167571647,1.304991130893086"]);
 
-const jsonString = JSON.stringify(userAssignments);
-console.log("userAssignments "+jsonString);
+// const jsonString = JSON.stringify(userAssignments);
+// console.log("userAssignments "+jsonString);
 
 // GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
 const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
@@ -97,16 +97,13 @@ for (let i = 0; i < length2.length; i++) {
   length3.push(length1[i] + length2[i]);
 }
 
-console.log("length1len "+ length1.length);
-
 // FINDING FASTEST DELIVERY FOR DRIVER /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 const minIndex = length3.indexOf(Math.min(...length3));
 export var shortestPath1 = paths1[minIndex];
 export var shortestPath2 = paths2[minIndex];
-console.log("paths1 "+ [minIndex]);
 
 // GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////
-export var path = shortestPath1;
+// export var path = shortestPath1;
 // console.log("weight "+ path.weight);
