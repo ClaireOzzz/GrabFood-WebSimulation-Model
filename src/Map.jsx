@@ -39,6 +39,8 @@ const Map = () => {
   useEffect(() => {
   console.log("userInput "+userInput);
   }, [userInput]);
+
+  
   // Initialize map when component mounts
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -286,10 +288,8 @@ const Map = () => {
         document.getElementById('reset').addEventListener('click', () => {
           driverState = 'food_attaining';
           prepAnimate(shortestPath1, driverSpawn)
-        
           // Reset the counter
           counter = 0;
-        
           // Restart the animation
           animate(counter);
         });
