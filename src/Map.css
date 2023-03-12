@@ -30,9 +30,6 @@
   margin-top: 10px;
 }
 
-.output {
-  margin-top: 100px;
-}
 
 .header {
   line-height: 1.2em;
@@ -93,6 +90,31 @@ select:focus{
   left: 20px;
 }
 
+.speedContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.speedButtons {
+  display: flex;
+  flex-direction: row;
+  margin-top: 7%;
+}
+
+.speedbutton {
+  margin-right: 10px;
+  font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  background-color: #251831;
+  color: #fff;
+  display: inline-block;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
 .resetbutton {
   font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
   background-color: #251831;
@@ -104,6 +126,7 @@ select:focus{
   border-radius: 3px;
 }
 
-.overlay button:hover {
-  background-color: #4ea0da;
+.overlay button.active,
+.overlay button:focus {
+  background-color: #7138a3;
 }

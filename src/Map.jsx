@@ -23,7 +23,7 @@ mapboxgl.accessToken =
 const Map = () => {
   const mapContainerRef = useRef(null);
   
-  const [userInput, setUserInput] = useState(5);
+  const [userInput, setUserInput] = useState(1);
   const inputRef = useRef(null);
 
   const handleUserInput = (input) => {
@@ -40,7 +40,7 @@ const Map = () => {
   console.log("userInput "+userInput);
   }, [userInput]);
 
-  
+
   // Initialize map when component mounts
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -51,6 +51,33 @@ const Map = () => {
       fadeDuration: 0
     });
     let driverState = 'food_attaining';
+
+    //time & speed
+    const speeds = [1, 2, 4, 8, 16]; // define the available speeds
+    let speedIndex = 0; 
+    let startTime; // declare a variable to store the start time
+    let elapsedTime; // declare a variable to store the elapsed time
+    document.getElementById('2x-speed').addEventListener('click', () => {
+      speedIndex = 1;
+    });
+    document.getElementById('4x-speed').addEventListener('click', () => {
+      speedIndex = 2;
+      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+        button.classList.remove('active');
+      });
+    });
+    document.getElementById('8x-speed').addEventListener('click', () => {
+      speedIndex = 3;
+      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+        button.classList.remove('active');
+      });
+    });
+    document.getElementById('16x-speed').addEventListener('click', () => {
+      speedIndex = 4;
+      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+        button.classList.remove('active');
+      });
+    });
 
     var point2, route, counter, steps;
 
@@ -87,7 +114,7 @@ const Map = () => {
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
       const arc = [];
-      steps = 400*lineDistance;
+      steps = 200*lineDistance;
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / steps) {
           const segment = turf.along(route.features[0], i);
@@ -235,6 +262,13 @@ const Map = () => {
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
 
         function animate() {
+          if (counter === 0) {
+            // capture the start time when counter is zero
+            startTime = new Date().getTime();
+          }
+          // calculate the time delta based on the selected speed
+          const timeDelta = (new Date().getTime() - startTime) / speeds[speedIndex];
+
           const start =
           route.features[0].geometry.coordinates[
                   counter >= steps ? counter - 1 : counter
@@ -266,7 +300,7 @@ const Map = () => {
               requestAnimationFrame(animate);
           }
 
-          counter = counter + 1;
+          counter += 1 ;
 
           if (counter === Math.floor(steps) && driverState === 'food_attaining') {
             // Set the animation to run again with a different path and update the driver state
@@ -281,6 +315,10 @@ const Map = () => {
           } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
             // Update the driver state when the second animation is complete
             driverState = 'done';
+
+            elapsedTime = timeDelta;
+            // elapsedMin =  Math.round(elapsedTime / 60000);
+            console.log(`Elapsed time: ${elapsedTime} ms`);
             console.log('done');
           }
 
@@ -293,7 +331,6 @@ const Map = () => {
           // Restart the animation
           animate(counter);
         });
-                
 
         // Start the animation
         animate(counter);
@@ -313,6 +350,7 @@ const Map = () => {
       <SideBar handleUserInput={handleUserInput}
         handleReset={handleReset}
         inputRef={inputRef}/>
+        <div id="elapsed-time"></div>
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );

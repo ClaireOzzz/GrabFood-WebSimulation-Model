@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const SideBar  = (props) => {
-  const [inputValue, setInputValue] = useState(5);
+  const [inputValue, setInputValue] = useState(1);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -21,7 +21,7 @@ const SideBar  = (props) => {
 
         <div className="optionSection">
           <div className="option">
-            <label htmlFor="number"> No. Of Customers:</label>
+            <label htmlFor="number"> No. Of Drivers:</label>
             <input type="number" name="number" id="number" min="1" max="50"  ref={props.inputRef} value={inputValue} onChange={handleInputChange} />
           </div>
         </div>
@@ -68,6 +68,17 @@ const SideBar  = (props) => {
           </div>
         </div>
         <div className ="overlay">
+          <div className='speedContainer'>
+            <div className='header'> Speed: </div>
+            <div className='speedButtons'>
+              <button className='speedbutton active' id='2x-speed'>2x </button>
+              <button className='speedbutton' id='4x-speed'>4x </button>
+              <button className='speedbutton' id='8x-speed'>8x </button>
+              <button className='speedbutton' id='16x-speed'>16x </button>
+            </div>
+          </div>
+
+       
           <button className ="resetbutton" id="reset" onClick={handleReset} >Reset</button>
         </div>
       </div>
