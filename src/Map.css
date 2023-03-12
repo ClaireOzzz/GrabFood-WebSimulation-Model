@@ -42,7 +42,7 @@
   margin-bottom: 50px;
 }
 
-.option {
+.variable {
   line-height: 1.5em;
   height: 1.5em;
   color: #ffffff;
@@ -53,13 +53,26 @@
   
 }
 
+.variableSection {
+  padding-bottom: 50px;
+}
+
 .optionSection {
-  padding-top: 100px;
+  padding-top: 10%;
+  padding-bottom: 10%;
 }
 
 select{
   width: 140px;
   padding: 8px 20px;
+  border-radius:5px;
+  margin-left: 10px;
+  float: right;
+}
+
+input {
+  width: 140px;
+  padding: 5px 20px;
   border-radius:5px;
   margin-left: 10px;
   float: right;

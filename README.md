@@ -24,4 +24,3 @@ How the path is chosen between driver and closest user: (26th Feb)
 
 5. Use pathFinder
 
-

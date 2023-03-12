@@ -14,8 +14,6 @@ const beginrandomIndex = Math.floor(Math.random() * myData.features.length);
 // Get a random coordinate from the selected feature
 export const driverSpawn = myData.features[beginrandomIndex].geometry.coordinates[0];
 
-
-
 // 1. 3 radnom begin coordinates for 3 drivers //////
     // const getDriverCoordinates = () => {
     //   const driverCoordinates = [];
@@ -123,4 +121,6 @@ export var shortestPath2 = paths2[minIndex];
 
 // GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////
 // export var path = shortestPath1;
-// console.log("weight "+ path.weight);
+console.log("endCoordinates "+ endCoordinates); //The closest road coordinate to the customers  
+console.log("userCoordinates "+ userCoordinates); //actual user coordinates
+console.log("shortestPath1 "+ shortestPath2.path[(shortestPath2.path.length)-1]);

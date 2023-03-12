@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import mapLines from './data/road_line.json';
 import * as turf from '@turf/turf';
 
 //Seperate components
@@ -12,6 +11,8 @@ import motoIcon from './icons/moto.png';
 import userIcon from './icons/user.png'; 
 import restaurantIcon from './icons/restaurant.png'; 
 
+//geojson
+import mapLines from './data/road_line.json';
 import restaurantCoords from './data/restaurants.js';
 
 import './Map.css';
@@ -21,7 +22,23 @@ mapboxgl.accessToken =
 
 const Map = () => {
   const mapContainerRef = useRef(null);
+  
+  const [userInput, setUserInput] = useState(5);
+  const inputRef = useRef(null);
 
+  const handleUserInput = (input) => {
+    setUserInput(input);
+  };
+
+  const handleReset = () => {
+    // Update the userInput state with the current input field value
+    setUserInput(inputRef.current.value);
+    // Do something with userInput, like reset the app's state
+  };
+
+  useEffect(() => {
+  console.log("userInput "+userInput);
+  }, [userInput]);
   // Initialize map when component mounts
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -69,11 +86,8 @@ const Map = () => {
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
-      
       const arc = [];
-
       steps = 400*lineDistance;
-
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / steps) {
           const segment = turf.along(route.features[0], i);
@@ -83,10 +97,8 @@ const Map = () => {
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
       
-
       // Used to increment the value of the point measurement against the route.
       counter = 0;
-
     }
 
     if (driverState === 'food_attaining') {
@@ -276,16 +288,17 @@ const Map = () => {
         document.getElementById('reset').addEventListener('click', () => {
           // Set the coordinates of the original point back to origin
           point2.features[0].geometry.coordinates = driverSpawn;
-
+        
           // Update the source layer
           map.getSource('point').setData(point2);
-
+        
           // Reset the counter
           counter = 0;
-
+        
           // Restart the animation
           animate(counter);
-          });
+        });
+                
 
         // Start the animation
         animate(counter);
@@ -299,12 +312,12 @@ const Map = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
-
-
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
-      <SideBar/>
+      <SideBar handleUserInput={handleUserInput}
+        handleReset={handleReset}
+        inputRef={inputRef}/>
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );
