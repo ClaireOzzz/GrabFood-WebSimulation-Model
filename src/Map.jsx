@@ -50,8 +50,6 @@ const Map = () => {
     });
     let driverState = 'food_attaining';
 
-    // console.log("shortestPath2 " + shortestPath1.weight);
-
     var point2, route, counter, steps;
 
     function prepAnimate(path, begin) {
@@ -286,11 +284,8 @@ const Map = () => {
 
         }
         document.getElementById('reset').addEventListener('click', () => {
-          // Set the coordinates of the original point back to origin
-          point2.features[0].geometry.coordinates = driverSpawn;
-        
-          // Update the source layer
-          map.getSource('point').setData(point2);
+          driverState = 'food_attaining';
+          prepAnimate(shortestPath1, driverSpawn)
         
           // Reset the counter
           counter = 0;
