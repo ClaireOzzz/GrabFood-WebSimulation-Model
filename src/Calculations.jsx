@@ -7,7 +7,7 @@ import restaurantClosest from './data/restaurants_closest.js';
 import user from './data/userPositions.js';
 //all lines on the map 
 import mapLines from './data/road_line.json';
-import SideBar from './Sidebar';
+
 
  // Generating random begin point ///////////////////////////////////////////////////////////////////////////////////////////////////
 const beginrandomIndex = Math.floor(Math.random() * myData.features.length);
@@ -136,6 +136,6 @@ export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignmen
 
 // GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////
 // export var path = shortestPath1;
-console.log("endCoordinates "+ endCoordinates); //The closest road coordinate to the customers  
-console.log("userCoordinates "+ userCoordinates); //actual user coordinates
-console.log("shortestPath1 "+ shortestPath2.path[(shortestPath2.path.length)-1]);
+// console.log("endCoordinates "+ endCoordinates); //The closest road coordinate to the customers  
+// console.log("userCoordinates "+ userCoordinates); //actual user coordinates
+// console.log("shortestPath1 "+ shortestPath2.path[(shortestPath2.path.length)-1]);

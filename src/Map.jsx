@@ -53,7 +53,7 @@ const Map = () => {
     let driverState = 'food_attaining';
 
     //time & speed
-    const speeds = [1, 2, 4, 8, 16, 0.1]; // define the available speeds
+    const speeds = [1, 2, 4, 8, 16, 0.4]; // define the available speeds
     let speedIndex = 0; 
     let startTime; // declare a variable to store the start time
     let elapsedTime; // declare a variable to store the elapsed time
