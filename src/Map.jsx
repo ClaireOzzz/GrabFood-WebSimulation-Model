@@ -91,8 +91,18 @@ const Map = () => {
         console.log("rainy");
         speedIndex = 5;
         weatherSpeed = speeds[speedIndex];
-      } 
+      } else {
+        speedIndex = 1;
+        weatherSpeed = speeds[speedIndex];
+      }
     });
+    // document.getElementById('weather').addEventListener('change', (event) => {
+    //   if (event.target.value === 'Normal') {
+    //     console.log("rainy");
+    //     speedIndex = 1;
+    //     weatherSpeed = speeds[speedIndex];
+    //   } 
+    // });
 
     var point2, route, counter, steps;
 
