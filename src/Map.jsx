@@ -60,31 +60,40 @@ const Map = () => {
     let elapsed;
     let currentSpeed = 1;
     let weatherSpeed = 1;
-    
     document.getElementById('2x-speed').addEventListener('click', () => {
       speedIndex = 1;
       currentSpeed = speeds[speedIndex];
+      document.querySelectorAll('.speedbutton').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById('2x-speed').classList.add('active');
     });
+    
     document.getElementById('4x-speed').addEventListener('click', () => {
       speedIndex = 2;
       currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+      document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
+      document.getElementById('4x-speed').classList.add('active');
     });
+    
     document.getElementById('8x-speed').addEventListener('click', () => {
       speedIndex = 3;
       currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+      document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
+      document.getElementById('8x-speed').classList.add('active');
     });
+    
     document.getElementById('16x-speed').addEventListener('click', () => {
       speedIndex = 4;
       currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton:not(.default-speed)').forEach(button => {
+      document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
+      document.getElementById('16x-speed').classList.add('active');
     });
     document.getElementById('weather').addEventListener('change', (event) => {
       if (event.target.value === 'Rainy') {
@@ -96,13 +105,7 @@ const Map = () => {
         weatherSpeed = speeds[speedIndex];
       }
     });
-    // document.getElementById('weather').addEventListener('change', (event) => {
-    //   if (event.target.value === 'Normal') {
-    //     console.log("rainy");
-    //     speedIndex = 1;
-    //     weatherSpeed = speeds[speedIndex];
-    //   } 
-    // });
+
 
     var point2, route, counter, steps;
 

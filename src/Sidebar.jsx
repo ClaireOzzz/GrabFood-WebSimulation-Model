@@ -67,9 +67,10 @@ const SideBar  = (props) => {
             Average Customers Served/h:
           </div>
         </div>
+        <div className='header'> Speed: </div>
         <div className ="overlay">
           <div className='speedContainer'>
-            <div className='header'> Speed: </div>
+            
             <div className='speedButtons'>
               <button className='speedbutton active' id='2x-speed'>2x </button>
               <button className='speedbutton' id='4x-speed'>4x </button>
