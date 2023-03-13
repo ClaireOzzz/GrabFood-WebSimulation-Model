@@ -41,8 +41,8 @@ const SideBar  = (props) => {
           <div className="variable">
             <label htmlFor="weather">Weather:</label>
             <select name="weather" id="weather" >
-              <option value="Rainy">Rainy</option>
               <option value="Normal" >Normal</option>
+              <option value="Rainy">Heavy Rain</option>
             </select>
           </div>
 
