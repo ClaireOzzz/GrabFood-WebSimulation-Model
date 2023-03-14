@@ -12,7 +12,7 @@
   left: 0;
   margin: 1%;
   height: 97%;
-  background-color: #413249;
+  background-color: #305c16;
   border-radius: 10px;
   justify-content:center;
   align-items:center;
@@ -107,7 +107,7 @@ select:focus{
 .speedbutton {
   margin-right: 10px;
   font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  background-color: #251831;
+  background-color: #19301b;
   color: #fff;
   display: inline-block;
   padding: 5px 10px;
@@ -118,7 +118,7 @@ select:focus{
 
 .resetbutton {
   font: 600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  background-color: #251831;
+  background-color: #17381a;
   color: #fff;
   display: inline-block;
   padding: 10px 20px;
@@ -129,5 +129,5 @@ select:focus{
 
 .overlay button.active,
 .overlay button:focus {
-  background-color: #7138a3;
+  background-color: #3da338;
 }

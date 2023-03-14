@@ -269,7 +269,7 @@ const Map = () => {
           'type': 'line',
           'paint': {
               'line-width': 2,
-              'line-color': '#4C00b0'
+              'line-color': '#305c16'
           }
         });
 
