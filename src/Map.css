@@ -91,11 +91,12 @@ select:focus{
 }
 
 .speedContainer {
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin: 50%;
+  margin: 0% 0% 15% 3%;
+  display: inline-block;
 }
 
 .speedButtons {

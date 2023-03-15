@@ -23,5 +23,3 @@ How the path is chosen between driver and closest user: (26th Feb)
 4. Calculate the closest road coordinate to the user (who is in a building) -> finish coordinate
 
 5. Use pathFinder
-
-

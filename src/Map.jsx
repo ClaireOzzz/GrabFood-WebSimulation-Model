@@ -45,11 +45,12 @@ const Map = () => {
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/mapbox/streets-v10',
       center: [103.85299393647626, 1.3005577339241654],
       zoom: 15.5,
       fadeDuration: 0
     });
+
     let driverState = 'food_attaining';
 
     //time & speed
@@ -60,6 +61,16 @@ const Map = () => {
     let elapsed;
     let currentSpeed = 1;
     let weatherSpeed = 1;
+
+    document.getElementById('1x-speed').addEventListener('click', () => {
+      speedIndex = 0;
+      currentSpeed = speeds[speedIndex];
+      document.querySelectorAll('.speedbutton').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById('1x-speed').classList.add('active');
+    });
+    
     document.getElementById('2x-speed').addEventListener('click', () => {
       speedIndex = 1;
       currentSpeed = speeds[speedIndex];
@@ -68,7 +79,7 @@ const Map = () => {
       });
       document.getElementById('2x-speed').classList.add('active');
     });
-    
+
     document.getElementById('4x-speed').addEventListener('click', () => {
       speedIndex = 2;
       currentSpeed = speeds[speedIndex];
@@ -99,7 +110,9 @@ const Map = () => {
       if (event.target.value === 'Rainy') {
         console.log("rainy");
         speedIndex = 5;
-        weatherSpeed = speeds[speedIndex];
+        const rando = Math.random() * (16 - 13.6) + 13.6;
+        weatherSpeed = speeds[speedIndex]; //(1+ rando/100)
+        console.log("rando "+rando);
       } else {
         speedIndex = 1;
         weatherSpeed = speeds[speedIndex];
@@ -142,8 +155,9 @@ const Map = () => {
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
       const arc = [];
-      steps = 500*lineDistance* (1/currentSpeed)*(1/weatherSpeed);
+      steps = 700*lineDistance* (1/currentSpeed)*(1/weatherSpeed); 
       console.log("steps "+steps);
+      console.log("lineDistance "+ lineDistance)
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / steps) {
           const segment = turf.along(route.features[0], i);
@@ -152,7 +166,6 @@ const Map = () => {
 
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
-      
       // Used to increment the value of the point measurement against the route.
       counter = 0;
     }
@@ -340,15 +353,19 @@ const Map = () => {
               counter = 0;
               animate();
             }, 5000*(1/currentSpeed));
+
             console.log('food_delivering now');
+            elapsedTime = timeDelta;
+            elapsed = elapsedTime* (currentSpeed / speeds[speedIndex])
+            console.log(`Elapsed time: ${elapsed} ms`);
           } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
             // Update the driver state when the second animation is complete
             driverState = 'done';
 
-            elapsedTime = timeDelta;
-            elapsed = elapsedTime* (currentSpeed / speeds[speedIndex])
+            // elapsedTime = timeDelta;
+            // elapsed = elapsedTime* (currentSpeed / speeds[speedIndex])
             // elapsedMin =  Math.round(elapsedTime / 60000);
-            console.log(`Elapsed time: ${elapsed} ms`);
+            // console.log(`Elapsed time: ${elapsed} ms`);
             console.log('done');
           }
 

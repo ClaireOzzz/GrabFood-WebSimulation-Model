@@ -131,6 +131,7 @@ function calculateFullCycle(userAssignments) {
   return { shortestPath1, shortestPath2 };
 }
 
+
 export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments);
 
 
