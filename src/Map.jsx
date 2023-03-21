@@ -154,7 +154,8 @@ const Map = () => {
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
-      const stepDistance = 6.944;
+      var vehicleSpeed = 25;
+      const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
       steps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
       console.log("steps "+steps);
