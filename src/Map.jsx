@@ -154,8 +154,9 @@ const Map = () => {
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
+      const stepDistance = 6.944;
       const arc = [];
-      steps = 700*lineDistance* (1/currentSpeed)*(1/weatherSpeed); 
+      steps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
       console.log("steps "+steps);
       console.log("lineDistance "+ lineDistance)
       // Draw an arc between the `origin` & `destination` of the two points
@@ -309,7 +310,7 @@ const Map = () => {
             startTime = new Date().getTime();
           }
           // calculate the time delta based on the selected speed
-          const timeDelta = (new Date().getTime() - startTime) / speeds[speedIndex];
+          const timeDelta = (new Date().getTime() - startTime);
 
           const start =
           route.features[0].geometry.coordinates[
