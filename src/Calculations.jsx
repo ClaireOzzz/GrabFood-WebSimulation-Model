@@ -57,8 +57,8 @@ export const generateCoordinates = (count) => {
 
 export const { endCoordinates, userCoordinates } = generateCoordinates(5);
 
-/// GETTING A RANDO EATERY FOR EACH USER, CAN BE REPEATED //////////////////////////////////////////////////////////////////////////////////////////////
 
+/// GETTING A RANDO EATERY FOR EACH USER, CAN BE REPEATED //////////////////////////////////////////////////////////////////////////////////////////////
   const eateryCoords = restaurantClosest.features[0].geometry.coordinates;
   
   // Shuffle the eatery coordinates array
@@ -86,8 +86,7 @@ export const { endCoordinates, userCoordinates } = generateCoordinates(5);
 
 // GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
 
-
-function calculateFullCycle(userAssignments) {
+function calculateFullCycle(userAssignments, spawnpoint) {
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
   const length1 = [];
   const length2 = [];
@@ -102,7 +101,7 @@ function calculateFullCycle(userAssignments) {
     var Lng = parseFloat(LatLng[1]);
 
     const path1 = pathFinder.findPath(
-      point([driverSpawn[0], driverSpawn[1]]),
+      point([spawnpoint[0], spawnpoint[1]]),
       point([Lat, Lng]),
     );
     
@@ -132,7 +131,7 @@ function calculateFullCycle(userAssignments) {
 }
 
 
-export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments);
+export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments, driverSpawn);
 
 
 // GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////

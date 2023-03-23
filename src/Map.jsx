@@ -54,7 +54,7 @@ const Map = () => {
     let driverState = 'food_attaining';
 
     //time & speed
-    const speeds = [1, 2, 4, 8, 16, 0.4]; // define the available speeds
+    const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
     let speedIndex = 0; 
     let startTime; // declare a variable to store the start time
     let elapsedTime; // declare a variable to store the elapsed time
@@ -71,26 +71,17 @@ const Map = () => {
       document.getElementById('1x-speed').classList.add('active');
     });
     
-    document.getElementById('2x-speed').addEventListener('click', () => {
-      speedIndex = 1;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('2x-speed').classList.add('active');
-    });
-
     document.getElementById('4x-speed').addEventListener('click', () => {
-      speedIndex = 2;
+      speedIndex = 1;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
       document.getElementById('4x-speed').classList.add('active');
     });
-    
+
     document.getElementById('8x-speed').addEventListener('click', () => {
-      speedIndex = 3;
+      speedIndex = 2;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
@@ -99,12 +90,21 @@ const Map = () => {
     });
     
     document.getElementById('16x-speed').addEventListener('click', () => {
-      speedIndex = 4;
+      speedIndex = 3;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
       document.getElementById('16x-speed').classList.add('active');
+    });
+    
+    document.getElementById('32x-speed').addEventListener('click', () => {
+      speedIndex = 4;
+      currentSpeed = speeds[speedIndex];
+      document.querySelectorAll('.speedbutton').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById('32x-speed').classList.add('active');
     });
     document.getElementById('weather').addEventListener('change', (event) => {
       if (event.target.value === 'Rainy') {
@@ -124,7 +124,6 @@ const Map = () => {
 
     function prepAnimate(path, begin) {
       // A single point that animates along the route.
-      console.log("prep animate was run");
       point2 = {
         'type': 'FeatureCollection',
         'features': [
@@ -357,17 +356,14 @@ const Map = () => {
             }, 5000*(1/currentSpeed));
 
             console.log('food_delivering now');
-            elapsedTime = timeDelta;
-            elapsed = elapsedTime* (currentSpeed / speeds[speedIndex])
-            console.log(`Elapsed time: ${elapsed} ms`);
+            
           } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
             // Update the driver state when the second animation is complete
             driverState = 'done';
 
-            // elapsedTime = timeDelta;
-            // elapsed = elapsedTime* (currentSpeed / speeds[speedIndex])
-            // elapsedMin =  Math.round(elapsedTime / 60000);
-            // console.log(`Elapsed time: ${elapsed} ms`);
+            elapsedTime = timeDelta;
+            elapsed = elapsedTime* (currentSpeed);
+            console.log(`Elapsed time: ${elapsed} ms`);
             console.log('done');
           }
 
