@@ -10,21 +10,22 @@ import mapLines from './data/road_line.json';
 
 
  // Generating random begin point ///////////////////////////////////////////////////////////////////////////////////////////////////
-const beginrandomIndex = Math.floor(Math.random() * myData.features.length);
-export const driverSpawn = myData.features[beginrandomIndex].geometry.coordinates[0];
+// const beginrandomIndex = Math.floor(Math.random() * myData.features.length);
+// export const driverSpawn = myData.features[beginrandomIndex].geometry.coordinates[0];
 
-// 1. 3 radnom begin coordinates for 3 drivers //////
-    // const getDriverCoordinates = () => {
-    //   const driverCoordinates = [];
-    //   while (driverCoordinates.length < 4) {
-    //       const driverRandomIndex = Math.floor(Math.random() * myData.features.length);
-    //       const driverRandomCoordinate = myData.features[driverRandomIndex].geometry.coordinates[0];
-    //       driverCoordinates.push(driverRandomCoordinate);
-    //       }
+// 3 random begin coordinates for 3 drivers //////
+    const getDriverCoordinates = () => {
+      const driverCoordinates = [];
+      while (driverCoordinates.length < 4) {
+          const driverRandomIndex = Math.floor(Math.random() * myData.features.length);
+          const driverRandomCoordinate = myData.features[driverRandomIndex].geometry.coordinates[0];
+          driverCoordinates.push(driverRandomCoordinate);
+          }
       
-    //   return driverCoordinates;
-    // };
-    // export const driverCoordinates = getDriverCoordinates();
+      return driverCoordinates;
+    };
+    export const driverCoordinates = getDriverCoordinates();
+    console.log("driverCoordinates "+ driverCoordinates[0])
 
 // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS AND GETTING ITS CLOSEST ROAD COORDINATE FROM ALL ROADS ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -75,18 +76,11 @@ export const { endCoordinates, userCoordinates } = generateCoordinates(5);
     }
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
-
-
-
-//userAssignments is a dict with restaurant coords as its keys
-// console.log(userAssignments["103.8537167571647,1.304991130893086"]);
-
-// const jsonString = JSON.stringify(userAssignments);
-// console.log("userAssignments "+jsonString);
-
+  export const assignments =  userAssignments;
+  
 // GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
 
-function calculateFullCycle(userAssignments, spawnpoint) {
+export function calculateFullCycle(userAssignments, spawnpoint) {
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
   const length1 = [];
   const length2 = [];
@@ -131,8 +125,16 @@ function calculateFullCycle(userAssignments, spawnpoint) {
 }
 
 
-export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments, driverSpawn);
+export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments, driverCoordinates[0]);
+export const { shortestPath3, shortestPath4 } = calculateFullCycle(userAssignments, driverCoordinates[1]);
+console.log("shortestPath3 "+shortestPath3);
 
+const fullCycle1 = calculateFullCycle(userAssignments, driverCoordinates[0]);
+const fullCycle2 = calculateFullCycle(userAssignments, driverCoordinates[1]);
+
+// Export the outputs
+export { fullCycle1, fullCycle2 };
+console.log("fullCycle1 "+fullCycle1[0]);
 
 // GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////
 // export var path = shortestPath1;

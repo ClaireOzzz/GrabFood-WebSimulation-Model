@@ -4,7 +4,7 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { shortestPath1, shortestPath2, driverSpawn, userCoordinates } from './Calculations';
+import { shortestPath1, shortestPath2, userCoordinates, driverCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -52,7 +52,7 @@ const Map = () => {
     });
 
     let driverState = 'food_attaining';
-
+    console.log("shortestPath2.path[shortestPath2.length - 1] "+ shortestPath2.path[shortestPath2.path.length - 1])
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
     let speedIndex = 0; 
@@ -109,13 +109,12 @@ const Map = () => {
     document.getElementById('weather').addEventListener('change', (event) => {
       if (event.target.value === 'Rainy') {
         console.log("rainy");
-        speedIndex = 5;
-        const rando = Math.random() * (16 - 13.6) + 13.6;
-        weatherSpeed = speeds[speedIndex]; //(1+ rando/100)
+        // speedIndex = 5;
+        const rando = Math.random() * (16 - 3.6) + 3.6;
+        weatherSpeed = (1+ rando/100)
         console.log("rando "+rando);
       } else {
-        speedIndex = 1;
-        weatherSpeed = speeds[speedIndex];
+        weatherSpeed = 1;
       }
     });
 
@@ -172,7 +171,7 @@ const Map = () => {
     }
 
     if (driverState === 'food_attaining') {
-      prepAnimate(shortestPath1, driverSpawn)
+      prepAnimate(shortestPath1, driverCoordinates[0])
       console.log('food_attaining')
     };
 
@@ -349,7 +348,7 @@ const Map = () => {
             // Set the animation to run again with a different path and update the driver state
             driverState = 'food_delivering';
             setTimeout(() => {
-              prepAnimate(shortestPath2, driverSpawn)
+              prepAnimate(shortestPath2, shortestPath1.path[0])
               steps = route.features[0].geometry.coordinates.length - 1;
               counter = 0;
               animate();
@@ -370,7 +369,7 @@ const Map = () => {
         }
         document.getElementById('reset').addEventListener('click', () => {
           driverState = 'food_attaining';
-          prepAnimate(shortestPath1, driverSpawn)
+          prepAnimate(shortestPath1, driverCoordinates[0])
           // Reset the counter
           counter = 0;
           // Restart the animation
