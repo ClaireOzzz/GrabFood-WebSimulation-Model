@@ -103,6 +103,8 @@ select:focus{
   display: flex;
   flex-direction: row;
   margin-top: 7%;
+  position: relative;
+  top: 42px;
 }
 
 .speedbutton {
@@ -126,6 +128,8 @@ select:focus{
   border: none;
   cursor: pointer;
   border-radius: 3px;
+  position: relative;
+  left: 9.5px;
 }
 
 .overlay button.active,
