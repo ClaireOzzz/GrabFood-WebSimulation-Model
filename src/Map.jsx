@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
+import { gsap } from 'gsap';
 
 //Seperate components
 import SideBar from './Sidebar';
@@ -22,9 +23,17 @@ mapboxgl.accessToken =
 
 const Map = () => {
   const mapContainerRef = useRef(null);
-  
+  const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
   const inputRef = useRef(null);
+
+  const IDLE = 0;
+  const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
+  const DELIVERING = 2; // DELIVERING THE FOOD TO THE CUSTOMER
+  const DONE = 3;
+
+  const DRIVER = 0;
+  const CUSTOMER = 1;
 
   const handleUserInput = (input) => {
     setUserInput(input);
@@ -33,13 +42,12 @@ const Map = () => {
   const handleReset = () => {
     // Update the userInput state with the current input field value
     setUserInput(inputRef.current.value);
-    // Do something with userInput, like reset the app's state
+    // console.log("userInput2222 "+ userInput);
   };
 
   useEffect(() => {
-  console.log("userInput "+userInput);
+    // console.log("userInput2222 " + userInput);
   }, [userInput]);
-
 
   // Initialize map when component mounts
   useEffect(() => {
@@ -51,8 +59,23 @@ const Map = () => {
       fadeDuration: 0
     });
 
-    let driverState = 'food_attaining';
+    const nod = 3; // NOD = number of drivers
 
+    const drivers =[];
+    for (let i = 0; i < nod; i++) {
+      const driver = {
+        "type": DRIVER,
+        "index": (i),
+        "location": [driverCoordinates[i]],
+        "pathobj1": shortestPaths[i][0], // TO EATERY
+        "pathobj2": shortestPaths[i][1], // TO CUSTOMER
+        "state": FETCHING
+      };
+      drivers.push(driver);
+    }
+    setDrivers(drivers);
+    console.log("shortestPaths " + shortestPaths);
+    
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
     let speedIndex = 0; 
@@ -109,21 +132,19 @@ const Map = () => {
     document.getElementById('weather').addEventListener('change', (event) => {
       if (event.target.value === 'Rainy') {
         console.log("rainy");
-        // speedIndex = 5;
         const rando = Math.random() * (16 - 3.6) + 3.6;
         weatherSpeed = (1+ rando/100)
-        console.log("rando "+rando);
       } else {
         weatherSpeed = 1;
       }
     });
 
+    var point2, route, counter;
+    var animations = [];          // will contain routes
+    var animationPoints = [];     // will contain the single point that animates along the route
+    var steps = [];               // will contain steps
 
-    var point2, route, counter, steps;
-    console.log("driverCoordinates0 "+ driverCoordinates[0]);
-    
     function prepAnimate(path, begin) {
-      // A single point that animates along the route.
       point2 = {
         'type': 'FeatureCollection',
         'features': [
@@ -150,32 +171,38 @@ const Map = () => {
             }}
         ]
       };
+      animationPoints.push(point2);
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
       var vehicleSpeed = 25;
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
-      steps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
-      console.log("steps "+steps);
-      console.log("lineDistance "+ lineDistance)
+      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
+      steps.push(calcSteps);
+      console.log("stepsss ", steps);
       // Draw an arc between the `origin` & `destination` of the two points
-      for (let i = 0; i < lineDistance; i += lineDistance / steps) {
+      for (let i = 0; i < lineDistance; i += lineDistance / calcSteps) {
           const segment = turf.along(route.features[0], i);
           arc.push(segment.geometry.coordinates);  
       };
 
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
+      animations.push(route);
       // Used to increment the value of the point measurement against the route.
       counter = 0;
     }
-    if (driverState === 'food_attaining') {
-      prepAnimate(shortestPaths[0][0], shortestPaths[0][0].path[0])
-      // prepAnimate(shortestPaths[1][0], driverCoordinates[1][0])
-      console.log('food_attaining')
+ 
+    for (let i = 0; i < nod; i++) {
+      if (drivers[i].state === FETCHING) {
+        // prep for the first part of full cycle: fetching
+        prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0])
+      };
     };
-
+    setDrivers(drivers);
+    // console.log("animationPoints "+ animationPoints);
+    // console.log("animations[1].features[0].geometry.coordinates "+ animations[2].features[0].geometry.coordinates);
 
     // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -267,16 +294,13 @@ const Map = () => {
       map.loadImage(motoIcon, (error, image) =>{
         if (error) throw error;
         map.addImage("taxi", image);
+
         // Add a GeoJSON source with multiple points
         map.addSource('route', {
           'type': 'geojson',
           'data': mapLines
         });
-        map.addSource('point', {
-          'type': 'geojson',
-          'data': point2
-        });
-        // Add a symbol layer
+
         map.addLayer({
           'id': 'route',
           'source': 'route',
@@ -286,25 +310,33 @@ const Map = () => {
               'line-color': '#305c16'
           }
         });
+        
+        // Loop through the animations array and add each point2 as a separate source and layer
+        animationPoints.forEach((animationPoint, index) => {
+          // console.log('point-', index);
+            map.addSource(`point-${index}`, {
+              'type': 'geojson',
+              'data': animationPoint
+            });
 
-        map.addLayer({
-          'id': 'point',
-          'source': 'point',
-          'type': 'symbol',
-          'layout': {
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true,
-            'icon-image': 'taxi',
-            'icon-size': 0.1,
-            'icon-rotate': ['get', 'bearing'],
-            'icon-rotation-alignment': 'map',
-          }
+          map.addLayer({
+            'id': `point-${index}`,
+            'source': `point-${index}`,
+            'type': 'symbol',
+            'layout': {
+              'icon-allow-overlap': true,
+              'icon-ignore-placement': true,
+              'icon-image': 'taxi',
+              'icon-size': 0.1,
+              'icon-rotate': ['get', 'bearing'],
+              'icon-rotation-alignment': 'map',
+            }
+          });     
         });
 
-
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
-
-        function animate() {
+        function animate(i) {
+          console.log("i ", i);
           if (counter === 0) {
             // capture the start time when counter is zero
             startTime = new Date().getTime();
@@ -313,81 +345,93 @@ const Map = () => {
           const timeDelta = (new Date().getTime() - startTime);
 
           const start =
-          route.features[0].geometry.coordinates[
-                  counter >= steps ? counter - 1 : counter
+          animations[i].features[0].geometry.coordinates[
+                  counter >= steps[i] ? counter - 1 : counter
               ];
           const end =
-          route.features[0].geometry.coordinates[
-                  counter >= steps ? counter : counter + 1
+          animations[i].features[0].geometry.coordinates[
+                  counter >= steps[i] ? counter : counter + 1
               ];
           if (!start || !end) return;
 
           // Update point geometry to a new position based on counter denoting
           // the index to access the arc
-          point2.features[0].geometry.coordinates =
-          route.features[0].geometry.coordinates[counter];
+          animationPoints[i].features[0].geometry.coordinates =
+          animations[i].features[0].geometry.coordinates[counter];
 
           // Calculate the bearing to ensure the icon is rotated to match the route arc
           // The bearing is calculated between the current point and the next point, except
           // at the end of the arc, which uses the previous point and the current point
-          point2.features[0].properties.bearing = turf.bearing(
+          animationPoints[i].features[0].properties.bearing = turf.bearing(
               turf.point(start),
               turf.point(end)
           );
 
           // Update the source with this new data
-          map.getSource('point').setData(point2);
+          map.getSource(`point-${i}`).setData(animationPoints[i]);
+         
 
           // Request the next frame of animation as long as the end has not been reached
-          if (counter < steps) {
-              requestAnimationFrame(animate);
+          if (counter < Math.floor(steps[i])) {
+            requestAnimationFrame(() => animate(i));
           }
 
           counter += 1 ;
 
-          if (counter === Math.floor(steps) && driverState === 'food_attaining') {
+          if (counter === Math.floor(steps[i]) && drivers[i].state === FETCHING) {
             // Set the animation to run again with a different path and update the driver state
-            driverState = 'food_delivering';
+            drivers[i].state = DELIVERING;
+            setDrivers(drivers);
+            // console.log(`driver.state${i} = ` + drivers[i].state);
             setTimeout(() => {
-              prepAnimate(shortestPaths[0][1], shortestPaths[0][1].path[0])
-              steps = route.features[0].geometry.coordinates.length - 1;
+              prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0]);
               counter = 0;
-              animate();
+              animate(i);
             }, 5000*(1/currentSpeed));
 
-            console.log('food_delivering now');
-            
-          } else if (counter === Math.floor(steps) && driverState === 'food_delivering') {
+          } else if (counter === Math.floor(steps[i]) && drivers[i].state === DELIVERING) {
             // Update the driver state when the second animation is complete
-            driverState = 'done';
-
+            drivers[i].state = DONE;
+            setDrivers(drivers);
             elapsedTime = timeDelta;
             elapsed = elapsedTime* (currentSpeed);
             console.log(`Elapsed time: ${elapsed} ms`);
-            console.log('done');
-          }
+            console.log(`${i} DONE`);
+          };
+        };
 
+        function runSimultaneously() {
+          const timeline = gsap.timeline();
+          for (let i = 0; i < nod; i++) {
+            timeline.add(() => animate(i));
+          }
+          // timeline.add(() => animate(1)).add(() => animate(0), 0);
+          console.log("all running");
         }
+
         document.getElementById('reset').addEventListener('click', () => {
-          driverState = 'food_attaining';
-          prepAnimate(shortestPaths[0][0], shortestPaths[0][0].path[0])
-          // prepAnimate(shortestPaths[1][0], driverCoordinates[1][0])
-          // Reset the counter
+          animations = []; // EMPTYING THE ARRAYS FOR REFILL (CANNOT REUSE AS SPEED MIGHT CHANGE)
+          animationPoints =[];
+          steps = [];
           counter = 0;
+          for (let i = 0; i < nod; i++) {
+            drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
+            prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0])
+          };      
+          setDrivers(drivers);
+
           // Restart the animation
-          animate(counter);
+          runSimultaneously();
         });
 
-        // Start the animation
-        animate(counter);
-
+        runSimultaneously();
+     
       });});
-
-
 
     // Clean up on unmount
     return () => map.update();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  },[]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

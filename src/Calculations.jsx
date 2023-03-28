@@ -87,7 +87,7 @@ export function calculateFullCycle2(userAssignments, numDrivers) {
   
   const shortestPaths = [];
 
-  for (let j = 0; j < numDrivers; j++) {
+  for (let j = 0; j < 3; j++) {
     var spawnpoint = [ driverCoordinates[j][0], driverCoordinates[j][1] ];
     console.log("spawnpointzzz "+ spawnpoint);
     const paths1 = [];

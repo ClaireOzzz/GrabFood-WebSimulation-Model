@@ -10,6 +10,8 @@ npm i @turf/helpers
 
 npm install --save geojson-path-finder
 
+npm install gsap
+
 npm start
 
 
@@ -26,9 +28,15 @@ How the path is chosen between driver and closest user: (26th Feb)
 
 5. Use pathFinder
 
-Spare code that I might look at later
-//userAssignments is a dict with restaurant coords as its keys
-// console.log(userAssignments["103.8537167571647,1.304991130893086"]);
 
-// const jsonString = JSON.stringify(userAssignments);
-// console.log("userAssignments "+jsonString);
+Need driver database:
+Driver index:
+Location (in coordinates):
+state: (food_attaining/food_delivering/done)
+Assigned user coodinate:
+Assigned eatery coodinate:
+Current Path:
+
+User index:
+Location: (road coordinate not actual)
+state: complete/waiting/unassigned
