@@ -4,7 +4,7 @@ import * as turf from '@turf/turf';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { shortestPath1, shortestPath2, userCoordinates, driverCoordinates } from './Calculations';
+import { shortestPaths, userCoordinates, driverCoordinates } from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -52,7 +52,7 @@ const Map = () => {
     });
 
     let driverState = 'food_attaining';
-    console.log("shortestPath2.path[shortestPath2.length - 1] "+ shortestPath2.path[shortestPath2.path.length - 1])
+
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
     let speedIndex = 0; 
@@ -120,7 +120,8 @@ const Map = () => {
 
 
     var point2, route, counter, steps;
-
+    console.log("driverCoordinates0 "+ driverCoordinates[0]);
+    
     function prepAnimate(path, begin) {
       // A single point that animates along the route.
       point2 = {
@@ -169,9 +170,9 @@ const Map = () => {
       // Used to increment the value of the point measurement against the route.
       counter = 0;
     }
-
     if (driverState === 'food_attaining') {
-      prepAnimate(shortestPath1, driverCoordinates[0])
+      prepAnimate(shortestPaths[0][0], shortestPaths[0][0].path[0])
+      // prepAnimate(shortestPaths[1][0], driverCoordinates[1][0])
       console.log('food_attaining')
     };
 
@@ -348,7 +349,7 @@ const Map = () => {
             // Set the animation to run again with a different path and update the driver state
             driverState = 'food_delivering';
             setTimeout(() => {
-              prepAnimate(shortestPath2, shortestPath1.path[0])
+              prepAnimate(shortestPaths[0][1], shortestPaths[0][1].path[0])
               steps = route.features[0].geometry.coordinates.length - 1;
               counter = 0;
               animate();
@@ -369,7 +370,8 @@ const Map = () => {
         }
         document.getElementById('reset').addEventListener('click', () => {
           driverState = 'food_attaining';
-          prepAnimate(shortestPath1, driverCoordinates[0])
+          prepAnimate(shortestPaths[0][0], shortestPaths[0][0].path[0])
+          // prepAnimate(shortestPaths[1][0], driverCoordinates[1][0])
           // Reset the counter
           counter = 0;
           // Restart the animation
@@ -395,6 +397,7 @@ const Map = () => {
         handleReset={handleReset}
         inputRef={inputRef}/>
         <div id="elapsed-time"></div>
+      {/* <script src="/Listeners.jsx"></script> */}
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );

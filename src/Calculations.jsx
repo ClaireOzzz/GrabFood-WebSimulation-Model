@@ -80,64 +80,63 @@ export const { endCoordinates, userCoordinates } = generateCoordinates(5);
   
 // GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
 
-export function calculateFullCycle(userAssignments, spawnpoint) {
+console.log("driverCoordinates "+ driverCoordinates[0][1]);
+
+export function calculateFullCycle2(userAssignments, numDrivers) {
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-  const length1 = [];
-  const length2 = [];
-  const length3 = [];
-  const paths1 = [];
-  const paths2 = [];
+  
+  const shortestPaths = [];
 
-  // Find the path between driverSpawn and each eatery
-  for (const eateryCoord of Object.keys(userAssignments)) {
-    var LatLng = eateryCoord.replace(",", ", ").split(", ")
-    var Lat = parseFloat(LatLng[0]);
-    var Lng = parseFloat(LatLng[1]);
+  for (let j = 0; j < numDrivers; j++) {
+    var spawnpoint = [ driverCoordinates[j][0], driverCoordinates[j][1] ];
+    console.log("spawnpointzzz "+ spawnpoint);
+    const paths1 = [];
+    const paths2 = [];
+    const length1 = [];
+    const length2 = [];
+    const length3 = [];
 
-    const path1 = pathFinder.findPath(
-      point([spawnpoint[0], spawnpoint[1]]),
-      point([Lat, Lng]),
-    );
-    
-    paths1.push(path1);
-    length1.push(path1.weight);
-
-    // Find the path between eatery and each user coordinate
-    for (const userCoord of userAssignments[eateryCoord]) {
-      const path2 = pathFinder.findPath(
+    // Find the path between driverSpawn and each eatery
+    for (const eateryCoord of Object.keys(userAssignments)) {
+      var LatLng = eateryCoord.replace(",", ", ").split(", ")
+      var Lat = parseFloat(LatLng[0]);
+      var Lng = parseFloat(LatLng[1]);
+      
+      const path1 = pathFinder.findPath(
+        point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
         point([Lat, Lng]),
-        point([userCoord[0], userCoord[1]]),
       );
-      paths2.push(path2);
-      length2.push(path2.weight);
+      
+      paths1.push(path1);
+      console.log("path1 "+ path1);
+      length1.push(path1.weight);
+
+      // Find the path between eatery and each user coordinate
+      for (const userCoord of userAssignments[eateryCoord]) {
+        const path2 = pathFinder.findPath(
+          point([Lat, Lng]),
+          point([userCoord[0], userCoord[1]]),
+        );
+        paths2.push(path2);
+        length2.push(path2.weight);
+      }
     }
-  }
 
-  // Calculate the full cycle distance for each eatery and its associated user coordinates
-  for (let i = 0; i < length2.length; i++) {
-    length3.push(length1[i] + length2[i]);
-  }
+    // Calculate the full cycle distance for each eatery and its associated user coordinates
+    for (let k = 0; k < length2.length; k++) {
+      length3.push(length1[k] + length2[k]);
+    }
 
-  const minIndex = length3.indexOf(Math.min(...length3));
-  const shortestPath1 = paths1[minIndex];
-  const shortestPath2 = paths2[minIndex];
-  return { shortestPath1, shortestPath2 };
+    const minIndex = length3.indexOf(Math.min(...length3));
+    const shortestPath1 = paths1[minIndex];
+    const shortestPath2 = paths2[minIndex];
+    shortestPaths.push([shortestPath1, shortestPath2 ]);
+    
+  }
+  console.log("shortestPaths "+ shortestPaths.length);
+  return shortestPaths;
+  
 }
 
-
-export const { shortestPath1, shortestPath2 } = calculateFullCycle(userAssignments, driverCoordinates[0]);
-export const { shortestPath3, shortestPath4 } = calculateFullCycle(userAssignments, driverCoordinates[1]);
-console.log("shortestPath3 "+shortestPath3);
-
-const fullCycle1 = calculateFullCycle(userAssignments, driverCoordinates[0]);
-const fullCycle2 = calculateFullCycle(userAssignments, driverCoordinates[1]);
-
-// Export the outputs
-export { fullCycle1, fullCycle2 };
-console.log("fullCycle1 "+fullCycle1[0]);
-
-// GETTING ROUTE ///////////////////////////////////////////////////////////////////////////////////////////////////
-// export var path = shortestPath1;
-// console.log("endCoordinates "+ endCoordinates); //The closest road coordinate to the customers  
-// console.log("userCoordinates "+ userCoordinates); //actual user coordinates
-// console.log("shortestPath1 "+ shortestPath2.path[(shortestPath2.path.length)-1]);
+export const shortestPaths = calculateFullCycle2(userAssignments, 2);
+console.log("shortestPaths "+shortestPaths[0]);

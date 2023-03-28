@@ -25,3 +25,10 @@ How the path is chosen between driver and closest user: (26th Feb)
 4. Calculate the closest road coordinate to the user (who is in a building) -> finish coordinate
 
 5. Use pathFinder
+
+Spare code that I might look at later
+//userAssignments is a dict with restaurant coords as its keys
+// console.log(userAssignments["103.8537167571647,1.304991130893086"]);
+
+// const jsonString = JSON.stringify(userAssignments);
+// console.log("userAssignments "+jsonString);
