@@ -77,19 +77,17 @@ export const { endCoordinates, userCoordinates } = generateCoordinates(5);
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
   export const assignments =  userAssignments;
+  // console.log("userAssignments ", userAssignments);
   
 // GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
-
-console.log("driverCoordinates "+ driverCoordinates[0][1]);
 
 export function calculateFullCycle2(userAssignments, numDrivers) {
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
   
   const shortestPaths = [];
 
-  for (let j = 0; j < 3; j++) {
+  for (let j = 0; j < numDrivers; j++) {
     var spawnpoint = [ driverCoordinates[j][0], driverCoordinates[j][1] ];
-    console.log("spawnpointzzz "+ spawnpoint);
     const paths1 = [];
     const paths2 = [];
     const length1 = [];
@@ -108,7 +106,7 @@ export function calculateFullCycle2(userAssignments, numDrivers) {
       );
       
       paths1.push(path1);
-      console.log("path1 "+ path1);
+      // console.log("path1 "+ path1.path);
       length1.push(path1.weight);
 
       // Find the path between eatery and each user coordinate
@@ -118,25 +116,26 @@ export function calculateFullCycle2(userAssignments, numDrivers) {
           point([userCoord[0], userCoord[1]]),
         );
         paths2.push(path2);
+        console.log("path2 "+ path2.path[0]);
         length2.push(path2.weight);
       }
     }
 
     // Calculate the full cycle distance for each eatery and its associated user coordinates
-    for (let k = 0; k < length2.length; k++) {
+    for (let k = 0; k < numDrivers; k++) {
       length3.push(length1[k] + length2[k]);
     }
 
     const minIndex = length3.indexOf(Math.min(...length3));
+    console.log("minIndex "+ minIndex);
     const shortestPath1 = paths1[minIndex];
     const shortestPath2 = paths2[minIndex];
     shortestPaths.push([shortestPath1, shortestPath2 ]);
-    
   }
-  console.log("shortestPaths "+ shortestPaths.length);
+  // console.log("shortestPaths "+ shortestPaths.length);
   return shortestPaths;
   
 }
 
-export const shortestPaths = calculateFullCycle2(userAssignments, 2);
-console.log("shortestPaths "+shortestPaths[0]);
+export const shortestPaths = calculateFullCycle2(userAssignments, 3);
+

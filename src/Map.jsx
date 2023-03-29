@@ -40,7 +40,6 @@ const Map = () => {
   };
 
   const handleReset = () => {
-    // Update the userInput state with the current input field value
     setUserInput(inputRef.current.value);
     // console.log("userInput2222 "+ userInput);
   };
@@ -65,16 +64,19 @@ const Map = () => {
     for (let i = 0; i < nod; i++) {
       const driver = {
         "type": DRIVER,
-        "index": (i),
+        "index": i,
         "location": [driverCoordinates[i]],
         "pathobj1": shortestPaths[i][0], // TO EATERY
         "pathobj2": shortestPaths[i][1], // TO CUSTOMER
-        "state": FETCHING
+        "state": FETCHING,
+        "counter": 0
       };
       drivers.push(driver);
     }
     setDrivers(drivers);
-    console.log("shortestPaths " + shortestPaths);
+    console.log("driver[0] " + drivers[0].pathobj2.path[0]);
+    console.log("driver[1] " + drivers[1].pathobj2.path[0]);
+    console.log("driver[2] " + drivers[2].pathobj2.path[0]);
     
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
@@ -139,12 +141,15 @@ const Map = () => {
       }
     });
 
-    var point2, route, counter;
+    var point2, route;
     var animations = [];          // will contain routes
     var animationPoints = [];     // will contain the single point that animates along the route
     var steps = [];               // will contain steps
+    var animations2 = [];  
+    var animationPoints2 = [];    // for the second part of the cycle
+    var steps2 = [];
 
-    function prepAnimate(path, begin) {
+    function prepAnimate(path, begin, i) {
       point2 = {
         'type': 'FeatureCollection',
         'features': [
@@ -158,7 +163,6 @@ const Map = () => {
           }
         ]
       };
-
       route = 
       {
         'type': 'FeatureCollection',
@@ -171,16 +175,14 @@ const Map = () => {
             }}
         ]
       };
-      animationPoints.push(point2);
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
       var vehicleSpeed = 25;
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
-      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
-      steps.push(calcSteps);
-      console.log("stepsss ", steps);
+      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed))/16;
+      
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / calcSteps) {
           const segment = turf.along(route.features[0], i);
@@ -189,18 +191,37 @@ const Map = () => {
 
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
-      animations.push(route);
-      // Used to increment the value of the point measurement against the route.
-      counter = 0;
+
+      if ( drivers[i].state === FETCHING) {
+        animations.push(route);
+        animationPoints.push(point2);
+        steps.push(calcSteps);
+      };
+
+      if ( drivers[i].state === DELIVERING) {
+        animations2.push(route);
+        animationPoints2.push(point2);
+        steps2.push(calcSteps);
+        console.log(` animations2length `, animations2.length);
+      };
     }
  
     for (let i = 0; i < nod; i++) {
       if (drivers[i].state === FETCHING) {
         // prep for the first part of full cycle: fetching
-        prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0])
+        prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
       };
     };
-    setDrivers(drivers);
+
+    for (let i = 0; i < nod; i++) {
+      drivers[i].state = DELIVERING
+      setDrivers(drivers);
+      prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
+      drivers[i].state = FETCHING
+      setDrivers(drivers);
+    };
+    console.log("stepD ", steps2);
+    console.log("stepF ", steps);
     // console.log("animationPoints "+ animationPoints);
     // console.log("animations[1].features[0].geometry.coordinates "+ animations[2].features[0].geometry.coordinates);
 
@@ -244,7 +265,6 @@ const Map = () => {
         });
       });
     });
-    
 
     // CUSTOMER ICONS //////////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -294,13 +314,11 @@ const Map = () => {
       map.loadImage(motoIcon, (error, image) =>{
         if (error) throw error;
         map.addImage("taxi", image);
-
         // Add a GeoJSON source with multiple points
         map.addSource('route', {
           'type': 'geojson',
           'data': mapLines
         });
-
         map.addLayer({
           'id': 'route',
           'source': 'route',
@@ -310,7 +328,7 @@ const Map = () => {
               'line-color': '#305c16'
           }
         });
-        
+
         // Loop through the animations array and add each point2 as a separate source and layer
         animationPoints.forEach((animationPoint, index) => {
           // console.log('point-', index);
@@ -335,33 +353,28 @@ const Map = () => {
         });
 
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
-        function animate(i) {
-          console.log("i ", i);
-          if (counter === 0) {
+        function animateFetching(i) {
+          // var counter = drivers[i].counter;
+          if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
             startTime = new Date().getTime();
           }
           // calculate the time delta based on the selected speed
           const timeDelta = (new Date().getTime() - startTime);
-
+          
           const start =
           animations[i].features[0].geometry.coordinates[
-                  counter >= steps[i] ? counter - 1 : counter
+            drivers[i].counter >= steps[i] ? drivers[i].counter - 1 : drivers[i].counter
               ];
           const end =
           animations[i].features[0].geometry.coordinates[
-                  counter >= steps[i] ? counter : counter + 1
+            drivers[i].counter >= steps[i] ? drivers[i].counter : drivers[i].counter + 1
               ];
           if (!start || !end) return;
 
-          // Update point geometry to a new position based on counter denoting
-          // the index to access the arc
           animationPoints[i].features[0].geometry.coordinates =
-          animations[i].features[0].geometry.coordinates[counter];
+          animations[i].features[0].geometry.coordinates[drivers[i].counter];
 
-          // Calculate the bearing to ensure the icon is rotated to match the route arc
-          // The bearing is calculated between the current point and the next point, except
-          // at the end of the arc, which uses the previous point and the current point
           animationPoints[i].features[0].properties.bearing = turf.bearing(
               turf.point(start),
               turf.point(end)
@@ -369,27 +382,64 @@ const Map = () => {
 
           // Update the source with this new data
           map.getSource(`point-${i}`).setData(animationPoints[i]);
-         
 
           // Request the next frame of animation as long as the end has not been reached
-          if (counter < Math.floor(steps[i])) {
-            requestAnimationFrame(() => animate(i));
+          if (drivers[i].counter < steps[i]) {
+            requestAnimationFrame(() => animateFetching(i));
           }
-
-          counter += 1 ;
-
-          if (counter === Math.floor(steps[i]) && drivers[i].state === FETCHING) {
+          drivers[i].counter += 1 ;
+          setDrivers(drivers);
+        
+          if (drivers[i].counter === Math.floor(steps[i])) {
             // Set the animation to run again with a different path and update the driver state
+            console.log(`done for - ${i}`);
             drivers[i].state = DELIVERING;
             setDrivers(drivers);
             // console.log(`driver.state${i} = ` + drivers[i].state);
             setTimeout(() => {
-              prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0]);
-              counter = 0;
-              animate(i);
+              drivers[i].counter = 0;
+              // timeline.add(() => animateDelivering(i));
+              animateDelivering(i)
             }, 5000*(1/currentSpeed));
-
-          } else if (counter === Math.floor(steps[i]) && drivers[i].state === DELIVERING) {
+          }; 
+        };
+          
+        function animateDelivering(i) {
+          if (drivers[i].counter === 0) {
+            // capture the start time when counter is zero
+            startTime = new Date().getTime();
+            
+            // update the animationPoints and animations variables to reflect the starting position
+            animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+          }
+          // calculate the time delta based on the selected speed
+          const timeDelta = new Date().getTime() - startTime;
+        
+          const start =
+          animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
+              ];
+          const end =
+          animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter : drivers[i].counter + 1
+              ];
+          if (!start || !end) return;
+        
+          animationPoints2[i].features[0].geometry.coordinates =
+          animations2[i].features[0].geometry.coordinates[drivers[i].counter];
+        
+          animationPoints2[i].features[0].properties.bearing = turf.bearing(
+              turf.point(start),
+              turf.point(end)
+          );
+            
+          map.getSource(`point-${i}`).setData(animationPoints2[i]);
+        
+          if (drivers[i].counter < steps2[i]) {
+            requestAnimationFrame(() => animateDelivering(i));
+          }
+          drivers[i].counter += 1 ;
+          setDrivers(drivers);
+        
+          if (drivers[i].counter === Math.floor(steps2[i])) {
             // Update the driver state when the second animation is complete
             drivers[i].state = DONE;
             setDrivers(drivers);
@@ -397,34 +447,38 @@ const Map = () => {
             elapsed = elapsedTime* (currentSpeed);
             console.log(`Elapsed time: ${elapsed} ms`);
             console.log(`${i} DONE`);
-          };
+          }; 
         };
-
-        function runSimultaneously() {
-          const timeline = gsap.timeline();
+        
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        const timeline = gsap.timeline();
+        function run() {
+          timeline.clear();
           for (let i = 0; i < nod; i++) {
-            timeline.add(() => animate(i));
-          }
+            if ( drivers[i].state === FETCHING) {
+              timeline.add(() => animateFetching(i));
+            };
+            if ( drivers[i].state === DELIVERING) {
+              timeline.add(() => animateDelivering(i));
+            };
+          };
           // timeline.add(() => animate(1)).add(() => animate(0), 0);
-          console.log("all running");
         }
-
+    
         document.getElementById('reset').addEventListener('click', () => {
-          animations = []; // EMPTYING THE ARRAYS FOR REFILL (CANNOT REUSE AS SPEED MIGHT CHANGE)
-          animationPoints =[];
-          steps = [];
-          counter = 0;
+          console.log("reset clicked");
+          timeline.pause();
+          timeline.clear();
+          // counter = 0;
           for (let i = 0; i < nod; i++) {
             drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
-            prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0])
+            drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
           };      
           setDrivers(drivers);
-
-          // Restart the animation
-          runSimultaneously();
+          run();
         });
 
-        runSimultaneously();
+        run();
      
       });});
 
@@ -448,3 +502,4 @@ const Map = () => {
 }
 
 export default Map;
+
