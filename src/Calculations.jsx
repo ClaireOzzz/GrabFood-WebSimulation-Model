@@ -16,7 +16,7 @@ import mapLines from './data/road_line.json';
 // 3 random begin coordinates for 3 drivers //////
     const getDriverCoordinates = () => {
       const driverCoordinates = [];
-      while (driverCoordinates.length < 4) {
+      while (driverCoordinates.length < 5) {
           const driverRandomIndex = Math.floor(Math.random() * myData.features.length);
           const driverRandomCoordinate = myData.features[driverRandomIndex].geometry.coordinates[0];
           driverCoordinates.push(driverRandomCoordinate);
@@ -77,65 +77,76 @@ export const { endCoordinates, userCoordinates } = generateCoordinates(5);
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
   export const assignments =  userAssignments;
-  // console.log("userAssignments ", userAssignments);
-  
-// GETTING DISTANCE BETWEEN USER AND EATERY + GETTING DISTANCE BETWEEN DRIVER AND EATERY + SUMMING THEM TO GET FULL CYCLE DISTANCE ////////////////////////////////////////////
 
-export function calculateFullCycle2(userAssignments, numDrivers) {
-  const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-  
-  const shortestPaths = [];
 
-  for (let j = 0; j < numDrivers; j++) {
-    var spawnpoint = [ driverCoordinates[j][0], driverCoordinates[j][1] ];
-    const paths1 = [];
-    const paths2 = [];
-    const length1 = [];
-    const length2 = [];
-    const length3 = [];
 
-    // Find the path between driverSpawn and each eatery
-    for (const eateryCoord of Object.keys(userAssignments)) {
-      var LatLng = eateryCoord.replace(",", ", ").split(", ")
+const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
+
+function findShortestJourney(driverCoords, userAssignments) {
+  const permutations = generatePermutations(driverCoords.length, Object.values(userAssignments).length);
+  let shortestJourney = null;
+  let shortestDistance = Infinity;
+  const customerCoords = Object.values(userAssignments);
+
+  for (const assignment of permutations) {
+    const paths = [];
+    const distances = [];
+
+    for (let i = 0; i < driverCoords.length; i++) {
+      var spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
+      var LatLng = Object.keys(userAssignments)[i].replace(",", ", ").split(", ") // keys = eatery, values = user
       var Lat = parseFloat(LatLng[0]);
-      var Lng = parseFloat(LatLng[1]);
-      
-      const path1 = pathFinder.findPath(
-        point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+      var Lng = parseFloat(LatLng[1]); // gets eatery location for assigned user
+      const customerCoord = customerCoords[assignment[i]][0];
+      // console.log("customerCoord  ",customerCoord)
+      const pathToEatery = pathFinder.findPath( point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]), point([Lat, Lng]));
+      const pathToCustomer =  pathFinder.findPath(
         point([Lat, Lng]),
+        point([customerCoord[0], customerCoord[1]]),
       );
-      
-      paths1.push(path1);
-      // console.log("path1 "+ path1.path);
-      length1.push(path1.weight);
-
-      // Find the path between eatery and each user coordinate
-      for (const userCoord of userAssignments[eateryCoord]) {
-        const path2 = pathFinder.findPath(
-          point([Lat, Lng]),
-          point([userCoord[0], userCoord[1]]),
-        );
-        paths2.push(path2);
-        console.log("path2 "+ path2.path[0]);
-        length2.push(path2.weight);
-      }
+      paths.push([pathToEatery, pathToCustomer]);
+      distances.push(pathToEatery.weight + pathToCustomer.weight);
     }
+    // console.log(paths[0][0]);
 
-    // Calculate the full cycle distance for each eatery and its associated user coordinates
-    for (let k = 0; k < numDrivers; k++) {
-      length3.push(length1[k] + length2[k]);
+    // const totalDistance = distances.reduce((acc, distance) => acc + distance, 0);
+    const totalDistance = paths.reduce((acc, path) => acc + path[0].weight + path[1].weight, 0);
+
+
+    if (totalDistance < shortestDistance) {
+      shortestJourney = paths;
+      shortestDistance = totalDistance;
     }
-
-    const minIndex = length3.indexOf(Math.min(...length3));
-    console.log("minIndex "+ minIndex);
-    const shortestPath1 = paths1[minIndex];
-    const shortestPath2 = paths2[minIndex];
-    shortestPaths.push([shortestPath1, shortestPath2 ]);
   }
-  // console.log("shortestPaths "+ shortestPaths.length);
-  return shortestPaths;
-  
+
+  return shortestJourney;
 }
 
-export const shortestPaths = calculateFullCycle2(userAssignments, 3);
+function generatePermutations(numDrivers, numCustomers) {
+  const permutations = [];
+  const indices = [];
+
+  for (let i = 0; i < numDrivers; i++) {
+    indices.push(i);
+  }
+
+  permute(permutations, indices, 0, numCustomers);
+
+  return permutations;
+}
+
+function permute(permutations, indices, start, end) {
+  if (start === end) {
+    permutations.push([...indices]);
+  } else {
+    for (let i = start; i < end; i++) {
+      [indices[start], indices[i]] = [indices[i], indices[start]];
+      permute(permutations, indices, start + 1, end);
+      [indices[start], indices[i]] = [indices[i], indices[start]];
+    }
+  }
+};
+
+const shortestJourney = findShortestJourney(driverCoordinates, userAssignments);
+export const shortestPaths = shortestJourney;
 

@@ -15,7 +15,7 @@ const SideBar  = (props) => {
     <div>
       <div className='sidebarStyle'>
         <div className = 'title'>
-          Critical <br/> Checkpoints
+          Dashboard 
         </div>
           {/* Longitude: {lng} | Latitude: {lat} | Zoom: {zoom} */}
 

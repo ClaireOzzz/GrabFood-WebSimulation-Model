@@ -58,7 +58,7 @@ const Map = () => {
       fadeDuration: 0
     });
 
-    const nod = 3; // NOD = number of drivers
+    const nod = 5; // NOD = number of drivers
 
     const drivers =[];
     for (let i = 0; i < nod; i++) {
@@ -77,6 +77,8 @@ const Map = () => {
     console.log("driver[0] " + drivers[0].pathobj2.path[0]);
     console.log("driver[1] " + drivers[1].pathobj2.path[0]);
     console.log("driver[2] " + drivers[2].pathobj2.path[0]);
+    console.log("driver[3] " + drivers[1].pathobj2.path[0]);
+    console.log("driver[4] " + drivers[2].pathobj2.path[0]);
     
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
@@ -141,7 +143,6 @@ const Map = () => {
       }
     });
 
-    var point2, route;
     var animations = [];          // will contain routes
     var animationPoints = [];     // will contain the single point that animates along the route
     var steps = [];               // will contain steps
@@ -150,7 +151,7 @@ const Map = () => {
     var steps2 = [];
 
     function prepAnimate(path, begin, i) {
-      point2 = {
+      var point2 = {
         'type': 'FeatureCollection',
         'features': [
           {
@@ -163,7 +164,7 @@ const Map = () => {
           }
         ]
       };
-      route = 
+      var route = 
       {
         'type': 'FeatureCollection',
         'features': [
@@ -205,25 +206,34 @@ const Map = () => {
         console.log(` animations2length `, animations2.length);
       };
     }
- 
-    for (let i = 0; i < nod; i++) {
-      if (drivers[i].state === FETCHING) {
-        // prep for the first part of full cycle: fetching
-        prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
-      };
-    };
 
-    for (let i = 0; i < nod; i++) {
-      drivers[i].state = DELIVERING
-      setDrivers(drivers);
-      prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
-      drivers[i].state = FETCHING
-      setDrivers(drivers);
-    };
-    console.log("stepD ", steps2);
-    console.log("stepF ", steps);
-    // console.log("animationPoints "+ animationPoints);
-    // console.log("animations[1].features[0].geometry.coordinates "+ animations[2].features[0].geometry.coordinates);
+    function restart() {
+      animations = [];
+      animations2 = [];
+      animationPoints = [];
+      animationPoints2 = [];
+      steps = [];
+      steps2 = [];
+      console.log("new restart function");
+      for (let i = 0; i < nod; i++) {
+        if (drivers[i].state === FETCHING) {
+          prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
+        };
+      };
+  
+      for (let i = 0; i < nod; i++) {
+        drivers[i].state = DELIVERING
+        setDrivers(drivers);
+        prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
+        drivers[i].state = FETCHING
+        setDrivers(drivers);
+      };
+
+      console.log("stepD ", steps2);
+      console.log("stepF ", steps);
+    }
+    restart();
+   
 
     // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
@@ -309,6 +319,7 @@ const Map = () => {
     
 
     //MOTOCYCLE ICON ADDING & ANIMATION ////////////////////////////////////////////////////////////////////////////////////////
+
     map.on("load", function () {
       // Add an image to use as a custom marker
       map.loadImage(motoIcon, (error, image) =>{
@@ -327,6 +338,40 @@ const Map = () => {
               'line-width': 2,
               'line-color': '#305c16'
           }
+        });
+
+        animations.forEach((animation, index) => {
+          map.addSource(`route-${index}`, {
+            'type': 'geojson',
+            'data': animation
+            });
+
+          map.addLayer({
+            'id': `route-${index}`,
+            'source': `route-${index}`,
+            'type': 'line',
+            'paint': {
+            'line-width': 2,
+            'line-color': '#d12e15'
+            }
+            });
+        });
+        
+        animations2.forEach((animation2, index) => {
+          map.addSource(`route2-${index}`, {
+            'type': 'geojson',
+            'data': animation2
+            });
+
+          map.addLayer({
+            'id': `route2-${index}`,
+            'source': `route2-${index}`,
+            'type': 'line',
+            'paint': {
+            'line-width': 2,
+            'line-color': '#d12e15'
+            }
+            });
         });
 
         // Loop through the animations array and add each point2 as a separate source and layer
@@ -453,7 +498,6 @@ const Map = () => {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
         function run() {
-          timeline.clear();
           for (let i = 0; i < nod; i++) {
             if ( drivers[i].state === FETCHING) {
               timeline.add(() => animateFetching(i));
@@ -462,19 +506,21 @@ const Map = () => {
               timeline.add(() => animateDelivering(i));
             };
           };
-          // timeline.add(() => animate(1)).add(() => animate(0), 0);
-        }
+        };
     
-        document.getElementById('reset').addEventListener('click', () => {
+        document.getElementById('reset').addEventListener('click', () => { 
           console.log("reset clicked");
           timeline.pause();
           timeline.clear();
-          // counter = 0;
           for (let i = 0; i < nod; i++) {
             drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
             drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
           };      
           setDrivers(drivers);
+          restart();
+          for (let i = 0; i < nod; i++) {
+            animateFetching(i);
+          };
           run();
         });
 
