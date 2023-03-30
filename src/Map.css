@@ -1,3 +1,7 @@
+* {
+  font-family: 'Tahoma';
+}
+
 .map-container {
   position: absolute;
   top: 0;
@@ -20,6 +24,21 @@
   z-index: 1 !important;
   padding: 20px 60px 6px 30px;
   font-weight: bold;
+  max-width: 400px;
+}
+
+@media (max-width: 600px) {
+  .sidebarStyle {
+    max-width: none;
+  }
+  
+  .output {
+    flex-wrap: wrap;
+  }
+  
+  .speedContainer {
+    flex-direction: column;
+  }
 }
 
 .title {
@@ -88,6 +107,7 @@ select:focus{
   position: absolute;
   bottom: 20px;
   left: 20px;
+  flex: auto;
 }
 
 .speedContainer {
