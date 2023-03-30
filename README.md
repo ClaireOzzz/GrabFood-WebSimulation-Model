@@ -12,6 +12,8 @@ npm install --save geojson-path-finder
 
 npm install gsap
 
+npm install --save random-normal 
+
 npm start
 
 

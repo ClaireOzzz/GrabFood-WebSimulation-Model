@@ -35,6 +35,7 @@ const SideBar  = (props) => {
               <option value="Morning" >Morning</option>
               <option value="Afternoon" >Afternoon</option>
               <option value="Night" >Night</option>
+              <option value="Midnight" >Midnight</option>
             </select>
           </div>
 
