@@ -8,21 +8,33 @@ import user from './data/userPositions.js';
 //all lines on the map 
 import mapLines from './data/road_line.json';
 
- // Generating random begin point ///////////////////////////////////////////////////////////////////////////////////////////////////
-// const beginrandomIndex = Math.floor(Math.random() * myData.features.length);
-// export const driverSpawn = myData.features[beginrandomIndex].geometry.coordinates[0];
-
-// const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-const prepnod = 5;
-const prepnou = 5;
 export var driverCoordinates = [];
 export var userCoordinates = [];
-export let shortestPaths = [];
-let shortestDistance = Infinity;
+export var shortestPaths = [];
+var shortestDistance = Infinity;
 var endCoordinates = [];
 var userAssignments = {};
+var paths = [];
+var distances = [];
+var spawnpoint =[];
+var indices = [];
+var permutations = [];
+
+const nou = 5;
+const nod = 5;
 
 export default function calculations(nod, nou) {
+  // driverCoordinates = [];
+  // userCoordinates = [];
+  // shortestPaths = [];
+  // endCoordinates = [];
+  // userAssignments = {};
+  // distances = [];
+  // spawnpoint = [];
+  // paths =[];
+  // permutations = [];
+  // indices = [];
+ 
   console.log('calc restart');
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
   while (driverCoordinates.length < nod) {
@@ -53,7 +65,6 @@ export default function calculations(nod, nou) {
   /// GETTING A RANDO EATERY FOR EACH USER, CAN BE REPEATED //////////////////////////////////////////////////////////////////////////////////////////////
   const eateryCoords = restaurantClosest.features[0].geometry.coordinates;
   
-  // Shuffle the eatery coordinates array
   for (let i = eateryCoords.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [eateryCoords[i], eateryCoords[j]] = [eateryCoords[j], eateryCoords[i]];
@@ -67,16 +78,15 @@ export default function calculations(nod, nou) {
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
 
+  
 
   function generatePermutations(numDrivers, numCustomers) {
-    const permutations = [];
-    const indices = [];
-
+    
     for (let i = 0; i < numDrivers; i++) {
       indices.push(i);
     }
 
-    permute(permutations, indices, 0, numCustomers);
+    permute(permutations, indices, 0, Math.min(numCustomers, numDrivers));
 
     return permutations;
   };
@@ -96,20 +106,22 @@ export default function calculations(nod, nou) {
 
   //SHORTEST PATHS 
 
-  const permutations = generatePermutations(driverCoordinates.length, Object.values(userAssignments).length);
+  generatePermutations(nod, nou);
   const customerCoords = Object.values(userAssignments);
 
   for (const assignment of permutations) {
-    const paths = [];
-    const distances = [];
 
-    for (let i = 0; i < driverCoordinates.length; i++) {
-      var spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-      var LatLng = Object.keys(userAssignments)[i].replace(",", ", ").split(", ") // keys = eatery, values = user
+    for (let i = 0; i < Math.min(nod, nou); i++) {
+      spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
+      console.log("userAssignments ", userAssignments)
+      console.log("nod ", nod);
+      console.log("i ", i);
+      var LatLng = Object.keys(userAssignments)[i].split(",") // keys = eatery, values = user
       var Lat = parseFloat(LatLng[0]);
       var Lng = parseFloat(LatLng[1]); // gets eatery location for assigned user
+
       const customerCoord = customerCoords[assignment[i]][0];
-      // console.log("customerCoord  ",customerCoord)
+      console.log("customerCoord  ",customerCoord)
       const pathToEatery = pathFinder.findPath( point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]), point([Lat, Lng]));
       const pathToCustomer =  pathFinder.findPath(
         point([Lat, Lng]),
@@ -125,13 +137,39 @@ export default function calculations(nod, nou) {
 
 
     if (totalDistance < shortestDistance) {
+      console.log("paths ", paths);
       shortestPaths = paths;
       shortestDistance = totalDistance;
     }
   }
 };
 
-calculations(prepnod, prepnou);
+calculations(5, 5);
+
+// calculations(5, 3);
+// console.log("done with 3, 3")
+// console.log("shortestPaths ", shortestPaths)
+// console.log("userCoordinates ", userCoordinates)
+// console.log("driverCoordinates ", driverCoordinates)
+
+// calculations(3, 1);
+// console.log("done with 2ND 2, 3")
+// console.log("shortestPaths2 ", shortestPaths)
+// console.log("userCoordinates2 ", userCoordinates)
+// console.log("driverCoordinates2 ", driverCoordinates)
 
 
 
+
+// export function setDriverCoordinates(newDriverCoordinates, newDriverCoordinates2) {
+//   driverCoordinates = newDriverCoordinates;
+//   userCoordinates = newDriverCoordinates;
+//   shortestPaths = newDriverCoordinates;
+//   endCoordinates = newDriverCoordinates;
+//   userAssignments = newDriverCoordinates2;
+//   paths = newDriverCoordinates;
+//   distances = newDriverCoordinates;
+//   spawnpoint =newDriverCoordinates;
+//   indices = newDriverCoordinates;
+//   permutations = newDriverCoordinates;
+// }

@@ -36,7 +36,6 @@ const SideBar  = (props) => {
             <label htmlFor="number2"> Customers:</label>
             <input type="number" name="number2" id="number2" min="1" max="50" ref={props.inputRef2} value={inputValue2} onChange={handleInputChange2} />
           </div>
-
         </div>
 
 

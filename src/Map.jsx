@@ -6,7 +6,8 @@ import { gsap } from 'gsap';
 
 //Seperate components
 import SideBar from './Sidebar';
-import { shortestPaths, userCoordinates, driverCoordinates } from './Calculations';
+import calculations, { driverCoordinates, userCoordinates, 
+      shortestPaths} from './Calculations';
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -53,7 +54,7 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
-    console.log('mapLines:', mapLines);
+    
     const nod = userInput; // NOD = number of drivers
     const nou = 5;
     // calculations(nod, nou);
@@ -61,19 +62,6 @@ const Map = () => {
     console.log("userInput2 ", userInput2);
 
     const drivers =[];
-    for (let i = 0; i < nod; i++) {
-      const driver = {
-        "type": DRIVER,
-        "index": i,
-        "location": [driverCoordinates[i]],
-        "pathobj1": shortestPaths[i][0], // TO EATERY
-        "pathobj2": shortestPaths[i][1], // TO CUSTOMER
-        "state": FETCHING,
-        "counter": 0
-      };
-      drivers.push(driver);
-    }
-    setDrivers(drivers);
     
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
@@ -203,6 +191,22 @@ const Map = () => {
     }
 
     function restart() {
+      // setDriverCoordinates([], {});
+      // calculations(nod);
+      
+      for (let i = 0; i < Math.min(nod, nou); i++) {
+        const driver = {
+          "type": DRIVER,
+          "index": i,
+          "location": [driverCoordinates[i]],
+          "pathobj1": shortestPaths[i][0], // TO EATERY
+          "pathobj2": shortestPaths[i][1], // TO CUSTOMER
+          "state": FETCHING,
+          "counter": 0
+        };
+        drivers.push(driver);
+      }
+      setDrivers(drivers);
       animations = [];
       animations2 = [];
       animationPoints = [];
@@ -210,13 +214,13 @@ const Map = () => {
       steps = [];
       steps2 = [];
       console.log("new restart function");
-      for (let i = 0; i < nod; i++) {
+      for (let i = 0; i < Math.min(nod, nou); i++) {
         if (drivers[i].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
       };
   
-      for (let i = 0; i < nod; i++) {
+      for (let i = 0; i < Math.min(nod, nou); i++) {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
         prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
@@ -493,7 +497,7 @@ const Map = () => {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
         function run() {
-          for (let i = 0; i < nod; i++) {
+          for (let i = 0; i < Math.min(nod, nou); i++) {
             if ( drivers[i].state === FETCHING) {
               timeline.add(() => animateFetching(i));
             };
@@ -507,19 +511,13 @@ const Map = () => {
           console.log("reset clicked");
           timeline.pause();
           timeline.clear();
-          // var driverCoordinates = [];
-          // var userCoordinates = [];
-          // let shortestPaths = [];
-          // let shortestDistance = Infinity;
-          // var endCoordinates = [];
-          // var userAssignments = {};
-          for (let i = 0; i < nod; i++) {
+          for (let i = 0; i < Math.min(nod, nou); i++) {
             drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
             drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
           };      
           setDrivers(drivers);
           restart();
-          for (let i = 0; i < nod; i++) {
+          for (let i = 0; i < Math.min(nod, nou); i++) {
             animateFetching(i);
           };
           run();
