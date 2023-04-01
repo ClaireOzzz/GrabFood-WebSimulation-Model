@@ -44,9 +44,9 @@ const Map = () => {
     // console.log("userInput2222 "+ userInput);
   };
 
-  useEffect(() => {
-    // console.log("userInput2222 " + userInput);
-  }, [userInput]);
+  // useEffect(() => {
+  //   // console.log("userInput2222 " + userInput);
+  // }, [userInput]);
 
   // Initialize map when component mounts
   useEffect(() => {
@@ -58,7 +58,8 @@ const Map = () => {
       fadeDuration: 0
     });
 
-    const nod = 5; // NOD = number of drivers
+    const nod = userInput; // NOD = number of drivers
+    console.log("userInput ", userInput);
 
     const drivers =[];
     for (let i = 0; i < nod; i++) {
@@ -74,11 +75,6 @@ const Map = () => {
       drivers.push(driver);
     }
     setDrivers(drivers);
-    console.log("driver[0] " + drivers[0].pathobj2.path[0]);
-    console.log("driver[1] " + drivers[1].pathobj2.path[0]);
-    console.log("driver[2] " + drivers[2].pathobj2.path[0]);
-    console.log("driver[3] " + drivers[1].pathobj2.path[0]);
-    console.log("driver[4] " + drivers[2].pathobj2.path[0]);
     
     //time & speed
     const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
@@ -529,9 +525,12 @@ const Map = () => {
       });});
 
     // Clean up on unmount
-    return () => map.update();
+    // return () => map.update();
+    if (typeof map.update === 'function') {
+      map.update();
+    }
 
-  },[]); 
+  },[userInput]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
