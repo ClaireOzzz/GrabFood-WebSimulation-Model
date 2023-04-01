@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import PathFinder from "geojson-path-finder";
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { gsap } from 'gsap';
@@ -44,10 +45,6 @@ const Map = () => {
     // console.log("userInput2222 "+ userInput);
   };
 
-  // useEffect(() => {
-  //   // console.log("userInput2222 " + userInput);
-  // }, [userInput]);
-
   // Initialize map when component mounts
   useEffect(() => {
     const map = new mapboxgl.Map({
@@ -57,8 +54,10 @@ const Map = () => {
       zoom: 15.5,
       fadeDuration: 0
     });
-
+    console.log('mapLines:', mapLines);
     const nod = userInput; // NOD = number of drivers
+    const nou = 5;
+    // calculations(nod, nou);
     console.log("userInput ", userInput);
 
     const drivers =[];
@@ -508,6 +507,12 @@ const Map = () => {
           console.log("reset clicked");
           timeline.pause();
           timeline.clear();
+          // var driverCoordinates = [];
+          // var userCoordinates = [];
+          // let shortestPaths = [];
+          // let shortestDistance = Infinity;
+          // var endCoordinates = [];
+          // var userAssignments = {};
           for (let i = 0; i < nod; i++) {
             drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
             drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
