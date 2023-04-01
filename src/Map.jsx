@@ -26,7 +26,9 @@ const Map = () => {
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
+  const [userInput2, setUserInput2] = useState(1);
   const inputRef = useRef(null);
+  const inputRef2 = useRef(null);
 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -36,12 +38,9 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
-  const handleUserInput = (input) => {
-    setUserInput(input);
-  };
-
   const handleReset = () => {
     setUserInput(inputRef.current.value);
+    setUserInput2(inputRef2.current.value);
     // console.log("userInput2222 "+ userInput);
   };
 
@@ -59,6 +58,7 @@ const Map = () => {
     const nou = 5;
     // calculations(nod, nou);
     console.log("userInput ", userInput);
+    console.log("userInput2 ", userInput2);
 
     const drivers =[];
     for (let i = 0; i < nod; i++) {
@@ -535,15 +535,16 @@ const Map = () => {
       map.update();
     }
 
-  },[userInput]); 
+  },[userInput, userInput2]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
-      <SideBar handleUserInput={handleUserInput}
+      <SideBar 
         handleReset={handleReset}
-        inputRef={inputRef}/>
+        inputRef={inputRef}
+        inputRef2={inputRef2}/>
         <div id="elapsed-time"></div>
       {/* <script src="/Listeners.jsx"></script> */}
       <div className='map-container' ref={mapContainerRef} />

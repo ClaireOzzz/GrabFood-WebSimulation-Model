@@ -2,10 +2,17 @@ import React, { useState } from 'react';
 
 const SideBar  = (props) => {
   const [inputValue, setInputValue] = useState(1);
+  const [inputValue2, setInputValue2] = useState(1);
+
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+
+  const handleInputChange2 = (event) => {
+    setInputValue2(event.target.value);
+  };
+  
 
   const handleReset = () => {
     props.handleReset();
@@ -21,9 +28,15 @@ const SideBar  = (props) => {
 
         <div className="optionSection">
           <div className="option">
-            <label htmlFor="number"> No. Of Drivers:</label>
+            <label htmlFor="number"> Drivers:</label>
             <input type="number" name="number" id="number" min="1" max="50"  ref={props.inputRef} value={inputValue} onChange={handleInputChange} />
           </div>
+
+          <div className="option">
+            <label htmlFor="number2"> Customers:</label>
+            <input type="number" name="number2" id="number2" min="1" max="50" ref={props.inputRef2} value={inputValue2} onChange={handleInputChange2} />
+          </div>
+
         </div>
 
 
