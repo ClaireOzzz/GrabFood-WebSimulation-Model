@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
-import PathFinder from "geojson-path-finder";
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { gsap } from 'gsap';
 
 //Seperate components
 import SideBar from './Sidebar';
+import Statbar from './Statbar';
 import calculations, { driverCoordinates, userCoordinates, 
       shortestPaths} from './Calculations';
 
@@ -543,6 +543,7 @@ const Map = () => {
         handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
+        <Statbar></Statbar>
         <div id="elapsed-time"></div>
       {/* <script src="/Listeners.jsx"></script> */}
       <div className='map-container' ref={mapContainerRef} />

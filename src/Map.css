@@ -156,3 +156,82 @@ select:focus{
 .overlay button:focus {
   background-color: #3da338;
 }
+
+
+
+/* STAT BAR CSS */
+
+body {
+  margin: 0;
+  font-family: 'Muli', sans-serif;
+}
+
+.menu {
+  font-weight: 100;
+  background: #305c16;
+  width:200px;
+  height: 100%;
+  padding-left: 50px;
+  position: fixed;
+  z-index: 100;
+  -webkit-box-shadow: -3px 0px 5px 0px rgba(0,0,0,0.2);
+  box-shadow: -3px 0px 5px 0px rgba(0,0,0,0.2);
+  right: -12px;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  color: #ffffff;
+}
+
+.menu:hover, .menu:focus {
+  transform: translate3d(-12%, 0, 0);
+  animation-timing-function: 1.5s ease-in;
+}
+
+.menu .title2 {
+  top: 50%;
+  position: absolute;
+  left: 10px;
+  font-weight: 800;
+  font-size: 15px;
+  transform: rotate(270deg) translateX(-50%);
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.menu .nav {
+  position: absolute;
+  top: 50%;
+  margin-top: -77.5px;
+  font-weight: 100;
+}
+
+.menu .nav li {
+  padding-bottom: 30px;
+  list-style-type: none;
+}
+
+.menu .nav li a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+}
+
+.menu .nav li a:hover {
+  color: #aaa;
+}
+
+.intro {
+  position: absolute;
+  top: 30%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  font-size: 45px;
+  text-align: center;
+  font-style: italic;
+}

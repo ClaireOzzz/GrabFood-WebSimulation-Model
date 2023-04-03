@@ -24,16 +24,16 @@ const nou = 5;
 const nod = 5;
 
 export default function calculations(nod, nou) {
-  // driverCoordinates = [];
-  // userCoordinates = [];
-  // shortestPaths = [];
-  // endCoordinates = [];
-  // userAssignments = {};
-  // distances = [];
-  // spawnpoint = [];
-  // paths =[];
-  // permutations = [];
-  // indices = [];
+  driverCoordinates = [];
+  userCoordinates = [];
+  shortestPaths = [];
+  endCoordinates = [];
+  userAssignments = {};
+  distances = [];
+  spawnpoint = [];
+  paths =[];
+  permutations = [];
+  indices = [];
  
   console.log('calc restart');
   const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
@@ -43,7 +43,7 @@ export default function calculations(nod, nou) {
       driverCoordinates.push(driverRandomCoordinate);
   };
 
-  // GETTING 5 RANDOM USER COORDINATES FROM USERPOSTIONS.JS AND GETTING ITS CLOSEST ROAD COORDINATE FROM ALL ROADS 
+  // GETTING RANDOM USER COORDINATES FROM USERPOSTIONS.JS AND GETTING ITS CLOSEST ROAD COORDINATE FROM ALL ROADS 
   for (let i = 0; i < nou; i++) {
     // Generate a random user coordinate
     const endRandomIndex = Math.floor(Math.random() * user.features[0].geometry.coordinates.length);
@@ -62,7 +62,7 @@ export default function calculations(nod, nou) {
     endCoordinates.push(closestRoadCoordinate);
   };
 
-  /// GETTING A RANDO EATERY FOR EACH USER, CAN BE REPEATED //////////////////////////////////////////////////////////////////////////////////////////////
+  /// GETTING A RANDOM EATERY FOR EACH USER //////////////////////////////////////////////////////////////////////////////////////////////
   const eateryCoords = restaurantClosest.features[0].geometry.coordinates;
   
   for (let i = eateryCoords.length - 1; i > 0; i--) {
@@ -105,7 +105,6 @@ export default function calculations(nod, nou) {
 
 
   //SHORTEST PATHS 
-
   generatePermutations(nod, nou);
   const customerCoords = Object.values(userAssignments);
 
@@ -113,16 +112,18 @@ export default function calculations(nod, nou) {
 
     for (let i = 0; i < Math.min(nod, nou); i++) {
       spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-      console.log("userAssignments ", userAssignments)
-      console.log("nod ", nod);
-      console.log("i ", i);
+      // console.log("userAssignments ", userAssignments)
+      // console.log("nod ", nod);
+      // console.log("i ", i);
       var LatLng = Object.keys(userAssignments)[i].split(",") // keys = eatery, values = user
       var Lat = parseFloat(LatLng[0]);
       var Lng = parseFloat(LatLng[1]); // gets eatery location for assigned user
 
       const customerCoord = customerCoords[assignment[i]][0];
-      console.log("customerCoord  ",customerCoord)
-      const pathToEatery = pathFinder.findPath( point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]), point([Lat, Lng]));
+      // console.log("customerCoord  ",customerCoord)
+      const pathToEatery = pathFinder.findPath(
+        point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+        point([Lat, Lng]));
       const pathToCustomer =  pathFinder.findPath(
         point([Lat, Lng]),
         point([customerCoord[0], customerCoord[1]]),
@@ -137,7 +138,7 @@ export default function calculations(nod, nou) {
 
 
     if (totalDistance < shortestDistance) {
-      console.log("paths ", paths);
+      // console.log("paths ", paths);
       shortestPaths = paths;
       shortestDistance = totalDistance;
     }
@@ -159,17 +160,3 @@ calculations(5, 5);
 // console.log("driverCoordinates2 ", driverCoordinates)
 
 
-
-
-// export function setDriverCoordinates(newDriverCoordinates, newDriverCoordinates2) {
-//   driverCoordinates = newDriverCoordinates;
-//   userCoordinates = newDriverCoordinates;
-//   shortestPaths = newDriverCoordinates;
-//   endCoordinates = newDriverCoordinates;
-//   userAssignments = newDriverCoordinates2;
-//   paths = newDriverCoordinates;
-//   distances = newDriverCoordinates;
-//   spawnpoint =newDriverCoordinates;
-//   indices = newDriverCoordinates;
-//   permutations = newDriverCoordinates;
-// }
