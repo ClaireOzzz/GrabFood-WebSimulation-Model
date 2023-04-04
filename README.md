@@ -2,11 +2,11 @@
 
 npm cache clean --force  (run only if there are errors after npm i)
 
-npm i
+npm install
 
-npm i @turf/turf
+npm install @turf/turf
 
-npm i @turf/helpers
+npm install @turf/helpers
 
 npm install --save geojson-path-finder
 
@@ -14,33 +14,22 @@ npm install gsap
 
 npm install --save random-normal 
 
-npm install react-plotly.js plotly.js
+npm install plotly.js  
+
+npm install react-plotly.js@2.2.0     
+
+export NODE_OPTIONS=--max-old-space-size=4096       //when u get that fatal error
 
 npm start
-
 
 layer for routes was extracted using:
 https://mygeodata.cloud/osm/data/download/
 
-How the path is chosen between driver and closest user: (26th Feb)
-
-1. Get random driver position from road_line.js coordinates ->  start coordinate
-
-2. Get random list of 5 user positions from userPositions.js -> gives endCoordinates
-3. Get closest user to driver -> user position
-4. Calculate the closest road coordinate to the user (who is in a building) -> finish coordinate
-
-5. Use pathFinder
-
-
-Need driver database:
-Driver index:
-Location (in coordinates):
-state: (food_attaining/food_delivering/done)
-Assigned user coodinate:
-Assigned eatery coodinate:
-Current Path:
 
 User index:
 Location: (road coordinate not actual)
 state: complete/waiting/unassigned
+
+
+"start": "react-scripts --max_old_space_size=4096 start",
+"build": "react-scripts --max_old_space_size=4096 build"

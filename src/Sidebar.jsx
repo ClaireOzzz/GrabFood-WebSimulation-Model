@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const SideBar  = (props) => {
   const [inputValue, setInputValue] = useState(1);
-  const [inputValue2, setInputValue2] = useState(1);
+  const [inputValue2, setInputValue2] = useState(5);
 
 
   const handleInputChange = (event) => {

@@ -23,15 +23,19 @@ import './Map.css';
 mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
+let currentSpeed = 1;
+let weatherSpeed = 1;
+var elapsedArray = [];
+
 const Map = () => {
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
-  const [userInput2, setUserInput2] = useState(1);
+  const [userInput2, setUserInput2] = useState(5);
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const [totalTime, setTotalTime] = useState(0);
-
+ 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
   const DELIVERING = 2; // DELIVERING THE FOOD TO THE CUSTOMER
@@ -43,11 +47,50 @@ const Map = () => {
   const handleReset = () => {
     setUserInput(inputRef.current.value);
     setUserInput2(inputRef2.current.value);
-    // console.log("userInput2222 "+ userInput);
   };
+
+
+  
+
+useEffect(() => {
+  console.log("run again");
+  const speeds = [1, 8, 16, 32, 64, 0.4]; // define the available speeds
+  
+  const speedButtons = document.querySelectorAll('.speedbutton');
+  
+  // Add event listeners to each speed button
+  speedButtons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+      currentSpeed = speeds[index];
+      console.log("currentSpeed ", currentSpeed);
+      speedButtons.forEach(button => button.classList.remove('active'));
+      button.classList.add('active');
+    });
+  });
+
+  document.getElementById('weather').addEventListener('change', (event) => {
+    if (event.target.value === 'Rainy') {
+      console.log("rainy");
+      const rando = Math.random() * (16 - 3.6) + 3.6;
+      weatherSpeed = (1+ rando/100)
+    } else {
+      weatherSpeed = 1;
+    }
+  });
+
+}, []); // empty dependency array ensures that this effect is only run once
+
 
   // Initialize map when component mounts
   useEffect(() => {
+    //time & speed
+    let startTime; // declare a variable to store the start time
+    let elapsedTime; // declare a variable to store the elapsed time
+    let elapsed;
+    let startTime2; // declare a variable to store the start time
+    let elapsedTime2; // declare a variable to store the elapsed time
+    let elapsed2;
+
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v10',
@@ -58,74 +101,12 @@ const Map = () => {
     
     const nod = userInput; // NOD = number of drivers
     const nou = 5;
-    // calculations(nod, nou);
+    // calculations(nod, nou)
     console.log("userInput ", userInput);
     console.log("userInput2 ", userInput2);
 
     const drivers =[];
-    
-    //time & speed
-    const speeds = [1, 8, 16, 32, 64, 0.4]; // define the available speeds
-    let speedIndex = 0; 
-    let startTime; // declare a variable to store the start time
-    let elapsedTime; // declare a variable to store the elapsed time
-    let elapsed;
-    let currentSpeed = 1;
-    let weatherSpeed = 1;
-
-    document.getElementById('1x-speed').addEventListener('click', () => {
-      speedIndex = 0;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('1x-speed').classList.add('active');
-    });
-    
-    document.getElementById('8x-speed').addEventListener('click', () => {
-      speedIndex = 1;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('8x-speed').classList.add('active');
-    });
-
-    document.getElementById('16x-speed').addEventListener('click', () => {
-      speedIndex = 2;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('16x-speed').classList.add('active');
-    });
-    
-    document.getElementById('32x-speed').addEventListener('click', () => {
-      speedIndex = 3;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('32x-speed').classList.add('active');
-    });
-    
-    document.getElementById('64x-speed').addEventListener('click', () => {
-      speedIndex = 4;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('64x-speed').classList.add('active');
-    });
-    document.getElementById('weather').addEventListener('change', (event) => {
-      if (event.target.value === 'Rainy') {
-        console.log("rainy");
-        const rando = Math.random() * (16 - 3.6) + 3.6;
-        weatherSpeed = (1+ rando/100)
-      } else {
-        weatherSpeed = 1;
-      }
-    });
+  
 
     var animations = [];          // will contain routes
     var animationPoints = [];     // will contain the single point that animates along the route
@@ -167,7 +148,6 @@ const Map = () => {
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
       const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
-      
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / calcSteps) {
           const segment = turf.along(route.features[0], i);
@@ -219,10 +199,11 @@ const Map = () => {
       steps2 = [];
       console.log("new restart function");
       for (let i = 0; i < Math.min(nod, nou); i++) {
-        if (drivers[i].state === FETCHING) {
+        if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
       };
+      
   
       for (let i = 0; i < Math.min(nod, nou); i++) {
         drivers[i].state = DELIVERING
@@ -405,7 +386,7 @@ const Map = () => {
           // var counter = drivers[i].counter;
           if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
-            startTime = new Date().getTime();
+             startTime = new Date().getTime();
           }
           // calculate the time delta based on the selected speed
           const timeDelta = (new Date().getTime() - startTime);
@@ -441,6 +422,10 @@ const Map = () => {
           if (drivers[i].counter === Math.floor(steps[i])) {
             // Set the animation to run again with a different path and update the driver state
             console.log(`done for - ${i}`);
+            elapsed = (timeDelta);
+            console.log("elapsed ", elapsed);
+            elapsedArray.push(elapsed);
+            console.log("elapsedArray ", elapsedArray);
             drivers[i].state = DELIVERING;
             setDrivers(drivers);
             // console.log(`driver.state${i} = ` + drivers[i].state);
@@ -455,13 +440,13 @@ const Map = () => {
         function animateDelivering(i) {
           if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
-            startTime = new Date().getTime();
-            
+            startTime2 = new Date().getTime();
+         
             // update the animationPoints and animations variables to reflect the starting position
             animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
           }
           // calculate the time delta based on the selected speed
-          const timeDelta = new Date().getTime() - startTime;
+          const timeDelta2 = new Date().getTime() - startTime;
         
           const start =
           animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
@@ -491,10 +476,13 @@ const Map = () => {
             // Update the driver state when the second animation is complete
             drivers[i].state = DONE;
             setDrivers(drivers);
-            elapsedTime = timeDelta;
-            elapsed = Math.floor((elapsedTime* (currentSpeed))/60000);
-            setTotalTime(elapsed);
-            console.log(`Elapsed time: ${elapsed} ms`);
+            elapsed2 = (timeDelta2);
+            elapsedArray.push(elapsed2);
+            console.log("elapsed2 ", elapsed2);
+            console.log("elapsedArray ", elapsedArray);
+            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/userInput);
+            setTotalTime(sumElapsed);
+            console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);
           }; 
         };
@@ -515,13 +503,10 @@ const Map = () => {
         document.getElementById('reset').addEventListener('click', () => { 
           console.log("reset clicked");
           timeline.pause();
-          timeline.clear();
-          for (let i = 0; i < Math.min(nod, nou); i++) {
-            drivers[i].state = FETCHING; //RESETTING THE STATE BACK TO THE START
-            drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
-          };      
-          setDrivers(drivers);
-          restart(userInput)
+          timeline.clear();    
+          setDrivers([]);
+          elapsedArray = [];
+          restart(nod)
           for (let i = 0; i < Math.min(nod, nou); i++) {
             animateFetching(i);
           };

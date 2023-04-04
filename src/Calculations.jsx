@@ -145,7 +145,7 @@ export default function calculations(nod, nou) {
   }
 };
 
-calculations(5, 5);
+calculations(2 , 5);
 
 // calculations(5, 3);
 // console.log("done with 3, 3")
