@@ -71,7 +71,7 @@ const SideBar  = (props) => {
         {/* output */}
         <div className = 'output'>
           <div className = 'header'>
-            Average Waiting Time: 
+            Average Waiting Time: {props.totalTime} minutes
           </div>
           <div className = 'header'>
             Occupied to Unoccupied Drivers:
@@ -86,10 +86,10 @@ const SideBar  = (props) => {
             
             <div className='speedButtons'>
               <button className='speedbutton active' id='1x-speed'>Real time </button>
-              <button className='speedbutton' id='4x-speed'>4x </button>
               <button className='speedbutton' id='8x-speed'>8x </button>
               <button className='speedbutton' id='16x-speed'>16x </button>
               <button className='speedbutton' id='32x-speed'>32x </button>
+              <button className='speedbutton' id='64x-speed'>64x </button>
             </div>
           </div>
 

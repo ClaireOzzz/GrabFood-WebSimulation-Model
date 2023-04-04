@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { gsap } from 'gsap';
-import PlotComponent from 'react-plotly.js';
 
 //Seperate components
 import SideBar from './Sidebar';
@@ -31,6 +30,7 @@ const Map = () => {
   const [userInput2, setUserInput2] = useState(1);
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
+  const [totalTime, setTotalTime] = useState(0);
 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -65,7 +65,7 @@ const Map = () => {
     const drivers =[];
     
     //time & speed
-    const speeds = [1, 4, 8, 16, 32, 0.4]; // define the available speeds
+    const speeds = [1, 8, 16, 32, 64, 0.4]; // define the available speeds
     let speedIndex = 0; 
     let startTime; // declare a variable to store the start time
     let elapsedTime; // declare a variable to store the elapsed time
@@ -82,26 +82,17 @@ const Map = () => {
       document.getElementById('1x-speed').classList.add('active');
     });
     
-    document.getElementById('4x-speed').addEventListener('click', () => {
-      speedIndex = 1;
-      currentSpeed = speeds[speedIndex];
-      document.querySelectorAll('.speedbutton').forEach(button => {
-        button.classList.remove('active');
-      });
-      document.getElementById('4x-speed').classList.add('active');
-    });
-
     document.getElementById('8x-speed').addEventListener('click', () => {
-      speedIndex = 2;
+      speedIndex = 1;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
       document.getElementById('8x-speed').classList.add('active');
     });
-    
+
     document.getElementById('16x-speed').addEventListener('click', () => {
-      speedIndex = 3;
+      speedIndex = 2;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
@@ -110,12 +101,21 @@ const Map = () => {
     });
     
     document.getElementById('32x-speed').addEventListener('click', () => {
-      speedIndex = 4;
+      speedIndex = 3;
       currentSpeed = speeds[speedIndex];
       document.querySelectorAll('.speedbutton').forEach(button => {
         button.classList.remove('active');
       });
       document.getElementById('32x-speed').classList.add('active');
+    });
+    
+    document.getElementById('64x-speed').addEventListener('click', () => {
+      speedIndex = 4;
+      currentSpeed = speeds[speedIndex];
+      document.querySelectorAll('.speedbutton').forEach(button => {
+        button.classList.remove('active');
+      });
+      document.getElementById('64x-speed').classList.add('active');
     });
     document.getElementById('weather').addEventListener('change', (event) => {
       if (event.target.value === 'Rainy') {
@@ -190,11 +190,13 @@ const Map = () => {
         console.log(` animations2length `, animations2.length);
       };
     }
+    restart(nod);
+    console.log("called again");
 
-    function restart() {
+    function restart(nod) {
       // setDriverCoordinates([], {});
       // calculations(nod);
-      
+      // setDrivers([]);
       for (let i = 0; i < Math.min(nod, nou); i++) {
         const driver = {
           "type": DRIVER,
@@ -208,6 +210,7 @@ const Map = () => {
         drivers.push(driver);
       }
       setDrivers(drivers);
+      
       animations = [];
       animations2 = [];
       animationPoints = [];
@@ -232,7 +235,7 @@ const Map = () => {
       console.log("stepD ", steps2);
       console.log("stepF ", steps);
     }
-    restart();
+   
    
 
     // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -489,7 +492,8 @@ const Map = () => {
             drivers[i].state = DONE;
             setDrivers(drivers);
             elapsedTime = timeDelta;
-            elapsed = elapsedTime* (currentSpeed);
+            elapsed = Math.floor((elapsedTime* (currentSpeed))/60000);
+            setTotalTime(elapsed);
             console.log(`Elapsed time: ${elapsed} ms`);
             console.log(`${i} DONE`);
           }; 
@@ -517,7 +521,7 @@ const Map = () => {
             drivers[i].counter = 0; // RESET THE DRIVER'S COUNTER
           };      
           setDrivers(drivers);
-          restart();
+          restart(userInput)
           for (let i = 0; i < Math.min(nod, nou); i++) {
             animateFetching(i);
           };
@@ -534,13 +538,14 @@ const Map = () => {
       map.update();
     }
 
-  },[userInput, userInput2]); 
+  },[userInput]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <SideBar 
+        totalTime ={totalTime}
         handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
