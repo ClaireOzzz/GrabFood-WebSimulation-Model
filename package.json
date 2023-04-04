@@ -7,9 +7,11 @@
     "geojson-path-finder": "^2.0.1",
     "gsap": "^3.11.5",
     "mapbox-gl": "^1.11.1",
+    "plotly.js": "^2.20.0",
     "random-normal": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-plotly.js": "^2.2.0",
     "react-scripts": "^3.4.3"
   },
   "scripts": {

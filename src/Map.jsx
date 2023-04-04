@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { gsap } from 'gsap';
+import PlotComponent from 'react-plotly.js';
 
 //Seperate components
 import SideBar from './Sidebar';
@@ -165,7 +166,7 @@ const Map = () => {
       var vehicleSpeed = 25;
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
-      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed))/16;
+      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
       
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / calcSteps) {

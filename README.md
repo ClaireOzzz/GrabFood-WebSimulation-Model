@@ -14,6 +14,8 @@ npm install gsap
 
 npm install --save random-normal 
 
+npm install react-plotly.js plotly.js
+
 npm start
 
 
