@@ -94,7 +94,7 @@ const SideBar  = (props) => {
           </div>
 
        
-          <button className ="resetbutton" id="reset" onClick={handleReset} >Reset</button>
+          <button className ="resetbutton" id="reset" onClick={handleReset} >Simulate</button>
         </div>
       </div>
       

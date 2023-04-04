@@ -20,8 +20,8 @@ var spawnpoint =[];
 var indices = [];
 var permutations = [];
 
-const nou = 5;
-const nod = 5;
+// const nou = 5;
+// const nod = 5;
 
 export default function calculations(nod, nou) {
   driverCoordinates = [];
