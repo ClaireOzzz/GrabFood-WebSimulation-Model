@@ -1,5 +1,5 @@
 import randomNormal from 'random-normal';
-import conditions from './Map';
+import {conditions} from './Map';
 
 let base_number_of_customers = 5;
 var number_of_customers

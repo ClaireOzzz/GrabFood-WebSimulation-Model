@@ -8,7 +8,7 @@ import SideBar from './Sidebar';
 import Statbar from './Statbar';
 import calculations, { driverCoordinates, userCoordinates, 
       shortestPaths} from './Calculations';
-import generate_speeds, {all_drivers_speed} from './SpeedInputs';
+import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
 //icons
@@ -30,6 +30,7 @@ var elapsedArray = [];
 
 export var nod; 
 export var conditions = ['morning', 'normal', 'ebicycle'];
+export var driver_speed_array = [];
 
 const Map = () => {
   const mapContainerRef = useRef(null);
@@ -71,8 +72,6 @@ useEffect(() => {
       button.classList.add('active');
     });
   });
-
-//  conditions = ['morning', 'normal', 'ebicycle'];
 
   document.getElementById('weather').addEventListener('change', (event) => {
     if (event.target.value === 'Rainy') {
@@ -161,13 +160,15 @@ useEffect(() => {
     
     nod = userInput; // NOD = number of drivers
     generate_number_of_customers()
-    const nou = 5;
+    const nou = number_of_customers;
+    //console.log(nou)
     // calculations(nod, nou)
     console.log("userInput ", userInput);
     console.log("userInput2 ", userInput2);
 
     const drivers =[];
   
+    generate_speeds();
 
     var animations = [];          // will contain routes
     var animationPoints = [];     // will contain the single point that animates along the route
@@ -205,7 +206,7 @@ useEffect(() => {
 
       // Calculate the distance in kilometers between route start/end point.
       const lineDistance = path.weight;
-      var vehicleSpeed = 25;
+      var vehicleSpeed = all_drivers_speeds[i];
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
       const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed));
@@ -238,6 +239,7 @@ useEffect(() => {
       // setDriverCoordinates([], {});
       // calculations(nod);
       // setDrivers([]);
+      //generate_speeds()
       for (let i = 0; i < Math.min(nod, nou); i++) {
         const driver = {
           "type": DRIVER,
@@ -567,6 +569,7 @@ useEffect(() => {
           timeline.clear();    
           setDrivers([]);
           elapsedArray = [];
+          driver_speed_array = [];
           restart(nod)
           for (let i = 0; i < Math.min(nod, nou); i++) {
             animateFetching(i);
