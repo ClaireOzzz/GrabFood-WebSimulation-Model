@@ -8,6 +8,8 @@ import SideBar from './Sidebar';
 import Statbar from './Statbar';
 import calculations, { driverCoordinates, userCoordinates, 
       shortestPaths} from './Calculations';
+import generate_speeds, {all_drivers_speed} from './SpeedInputs';
+import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
 //icons
 import motoIcon from './icons/moto.png'; 
@@ -24,8 +26,10 @@ mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
 let currentSpeed = 1;
-let weatherSpeed = 1;
 var elapsedArray = [];
+
+export var nod; 
+export var conditions = ['morning', 'normal', 'ebicycle'];
 
 const Map = () => {
   const mapContainerRef = useRef(null);
@@ -54,7 +58,7 @@ const Map = () => {
 
 useEffect(() => {
   console.log("run again");
-  const speeds = [1, 8, 16, 32, 64, 0.4]; // define the available speeds
+  const speeds = [1, 8, 16, 32, 64]; // define the available speeds
   
   const speedButtons = document.querySelectorAll('.speedbutton');
   
@@ -68,13 +72,69 @@ useEffect(() => {
     });
   });
 
+//  conditions = ['morning', 'normal', 'ebicycle'];
+
   document.getElementById('weather').addEventListener('change', (event) => {
     if (event.target.value === 'Rainy') {
       console.log("rainy");
-      const rando = Math.random() * (16 - 3.6) + 3.6;
-      weatherSpeed = (1+ rando/100)
-    } else {
-      weatherSpeed = 1;
+      conditions[1] = 'rainy';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('weather').addEventListener('change', (event) => {
+    if (event.target.value === 'Normal') {
+      console.log("normal");
+      conditions[1] = 'normal';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('time').addEventListener('change', (event) => {
+    if (event.target.value === 'Morning') {
+      console.log("morning");
+      conditions[0] = 'morning';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('time').addEventListener('change', (event) => {
+    if (event.target.value === 'Afternoon') {
+      console.log("afternoon");
+      conditions[0] = 'afternoon';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('time').addEventListener('change', (event) => {
+    if (event.target.value === 'Night') {
+      console.log("night");
+      conditions[0] = 'night';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('time').addEventListener('change', (event) => {
+    if (event.target.value === 'Midnight') {
+      console.log("midnight");
+      conditions[0] = 'midnight';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('transport').addEventListener('change', (event) => {
+    if (event.target.value === 'Motorcycle') {
+      console.log("motorcycle");
+      conditions[2] = 'motorcycle';
+      console.log(conditions);
+    }
+  });
+
+  document.getElementById('transport').addEventListener('change', (event) => {
+    if (event.target.value === 'Ebicycle') {
+      console.log("ebicycle");
+      conditions[2] = 'ebicycle';
+      console.log(conditions);
     }
   });
 
@@ -99,7 +159,8 @@ useEffect(() => {
       fadeDuration: 0
     });
     
-    const nod = userInput; // NOD = number of drivers
+    nod = userInput; // NOD = number of drivers
+    generate_number_of_customers()
     const nou = 5;
     // calculations(nod, nou)
     console.log("userInput ", userInput);
@@ -147,7 +208,7 @@ useEffect(() => {
       var vehicleSpeed = 25;
       const stepDistance = ((vehicleSpeed*1000)/3600);
       const arc = [];
-      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed*weatherSpeed));
+      const calcSteps = ((lineDistance*1000)/(stepDistance/60))*(1/(currentSpeed));
       // Draw an arc between the `origin` & `destination` of the two points
       for (let i = 0; i < lineDistance; i += lineDistance / calcSteps) {
           const segment = turf.along(route.features[0], i);

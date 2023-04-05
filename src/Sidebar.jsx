@@ -63,7 +63,7 @@ const SideBar  = (props) => {
             <label htmlFor="transport">Transport:</label>
             <select name="transport" id="transport">
               <option value="Ebicycle">E-bicycle</option>
-              <option value="Motocycle" >Motocycle</option>
+              <option value="Motorcycle" >Motorcycle</option>
             </select>
           </div>
           
