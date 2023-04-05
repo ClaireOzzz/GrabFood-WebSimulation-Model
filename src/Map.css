@@ -245,3 +245,13 @@ body {
   text-align: center;
   font-style: italic;
 }
+
+.graph-container {
+  display: flex;
+}
+
+
+.graph {
+  flex: 2;
+  margin: 15px;
+}
