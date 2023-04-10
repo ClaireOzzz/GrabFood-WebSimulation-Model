@@ -543,7 +543,7 @@ useEffect(() => {
             elapsedArray.push(elapsed2);
             console.log("elapsed2 ", elapsed2);
             console.log("elapsedArray ", elapsedArray);
-            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/userInput);
+            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/2);
             setTotalTime(sumElapsed);
             console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);
@@ -570,7 +570,7 @@ useEffect(() => {
           setDrivers([]);
           elapsedArray = [];
           driver_speed_array = [];
-          restart(nod)
+          restart(nod);
           for (let i = 0; i < Math.min(nod, nou); i++) {
             animateFetching(i);
           };
