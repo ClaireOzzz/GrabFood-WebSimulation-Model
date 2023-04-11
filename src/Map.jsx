@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 //Seperate components
 import SideBar from './Sidebar';
 import Statbar from './Statbar';
-import calculations, { driverCoordinates, userCoordinates, 
+import calculations, { eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates, 
       shortestPaths} from './Calculations';
 import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
@@ -245,8 +245,8 @@ useEffect(() => {
           "type": DRIVER,
           "index": i,
           "location": [driverCoordinates[i]],
-          "pathobj1": shortestPaths[i][0], // TO EATERY
-          "pathobj2": shortestPaths[i][1], // TO CUSTOMER
+          "pathobj1": driverToEateryDict[`driver${i}`][driverAssignments[`driver${i}`]], // TO EATERY
+          "pathobj2": eateryToCustomerArray[driverAssignments[`driver${i}`]], // TO CUSTOMER
           "state": FETCHING,
           "counter": 0
         };

@@ -10,31 +10,32 @@ import mapLines from './data/road_line.json';
 
 export var driverCoordinates = [];
 export var userCoordinates = [];
-export var shortestPaths = [];
-var shortestDistance = Infinity;
+// export var shortestPaths = [];
+// var shortestDistance = Infinity;
 var endCoordinates = [];
 var userAssignments = {};
 var paths = [];
 var distances = [];
 var spawnpoint =[];
-var indices = [];
-var permutations = [];
+
+// second calculations
+export var driverAssignments = {};
+let driverFullDistances = [];
+let driverToEateryPath =[]
 
 const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-// const nou = 5;
-// const nod = 5;
+
 
 export default function calculations(nod, nou) {
   driverCoordinates = [];
   userCoordinates = [];
-  shortestPaths = [];
+  // shortestPaths = [];
   endCoordinates = [];
   userAssignments = {};
   distances = [];
   spawnpoint = [];
   paths =[];
-  permutations = [];
-  indices = [];
+ 
  
   // GETS RANDOM DRIVER COORDINATES 
   console.log('calc restart')
@@ -78,87 +79,16 @@ export default function calculations(nod, nou) {
     }
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
-
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-
-  
-
-  function generatePermutations(numDrivers, numCustomers) {
-    
-    for (let i = 0; i < numDrivers; i++) {
-      indices.push(i);
-    }
-
-    permute(permutations, indices, 0, Math.min(numCustomers, numDrivers));
-
-    return permutations;
-  };
-
-  function permute(permutations, indices, start, end) {
-    if (start === end) {
-      permutations.push([...indices]);
-    } else {
-      for (let i = start; i < end; i++) {
-        [indices[start], indices[i]] = [indices[i], indices[start]];
-        permute(permutations, indices, start + 1, end);
-        [indices[start], indices[i]] = [indices[i], indices[start]];
-      }
-    }
-  };
-
-
-  //SHORTEST PATHS 
-  generatePermutations(nod, nou);
-  const customerCoords = Object.values(userAssignments);
-
-  for (const assignment of permutations) {
-
-    for (let i = 0; i < Math.min(nod, nou); i++) {
-      spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-      // console.log("userAssignments ", userAssignments)
-      // console.log("nod ", nod);
-      // console.log("i ", i);
-      var LatLng = Object.keys(userAssignments)[i].split(",") // keys = eatery, values = CUSTOMER
-      var Lat = parseFloat(LatLng[0]);
-      var Lng = parseFloat(LatLng[1]); // gets eatery location for assigned user
-
-      const customerCoord = customerCoords[assignment[i]][0];
-      // console.log("customerCoord  ",customerCoord)
-      const pathToEatery = pathFinder.findPath(
-        point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
-        point([Lat, Lng]));
-      const pathToCustomer =  pathFinder.findPath(
-        point([Lat, Lng]),
-        point([customerCoord[0], customerCoord[1]]),
-      );
-      paths.push([pathToEatery, pathToCustomer]);
-      distances.push(pathToEatery.weight + pathToCustomer.weight);
-    }
-    // console.log(paths[0][0]);
-
-    // const totalDistance = distances.reduce((acc, distance) => acc + distance, 0);
-    const totalDistance = paths.reduce((acc, path) => acc + path[0].weight + path[1].weight, 0);
-
-
-    if (totalDistance < shortestDistance) {
-      // console.log("paths ", paths);
-      shortestPaths = paths;
-      shortestDistance = totalDistance;
-    }
-  }
 };
 
-calculations(3 , 5);
+calculations(1, 3);
 
-//Get eatery to customer path
-// const pathToEatery = pathFinder.findPath(
-let eateryToCustomerArray = []
+export var eateryToCustomerArray = []
 let eateryToCustomerDist = []
-var driverToEateryDict ={}
+export var driverToEateryDict ={}
 var driverFullDist = {};
 
-function newCalculations(nod, nou) {
-  
+function secondCalculations(nod, nou) {
   //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
   var counter = 0;
   for (const eateryCoord of Object.keys(userAssignments)) {
@@ -178,18 +108,18 @@ function newCalculations(nod, nou) {
   }
   console.log("eateryToCustomerDist ", eateryToCustomerDist);
   console.log("userAssignments ", userAssignments);
-  //////////////////////////////////////////////
-  
+  ////////////////////////////////////////////////
+  var ptE;
   // BUILD THE DICTIONARY THAT HOLDS THE FULL CYCLE DISTANCES FOR ALL DRIVERS
   for (let i = 0; i < nod; i++) {
     var j =0;
     // get the driver's coordinates
     spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
     const driverName = `driver${i}`;
-  
-    // initialize an empty array to hold the driver's distances to each eatery
-    let driverFullDistances = [];
-    let driverToEateryPath =[]
+
+    driverFullDistances = [];
+    driverToEateryPath =[];
+
     // loop through each eatery in userAssignments
     for (const eateryCoord of Object.keys(userAssignments)) { 
       var LatLng = eateryCoord.replace(",", ", ").split(", ")
@@ -197,121 +127,87 @@ function newCalculations(nod, nou) {
       var Lng = parseFloat(LatLng[1]);
   
       // calculate the distance from the driver to the eatery using pathFinder.findPath()
-      const ptE = pathFinder.findPath(
+      ptE = pathFinder.findPath(
         point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
         point([Lat, Lng]));
       driverToEateryPath.push(ptE)
 
       var fullDistance = 0;
-      console.log("j ", j);
+      // console.log("j ", j);
       fullDistance = ptE.weight + eateryToCustomerDist[j];  
-      console.log("fullDistance= ", fullDistance, "ptE.weight= ", ptE.weight, "eateryToCustomerDist[j]= ", eateryToCustomerDist[j]);
+      // console.log("fullDistance= ", fullDistance, "ptE.weight= ", ptE.weight, "eateryToCustomerDist[j]= ", eateryToCustomerDist[j]);
       driverFullDistances.push(fullDistance);
       j += 1;
     }
     // add the driverFullDistances array to the driverFullDist object
-    console.log("driverFullDistances ", driverFullDistances);
+
     driverFullDist[driverName] = driverFullDistances;
+    // console.log("driverFullDistances33 ", driverFullDistances);
     driverToEateryDict[driverName] = driverToEateryPath
+   
     //////////////////////////////////////////////
   }
-}
 
-newCalculations(3, 5);
+  // move inside 
+  var d = "";
+  let index = -1; // Initialize index to -1 as a flag value
+  function getMinDistance(driverFullDist) {
+    let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
+    console.log("minDistance2 ", minDistance2);
+    index = -1
+    for (let driver in driverFullDist) {
+      let driverIndex = driverFullDist[driver].indexOf(minDistance2);
+      if (driverIndex !== -1) { // Check if 100 is found in the current array
+        index = driverIndex;
+        console.log("driver ", driver);
+        d = driver;
+        if (minDistance2 === Infinity) break;
+        else driverAssignments[d] = index;
+        break; // Exit the loop once min is found
+      }
+    }
+    //1. remove driver
+    console.log("driverFullDist ", driverFullDist);
+    delete driverFullDist[d];
+    console.log("driverFullDist ", driverFullDist);
 
-console.log("eateryToCustomerDist ", eateryToCustomerDist);
-console.log("driverToEateryDict ", driverToEateryDict);
+    //2. replace eatery index with infinity
+    console.log("index ", index); // index of eatery with minimum distance
+    for (let driver in driverFullDist) {
+      driverFullDist[driver][index] = Infinity;
+    }
 
-// let driverFullDist2 = {
-//   "driver1": [20, 20, 30, 40, 50],
-//   "driver2": [6, 70, 80, 90, 100],
-//   "driver3": [110, 120, 130, 140, 150]
-// };
-// let distances2 = Array(Object.keys(driverFullDist).length).fill(Infinity);
-let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
-console.log("minDistance2 ", minDistance2);
-let index = -1; // Initialize index to -1 as a flag value
-let d = "";
-for (let driver in driverFullDist) {
-  let driverIndex = driverFullDist[driver].indexOf(minDistance2);
-  if (driverIndex !== -1) { // Check if 100 is found in the current array
-    index = driverIndex;
-    console.log("driver ", driver);
-    d = driver;
-    break; // Exit the loop once min is found
+    console.log("driverFullDist ", driverFullDist);
+    console.log("d ", d);       // driver with minimum distance
   }
+
+
+    //LOOP THROUGH DRIVERS
+    for (let k = 0; k < nod; k++ ) {
+      console.log("k ", k);
+      getMinDistance(driverFullDist) 
+
+      console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
+      console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
+    }
 }
 
-console.log("index ", index); // index of eatery with minimum distance
-console.log("d ", d); // driver with minimum distance
-console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
-console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
 
 
+secondCalculations(1, 3);
 
 
+// console.log("driverAssignments ", driverAssignments);
+// console.log("Object.keys(driverAssignments)[0] ", Object.keys(driverAssignments)[0]);
+// console.log("driverToEateryPath ", driverToEateryPath);
+
+//gives path 1
+console.log("driverToEateryPath333 ", driverToEateryDict["driver0"][driverAssignments["driver0"]]);
+
+//gives path 2
+console.log("eateryToCustomerArray ", eateryToCustomerArray[driverAssignments["driver0"]])
 
 
+//driverToEateryDict[driverName] = driverToEateryPath
+//eateryToCustomerArray.push(pathToCustomer);
 
-
-
-// let distances2 = []
-
-// let assignedDrivers = {};
-// let shortdist = [];
-// // loop through each index of the distance arrays in the dictionary
-// for (let i = 0; i < 5; i++) {
-//   let minValue = Infinity;
-//   let minKey;
-  
-//   // loop through each key-value pair in the dictionary
-//   for (let key in driverFullDist2) {
-//     console.log("key ", key);
-//     distances2 = driverFullDist2[key];
-//     let distance = distances2[i];
-//     // console.log("distance ", distance);
-//     // compare the distance to the minimum value found so far
-//     if (distance < minValue) {
-//       minValue = distance;
-//       minKey = key;
-//     }
-//   }
-//   shortdist.push(distances2[i]);
-  
-//   // add the driver and index of minimum distance to assignedDrivers
-//   assignedDrivers[minKey] = i;
-//   // remove the driver and all its distances from driverFullDist
-//   delete driverFullDist2[minKey];
-  
-//   // replace all other distances at that index with infinity
-//   for (let key in driverFullDist2) {
-//     distances2 = driverFullDist2[key];
-   
-//     distances2[i] = Infinity;
-//     console.log(i," ", distances2);
-//   }
-// }
-// console.log("shortdist ", shortdist); 
-// console.log("assignedDrivers1 ", assignedDrivers["driver1"]); 
-
-
-
-// calculations(5, 3);
-// console.log("done with 3, 3")
-// console.log("shortestPaths ", shortestPaths)
-// console.log("userCoordinates ", userCoordinates)
-// console.log("driverCoordinates ", driverCoordinates)
-
-// calculations(3, 1);
-// console.log("done with 2ND 2, 3")
-// console.log("shortestPaths2 ", shortestPaths)
-// console.log("userCoordinates2 ", userCoordinates)
-// console.log("driverCoordinates2 ", driverCoordinates)
-
-
-// // Get the driver key from the assignedDrivers dictionary
-// const driverKey = Object.keys(assignedDrivers)[0]; // 'driver1'
-
-// // Use the driver key to retrieve the path from the driverToEateryPath dictionary
-// const driverPath = driverToEateryPath[driverKey][assignedDrivers[driverKey]]; // path0
-// console.log("driverPath ", driverPath);
