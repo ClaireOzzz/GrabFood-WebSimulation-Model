@@ -35,14 +35,16 @@ state: complete/waiting/unassigned
 "build": "react-scripts --max_old_space_size=4096 build"
 
 FIXME:
-1. calculations.jsx: fix shortest path calculation
 2. Reset button bug (when journey ends)
 3. Reset button bug (when clicked twice)
 4. Dashboard resize bug
 
 TODO: 
 1. Driver moves onto next customer after first job is done
-2. Dynamic graphs for statsbar
+2, Output 2: occupied to unoccupied driver
+3. Output 3: Customers served by hour (len of elapsed time array)
+4. Dynamic graphs for statsbar
+
 3. Option to export data as json/CSV on statsbar
 4. Dashboard: checkbox for path viewing
 5. Dashboard: checkbox for icons/points

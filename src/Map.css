@@ -10,7 +10,7 @@
   right: 0;
 }
 
-.sidebarStyle {
+/* .sidebarStyle {
   position: absolute;
   top: 0;
   left: 0;
@@ -25,10 +25,14 @@
   padding: 20px 60px 6px 30px;
   font-weight: bold;
   max-width: 35%;
-}
+} */
 
 @media (max-width: 600px) {
   .sidebarStyle {
+    max-width: 35%;
+  }
+
+  .wrapper .sidebar {
     max-width: 35%;
   }
   
@@ -41,100 +45,146 @@
   }
 }
 
-.title {
-  line-height: 1.2em;
-  color: #ffffff;
-  font-weight: bold;
+
+/* SIDEBAR */
+
+.wrapper .sidebar{
+  background: #305c16;
+  /* display: flex; */
+  margin: 1%;
+  border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 350px;
+  height: 97%;
+  padding: 10px 0;
+  transition: all 0.5s ease;
+  z-index: 1 !important;
+}
+
+.wrapper .sidebar .profile{
   font-size: 40px;
-  margin-top: 10px;
+  margin-bottom: 1px;
+  text-align: left;
+  margin-left: 40px;
+}
+
+.wrapper .sidebar .profile h6{
+  font-weight: 900;
+  color: #ffffff;
+  margin:15px 0px 1px 0px;
+  margin-block-end: 1px;
+}
+
+.wrapper .sidebar .profile h1{
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  font-style: italic;
+  margin-top: 9px;
+}
+
+.wrapper .sidebar ul li {
+  display: block;
+  padding: 2px ;
+  border-bottom: 0.8px solid #ffffff;
+  font-weight: bold;
+  color: rgb(241, 237, 237);
+  font-size: 14px;
+  position: relative;
+  margin: 0px 40px 0px 40px;
 }
 
 
-.header {
-  line-height: 1.2em;
+/* OPTIONS */
+
+.optionSection {
+  padding-top: 5px;
+  padding-bottom: 0px;
+ 
+}
+
+.option {
+  height: 2em;
   color: #ffffff;
-  font-weight:400;
-  font-size: 16px;
-  margin-bottom: 50px;
+  font-weight:normal;
+  font-size: 14px;
+  margin: 4px 0px 7px 40px;
+  text-align: left;
+
+}
+
+input {
+  padding: 1px 30px;
+  border-radius:5px;
+  float: right;
+  margin-right: 40px;
+}
+
+
+/* VARIABLES */
+
+.variableSection {
+  padding-top: 5px;
+  padding-bottom: 0px;
 }
 
 .variable {
   line-height: 1.5em;
-  height: 1.5em;
+  height: 2em;
   color: #ffffff;
   font-weight:normal;
-  font-size: 15px;
-  margin-top: 12%;
-  text-align: left;
-  
-}
-
-.variableSection {
-  padding-bottom: 50px;
-}
-
-.optionSection {
-  padding-top: 10%;
-  padding-bottom: 10%;
-}
-
-.option {
-  line-height: 1.5em;
-  height: 1.5em;
-  color: #ffffff;
-  font-weight:normal;
-  font-size: 15px;
-  margin-top: 12%;
+  font-size: 14px;
+  margin: 4px 0px 7px 40px;
   text-align: left;
 }
 
 select{
-  width: 140px;
-  padding: 8px 20px;
+  width: 150px;
+  padding: 5px 30px;
   border-radius:5px;
-  margin-left: 10px;
   float: right;
+  margin-right: 40px;
 }
 
-input {
-  width: 140px;
-  padding: 5px 20px;
-  border-radius:5px;
-  margin-left: 10px;
-  float: right;
+
+/* OUTPUT */
+.output {
+  height: 2em;
+  color: #ffffff;
+  font-weight:normal;
+  font-size: 14px;
+  margin: 5px 0px 4px 40px;
+  text-align: left;
 }
 
-select:focus{
-  outline:none;
+.answer {
+  font-weight: bold;
+  font-size: 14px;
+  color: lightgreen;
+  margin: 0px 0px 3px 40px;
 }
 
-.dropdown {
-  /* display: inline-block; */
-  position: relative;
-}
 
-.overlay {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  flex: auto;
-}
+/* SETTINGS */
 
 .speedContainer {
-  /* display: flex; */
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0% 0% 15% 3%;
-  display: inline-block;
+  margin: 5px 0px 10px 40px;
+}
+
+.speedText {
+  margin: 5px 0px 10px 0px;
+  color: #fff;
+  font-size: 14px;
 }
 
 .speedButtons {
   display: flex;
   flex-direction: row;
-  margin-top: 7%;
   position: relative;
-  top: 12px;
+  /* top: 1px; */
 }
 
 .speedbutton {
@@ -159,13 +209,16 @@ select:focus{
   cursor: pointer;
   border-radius: 3px;
   position: relative;
-  left: 9.5px;
+  margin: 5px 0px 10px 40px
 }
 
 .overlay button.active,
 .overlay button:focus {
   background-color: #3da338;
 }
+
+
+
 
 
 
@@ -202,7 +255,7 @@ body {
   position: absolute;
   left: 10px;
   font-weight: 800;
-  font-size: 15px;
+  font-size: 14px;
   transform: rotate(270deg) translateX(-50%);
   -webkit-transform-origin: 0 0;
   -ms-transform-origin: 0 0;
