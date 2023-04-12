@@ -523,7 +523,7 @@ useEffect(() => {
         };
           
         function animateDelivering(i) {
-          console.log("DELIVERING NOWWWWWWWWWWW")
+          // console.log("DELIVERING NOWWWWWWWWWWW")
           if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
             startTime2 = new Date().getTime();
@@ -565,7 +565,7 @@ useEffect(() => {
             elapsedArray.push(elapsed2);
             console.log("elapsed2 ", elapsed2);
             console.log("elapsedArray ", elapsedArray);
-            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000)));
+            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod);
             setTotalTime(sumElapsed);
             console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);

@@ -40,15 +40,26 @@ const SideBar  = (props) => {
                     <input type="number" name="number" id="number" min="1" max="50"  ref={props.inputRef} value={inputValue} onChange={handleInputChange} />
                     </div>
 
-                    <div className="option">
+                    <div className="option" >
                     <label htmlFor="number2"> Number of Customers:</label>
-                    <input type="number" name="number2" id="number2" min="1" max="50" ref={props.inputRef2} value={inputValue2} onChange={handleInputChange2} />
+                    <select className="optionDrop" name="number" id="number2" >
+                        <option value="range1" > 1 - 5</option>
+                        <option value="range1" > 0 - </option>
+                        <option value="range1" > 0 - </option>
+                        <option value="range1" > 0 - </option>
+                    </select>
                     </div>
 
-                    <div className="option">
-                    <label htmlFor="number3"> Eatery Waiting Time:</label>
-                    <input type="number" name="number3" id="number3" min="1" max="50" />
+                    <div className="option" >
+                    <label htmlFor="number2"> Eatery Waiting Time:</label>
+                    <select className="optionDrop" name="number" id="number2" >
+                        <option value="range1" > 0 - </option>
+                        <option value="range1" > 0 - </option>
+                        <option value="range1" > 0 - </option>
+                        <option value="range1" > 0 - </option>
+                    </select>
                     </div>
+
                 </div>
 
                 <li>

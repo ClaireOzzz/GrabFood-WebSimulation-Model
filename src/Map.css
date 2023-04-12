@@ -113,7 +113,14 @@
   font-size: 14px;
   margin: 4px 0px 7px 40px;
   text-align: left;
+}
 
+.optionDrop {
+  width: 102px;
+  padding: 5px 10px;
+  border-radius:5px;
+  float: right;
+  margin-right: 40px;
 }
 
 input {
