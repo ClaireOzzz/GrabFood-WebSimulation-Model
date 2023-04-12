@@ -42,21 +42,18 @@ const SideBar  = (props) => {
 
                     <div className="option" >
                     <label htmlFor="number2"> Number of Customers:</label>
-                    <select className="optionDrop" name="number" id="number2" >
-                        <option value="range1" > 1 - 5</option>
-                        <option value="range1" > 0 - </option>
-                        <option value="range1" > 0 - </option>
-                        <option value="range1" > 0 - </option>
+                    <select className="optionDrop" name="number2" id="number2" >
+                        <option value="range1" > 5 - 10</option>
+                        <option value="range2" > 10 - 20</option>
                     </select>
                     </div>
 
                     <div className="option" >
-                    <label htmlFor="number2"> Eatery Waiting Time:</label>
-                    <select className="optionDrop" name="number" id="number2" >
-                        <option value="range1" > 0 - </option>
-                        <option value="range1" > 0 - </option>
-                        <option value="range1" > 0 - </option>
-                        <option value="range1" > 0 - </option>
+                    <label htmlFor="number3"> Food Preparation Time:</label>
+                    <select className="optionDrop" name="number3" id="number3" >
+                        <option value="range1" > 0 - 5 mins </option>
+                        <option value="range2" > 5 - 15 mins </option>
+                        <option value="range3" > 15 - 30 mins </option>
                     </select>
                     </div>
 

@@ -255,7 +255,6 @@ useEffect(() => {
       drivers = [];
       setDrivers(drivers);
       //generate_speeds()
-      console.log("DRIVERS ", drivers);
 
       for (let i = 0; i < minInput; i++) {
         const driver = {
@@ -270,7 +269,6 @@ useEffect(() => {
         drivers.push(driver);
       }
       setDrivers(drivers);
-      console.log("DRIVERS22222222 ", drivers);
     
       animations = [];
       animations2 = [];
@@ -279,10 +277,8 @@ useEffect(() => {
       steps = [];
       steps2 = [];
       console.log("new restart function");
-      console.log("MSVJDSNDJNCCAC " , drivers[0].state);
 
       for (let i = 0; i < minInput; i++) {
-        console.log("stattTEEEEEE " , drivers[i].state);
         if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
