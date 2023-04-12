@@ -29,6 +29,7 @@ var elapsedArray = [];
 var currentdate = new Date(); 
 
 export var nod; 
+export var customerInput;
 export var conditions = ['morning', 'normal', 'ebicycle'];
 export var driver_speed_array = [];
 
@@ -131,6 +132,20 @@ useEffect(() => {
       console.log("ebicycle");
       conditions[2] = 'ebicycle';
       console.log(conditions);
+    }
+  });
+
+  document.getElementById('noc').addEventListener('change', (event) => {
+    if (event.target.value === "5 - 10") {
+      console.log("5 - 10");
+      customerInput = 5;
+    }
+  });
+
+  document.getElementById('noc').addEventListener('change', (event) => {
+    if (event.target.value === "10 - 20") {
+      console.log("10 - 20");
+      customerInput = 10;
     }
   });
 
