@@ -6,8 +6,7 @@ import { gsap } from 'gsap';
 //Seperate components
 import SideBar from './Sidebar';
 import Statbar from './Statbar';
-import calculations, { eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates, 
-      shortestPaths} from './Calculations';
+import calculations, { eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates } from './Calculations';
 import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
@@ -25,7 +24,7 @@ import './Map.css';
 mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
-let currentSpeed = 1;
+let currentSpeed = 32;
 var elapsedArray = [];
 
 export var nod; 
@@ -53,8 +52,6 @@ const Map = () => {
     setUserInput(inputRef.current.value);
     setUserInput2(inputRef2.current.value);
   };
-
-
   
 
 useEffect(() => {
@@ -137,8 +134,7 @@ useEffect(() => {
     }
   });
 
-}, []); // empty dependency array ensures that this effect is only run once
-
+}, []); 
 
   // Initialize map when component mounts
   useEffect(() => {
@@ -215,6 +211,12 @@ useEffect(() => {
           const segment = turf.along(route.features[0], i);
           arc.push(segment.geometry.coordinates);  
       };
+
+      //theorhetical time calculation
+      const theorheticaltime = currentSpeed*((calcSteps * 16.67)/60000);
+      console.log("theorheticaltime ", theorheticaltime);
+      console.log("lineDistance ", lineDistance);
+      console.log("vehicleSpeed ", vehicleSpeed);
 
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
@@ -481,7 +483,8 @@ useEffect(() => {
           }
           drivers[i].counter += 1 ;
           setDrivers(drivers);
-        
+          console.log("drivers[i].counter ", drivers[i].counter)
+          console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
           if (drivers[i].counter === Math.floor(steps[i])) {
             // Set the animation to run again with a different path and update the driver state
             console.log(`done for - ${i}`);
@@ -543,7 +546,7 @@ useEffect(() => {
             elapsedArray.push(elapsed2);
             console.log("elapsed2 ", elapsed2);
             console.log("elapsedArray ", elapsedArray);
-            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/2);
+            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000)));
             setTotalTime(sumElapsed);
             console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);
