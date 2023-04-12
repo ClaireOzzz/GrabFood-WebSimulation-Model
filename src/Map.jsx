@@ -6,7 +6,7 @@ import { gsap } from 'gsap';
 //Seperate components
 import SideBar from './Sidebar';
 import Statbar from './Statbar';
-import calculations, { eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates } from './Calculations';
+import calculations, { secondCalculations, eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates } from './Calculations';
 import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
@@ -156,8 +156,9 @@ useEffect(() => {
     
     nod = userInput; // NOD = number of drivers
     generate_number_of_customers()
+    console.log("number_of_customers ", number_of_customers);
     const nou = number_of_customers;
-    //console.log(nou)
+    console.log(nou)
     // calculations(nod, nou)
     var minInput = Math.min(nod, nou);
 
@@ -237,15 +238,20 @@ useEffect(() => {
         console.log(` animations2length `, animations2.length);
       };
     }
-    restart(nod);
+    restart(nod, nou, minInput);
     console.log("called again");
 
-    function restart(nod) {
+    function restart(nod, nou, minInput) {
       console.log("NOUUUU ", nou);
       console.log("NODDDD ", nod);
       console.log("minInput ", minInput);
       // setDriverCoordinates([], {});
-      // calculations(nod);
+      // calculations((nod, nou) => { 
+      //   secondCalculations(nod, nou);
+      // })
+      calculations(nod, nou);
+      secondCalculations(nod, nou);
+      
       drivers = [];
       setDrivers(drivers);
       //generate_speeds()
@@ -591,11 +597,11 @@ useEffect(() => {
           setDrivers(drivers);
           elapsedArray = [];
           driver_speed_array = [];
-          // restart(nod);
-          restart(nod);
+       
+          restart(nod, nou, minInput)
           // setTimeout(() => {
             console.log("CLICKEDDDDDDDDDDDDDDD");
-            for (let i = 0; i <2; i++) {
+            for (let i = 0; i < minInput; i++) {
             drivers[i].counter=0;
             console.log("STEPS ", steps[i]);
             setDrivers(drivers);
@@ -604,9 +610,9 @@ useEffect(() => {
             animateFetching(i)
             }
             // }, 7000);
-          // restart((1) => { 
+          // restart((nod, nou, minInput) => { 
           //     console.log("This message is shown after 3 seconds");
-          //     for (let i = 0; i < 1; i++) {
+          //     for (let i = 0; i < minInput; i++) {
           //       drivers[i].counter=0;
           //       console.log("STEPS ", steps[i]);
           //       setDrivers(drivers);
@@ -614,24 +620,6 @@ useEffect(() => {
           //       // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
           //       animateFetching(i)
           //     }})
-
-          // }, 3000);
-          // restart((nod) => {
-          //   console.log("CLICKEDDDDDDDDDDDDDDD")},
-
-          //   for (let i = 0; i < Math.min(nod, nou); i++) {
-          //   drivers[i].counter=0;
-          //   console.log("STEPS ", steps[i]);
-          //   setDrivers(drivers);
-          //   animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-          //   // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
-          //   animateFetching(i)
-          
-          // })
-
-
-            
-
         });
 
         run();
@@ -644,7 +632,7 @@ useEffect(() => {
       map.update();
     }
 
-  },[userInput]); 
+  },[userInput, userInput2]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

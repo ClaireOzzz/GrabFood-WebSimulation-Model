@@ -78,14 +78,14 @@ export default function calculations(nod, nou) {
   }
 };
 
-calculations(2, 3);
+// calculations(2, 3);
 
 export var eateryToCustomerArray = []
 let eateryToCustomerDist = []
 export var driverToEateryDict ={}
 var driverFullDist = {};
 
-function secondCalculations(nod, nou) {
+export function secondCalculations(nod, nou) {
   //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
   var counter = 0;
   for (const eateryCoord of Object.keys(userAssignments)) {
@@ -151,7 +151,7 @@ function secondCalculations(nod, nou) {
   function getMinDistance(driverFullDist) {
     let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
     console.log("minDistance2 ", minDistance2);
-    index = -1
+    // index = -1
     for (let driver in driverFullDist) {
       let driverIndex = driverFullDist[driver].indexOf(minDistance2);
       if (driverIndex !== -1) { // Check if 100 is found in the current array
@@ -190,7 +190,7 @@ function secondCalculations(nod, nou) {
 
 
 
-secondCalculations(2, 3);
+// secondCalculations(2, 3);
 
 
 // console.log("driverAssignments ", driverAssignments);
