@@ -24,7 +24,7 @@ import './Map.css';
 mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
-let currentSpeed = 32;
+let currentSpeed = 64;
 var elapsedArray = [];
 var currentdate = new Date(); 
 
@@ -573,6 +573,8 @@ useEffect(() => {
           timeline.pause();
           timeline.clear();    
           // setDrivers([]);
+            // var sumElapsed = 0;
+          setTotalTime(0);
           for (let i = 0; i < Math.min(nod, nou); i++) {
             drivers[i].counter = 0;
             drivers[i].state = FETCHING;
