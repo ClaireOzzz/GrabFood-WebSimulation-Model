@@ -27,6 +27,7 @@ mapboxgl.accessToken =
 let currentSpeed = 64;
 var elapsedArray = [];
 var currentdate = new Date(); 
+var foodPrepTime = 0;
 
 export var nod; 
 export var customerInput;
@@ -145,6 +146,14 @@ useEffect(() => {
   document.getElementById('fpt').addEventListener('change', (event) => {
     if (event.target.value === "10 - 20") {
       console.log("10 - 20");
+      customerInput = 10;
+    }
+  });
+
+
+  document.getElementById('fpt').addEventListener('change', (event) => {
+    if (event.target.value === "0 - 5 mins") {
+      console.log("0 - 5 mins");
       customerInput = 10;
     }
   });
