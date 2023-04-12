@@ -37,7 +37,7 @@ const Map = () => {
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
-  const [userInput2, setUserInput2] = useState(5);
+  // const [userInput2, setUserInput2] = useState(5);
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const [totalTime, setTotalTime] = useState(0);
@@ -52,7 +52,7 @@ const Map = () => {
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
-    setUserInput2(inputRef2.current.value);
+    // setUserInput2(inputRef2.current.value);
   };
   
 
@@ -632,7 +632,7 @@ useEffect(() => {
       map.update();
     }
 
-  },[userInput, userInput2]); 
+  },[userInput]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
