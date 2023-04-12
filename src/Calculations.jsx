@@ -10,8 +10,6 @@ import mapLines from './data/road_line.json';
 
 export var driverCoordinates = [];
 export var userCoordinates = [];
-// export var shortestPaths = [];
-// var shortestDistance = Infinity;
 var endCoordinates = [];
 var userAssignments = {};
 var paths = [];
@@ -29,7 +27,6 @@ const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
 export default function calculations(nod, nou) {
   driverCoordinates = [];
   userCoordinates = [];
-  // shortestPaths = [];
   endCoordinates = [];
   userAssignments = {};
   distances = [];
@@ -181,7 +178,6 @@ function secondCalculations(nod, nou) {
     console.log("d ", d);       // driver with minimum distance
   }
 
-
     //LOOP THROUGH DRIVERS
     for (let k = 0; k < nod; k++ ) {
       console.log("k ", k);
@@ -201,11 +197,11 @@ secondCalculations(2, 3);
 // console.log("Object.keys(driverAssignments)[0] ", Object.keys(driverAssignments)[0]);
 // console.log("driverToEateryPath ", driverToEateryPath);
 
-//gives path 1
-console.log("driverToEateryPath333 ", driverToEateryDict["driver0"][driverAssignments["driver0"]]);
+// //gives path 1
+// console.log("driverToEateryPath333 ", driverToEateryDict["driver0"][driverAssignments["driver0"]]);
 
-//gives path 2
-console.log("eateryToCustomerArray ", eateryToCustomerArray[driverAssignments["driver0"]])
+// //gives path 2
+// console.log("eateryToCustomerArray ", eateryToCustomerArray[driverAssignments["driver0"]])
 
 
 //driverToEateryDict[driverName] = driverToEateryPath

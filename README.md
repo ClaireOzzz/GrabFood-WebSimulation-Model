@@ -38,6 +38,7 @@ FIXME:
 2. Reset button bug (when journey ends)
 3. Reset button bug (when clicked twice)
 4. Dashboard resize bug
+5. Input waiting time, change to minutes
 
 TODO: 
 1. Driver moves onto next customer after first job is done
@@ -49,9 +50,8 @@ TODO:
 4. Dashboard: checkbox for path viewing
 5. Dashboard: checkbox for icons/points
 6. Run 30 times in backend
-7. Edit Dashboard design
-8. Change driver and customer number to range bar
 9. Add food waiting time range bar
+10. Make the statsbar slide out when click instead of hover
 
 
 DASHBOARD LAYOUT

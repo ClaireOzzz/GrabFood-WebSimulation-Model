@@ -60,7 +60,6 @@ useEffect(() => {
   const speeds = [1, 8, 16, 32, 64]; // define the available speeds
   
   const speedButtons = document.querySelectorAll('.speedbutton');
-  
   // Add event listeners to each speed button
   speedButtons.forEach((button, index) => {
     button.addEventListener('click', () => {
@@ -160,10 +159,13 @@ useEffect(() => {
     const nou = number_of_customers;
     //console.log(nou)
     // calculations(nod, nou)
+    var minInput = Math.min(nod, nou);
+
+    // console.log("minInput ", minInput);
     console.log("userInput ", userInput);
     console.log("userInput2 ", userInput2);
 
-    const drivers =[];
+    var drivers =[];
   
     generate_speeds();
 
@@ -239,11 +241,17 @@ useEffect(() => {
     console.log("called again");
 
     function restart(nod) {
+      console.log("NOUUUU ", nou);
+      console.log("NODDDD ", nod);
+      console.log("minInput ", minInput);
       // setDriverCoordinates([], {});
       // calculations(nod);
-      // setDrivers([]);
+      drivers = [];
+      setDrivers(drivers);
       //generate_speeds()
-      for (let i = 0; i < Math.min(nod, nou); i++) {
+      console.log("DRIVERS ", drivers);
+
+      for (let i = 0; i < minInput; i++) {
         const driver = {
           "type": DRIVER,
           "index": i,
@@ -256,7 +264,8 @@ useEffect(() => {
         drivers.push(driver);
       }
       setDrivers(drivers);
-      
+      console.log("DRIVERS22222222 ", drivers);
+    
       animations = [];
       animations2 = [];
       animationPoints = [];
@@ -264,14 +273,16 @@ useEffect(() => {
       steps = [];
       steps2 = [];
       console.log("new restart function");
-      for (let i = 0; i < Math.min(nod, nou); i++) {
+      console.log("MSVJDSNDJNCCAC " , drivers[0].state);
+
+      for (let i = 0; i < minInput; i++) {
+        console.log("stattTEEEEEE " , drivers[i].state);
         if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
       };
-      
   
-      for (let i = 0; i < Math.min(nod, nou); i++) {
+      for (let i = 0; i < minInput; i++) {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
         prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
@@ -456,7 +467,7 @@ useEffect(() => {
           }
           // calculate the time delta based on the selected speed
           const timeDelta = (new Date().getTime() - startTime);
-          
+          // console.log("drivers[i].counter  ", drivers[i].counter);
           const start =
           animations[i].features[0].geometry.coordinates[
             drivers[i].counter >= steps[i] ? drivers[i].counter - 1 : drivers[i].counter
@@ -506,6 +517,7 @@ useEffect(() => {
         };
           
         function animateDelivering(i) {
+          console.log("DELIVERING NOWWWWWWWWWWW")
           if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
             startTime2 = new Date().getTime();
@@ -515,7 +527,6 @@ useEffect(() => {
           }
           // calculate the time delta based on the selected speed
           const timeDelta2 = new Date().getTime() - startTime;
-        
           const start =
           animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
               ];
@@ -558,7 +569,7 @@ useEffect(() => {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
         function run() {
-          for (let i = 0; i < Math.min(nod, nou); i++) {
+          for (let i = 0; i < minInput; i++) {
             if ( drivers[i].state === FETCHING) {
               timeline.add(() => animateFetching(i));
             };
@@ -570,24 +581,57 @@ useEffect(() => {
     
         document.getElementById('reset').addEventListener('click', () => { 
           console.log("reset clicked");
-          timeline.pause();
+          // timeline.pause();
           timeline.clear();    
           // setDrivers([]);
             // var sumElapsed = 0;
+         
           setTotalTime(0);
-          for (let i = 0; i < Math.min(nod, nou); i++) {
-            drivers[i].counter = 0;
-            drivers[i].state = FETCHING;
-          };
           
           setDrivers(drivers);
           elapsedArray = [];
           driver_speed_array = [];
+          // restart(nod);
           restart(nod);
-          for (let i = 0; i < Math.min(nod, nou); i++) {
-            animateFetching(i);
-          };
-          run();
+          // setTimeout(() => {
+            console.log("CLICKEDDDDDDDDDDDDDDD");
+            for (let i = 0; i <2; i++) {
+            drivers[i].counter=0;
+            console.log("STEPS ", steps[i]);
+            setDrivers(drivers);
+            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+            // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
+            animateFetching(i)
+            }
+            // }, 7000);
+          // restart((1) => { 
+          //     console.log("This message is shown after 3 seconds");
+          //     for (let i = 0; i < 1; i++) {
+          //       drivers[i].counter=0;
+          //       console.log("STEPS ", steps[i]);
+          //       setDrivers(drivers);
+          //       animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+          //       // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
+          //       animateFetching(i)
+          //     }})
+
+          // }, 3000);
+          // restart((nod) => {
+          //   console.log("CLICKEDDDDDDDDDDDDDDD")},
+
+          //   for (let i = 0; i < Math.min(nod, nou); i++) {
+          //   drivers[i].counter=0;
+          //   console.log("STEPS ", steps[i]);
+          //   setDrivers(drivers);
+          //   animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+          //   // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
+          //   animateFetching(i)
+          
+          // })
+
+
+            
+
         });
 
         run();
