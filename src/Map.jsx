@@ -142,7 +142,7 @@ useEffect(() => {
     }
   });
 
-  document.getElementById('noc').addEventListener('change', (event) => {
+  document.getElementById('fpt').addEventListener('change', (event) => {
     if (event.target.value === "10 - 20") {
       console.log("10 - 20");
       customerInput = 10;
@@ -174,12 +174,7 @@ useEffect(() => {
     console.log("number_of_customers ", number_of_customers);
     const nou = number_of_customers;
     console.log(nou)
-    // calculations(nod, nou)
     var minInput = Math.min(nod, nou);
-
-    // console.log("minInput ", minInput);
-    console.log("userInput ", userInput);
-    console.log("userInput2 ", userInput2);
 
     var drivers =[];
   
@@ -260,10 +255,7 @@ useEffect(() => {
       console.log("NOUUUU ", nou);
       console.log("NODDDD ", nod);
       console.log("minInput ", minInput);
-      // setDriverCoordinates([], {});
-      // calculations((nod, nou) => { 
-      //   secondCalculations(nod, nou);
-      // })
+  
       calculations(nod, nou);
       secondCalculations(nod, nou);
       
@@ -310,7 +302,6 @@ useEffect(() => {
       console.log("stepD ", steps2);
       console.log("stepF ", steps);
     }
-   
    
 
     // RESTURANT ICONS /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -454,7 +445,6 @@ useEffect(() => {
 
         // Loop through the animations array and add each point2 as a separate source and layer
         animationPoints.forEach((animationPoint, index) => {
-          // console.log('point-', index);
             map.addSource(`point-${index}`, {
               'type': 'geojson',
               'data': animationPoint
@@ -484,7 +474,6 @@ useEffect(() => {
           }
           // calculate the time delta based on the selected speed
           const timeDelta = (new Date().getTime() - startTime);
-          // console.log("drivers[i].counter  ", drivers[i].counter);
           const start =
           animations[i].features[0].geometry.coordinates[
             drivers[i].counter >= steps[i] ? drivers[i].counter - 1 : drivers[i].counter

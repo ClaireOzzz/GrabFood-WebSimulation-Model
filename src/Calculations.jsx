@@ -151,7 +151,7 @@ export function secondCalculations(nod, nou) {
   function getMinDistance(driverFullDist) {
     let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
     console.log("minDistance2 ", minDistance2);
-    // index = -1
+    index = -1
     for (let driver in driverFullDist) {
       let driverIndex = driverFullDist[driver].indexOf(minDistance2);
       if (driverIndex !== -1) { // Check if 100 is found in the current array
