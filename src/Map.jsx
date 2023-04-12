@@ -26,6 +26,7 @@ mapboxgl.accessToken =
 
 let currentSpeed = 32;
 var elapsedArray = [];
+var currentdate = new Date(); 
 
 export var nod; 
 export var conditions = ['morning', 'normal', 'ebicycle'];
@@ -448,10 +449,10 @@ useEffect(() => {
 
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
         function animateFetching(i) {
-          // var counter = drivers[i].counter;
+  
           if (drivers[i].counter === 0) {
-            // capture the start time when counter is zero
-             startTime = new Date().getTime();
+            startTime = new Date().getTime();
+           
           }
           // calculate the time delta based on the selected speed
           const timeDelta = (new Date().getTime() - startTime);
@@ -483,9 +484,10 @@ useEffect(() => {
           }
           drivers[i].counter += 1 ;
           setDrivers(drivers);
-          console.log("drivers[i].counter ", drivers[i].counter)
-          console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
+          // console.log("drivers[i].counter ", drivers[i].counter)
+          // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
           if (drivers[i].counter === Math.floor(steps[i])) {
+            
             // Set the animation to run again with a different path and update the driver state
             console.log(`done for - ${i}`);
             elapsed = (timeDelta);
@@ -570,7 +572,13 @@ useEffect(() => {
           console.log("reset clicked");
           timeline.pause();
           timeline.clear();    
-          setDrivers([]);
+          // setDrivers([]);
+          for (let i = 0; i < Math.min(nod, nou); i++) {
+            drivers[i].counter = 0;
+            drivers[i].state = FETCHING;
+          };
+          
+          setDrivers(drivers);
           elapsedArray = [];
           driver_speed_array = [];
           restart(nod);

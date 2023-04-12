@@ -81,7 +81,7 @@ export default function calculations(nod, nou) {
   }
 };
 
-calculations(1, 3);
+calculations(2, 3);
 
 export var eateryToCustomerArray = []
 let eateryToCustomerDist = []
@@ -194,7 +194,7 @@ function secondCalculations(nod, nou) {
 
 
 
-secondCalculations(1, 3);
+secondCalculations(2, 3);
 
 
 // console.log("driverAssignments ", driverAssignments);
