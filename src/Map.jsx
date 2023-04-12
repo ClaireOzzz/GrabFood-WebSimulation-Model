@@ -30,7 +30,7 @@ var currentdate = new Date();
 var foodPrepTime = 0;
 
 export var nod; 
-export var customerInput;
+export var customerInput = 5;
 export var conditions = ['morning', 'normal', 'ebicycle'];
 export var driver_speed_array = [];
 
@@ -143,7 +143,7 @@ useEffect(() => {
     }
   });
 
-  document.getElementById('fpt').addEventListener('change', (event) => {
+  document.getElementById('noc').addEventListener('change', (event) => {
     if (event.target.value === "10 - 20") {
       console.log("10 - 20");
       customerInput = 10;
