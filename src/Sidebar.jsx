@@ -51,9 +51,9 @@ const SideBar  = (props) => {
                     <div className="option" >
                     <label htmlFor="fpt"> Food Preparation Time:</label>
                     <select className="optionDrop" name="fpt" id="fpt" >
-                        <option value="range1" > 0 - 5 mins </option>
-                        <option value="range2" > 5 - 15 mins </option>
-                        <option value="range3" > 15 - 30 mins </option>
+                        <option value="0 - 5 mins" > 0 - 5 mins </option>
+                        <option value="5 - 15 mins" > 5 - 15 mins </option>
+                        <option value="15 - 30 mins" > 15 - 30 mins </option>
                     </select>
                     </div>
 

@@ -86,6 +86,10 @@ export var driverToEateryDict ={}
 var driverFullDist = {};
 
 export function secondCalculations(nod, nou) {
+  eateryToCustomerArray = []
+  eateryToCustomerDist = []
+  driverToEateryDict ={}
+  driverFullDist = {};
   //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
   var counter = 0;
   for (const eateryCoord of Object.keys(userAssignments)) {
