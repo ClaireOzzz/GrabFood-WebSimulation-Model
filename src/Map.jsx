@@ -543,12 +543,9 @@ useLayoutEffect(() => {
             setTimeout(() => {
               drivers[i].counter = 0;
               drivers[i].state = DELIVERING;
-              // timeline.add(() => animateDelivering(i));
-              // animateDelivering(i)
+
               animateDelivering(i)
               function animateDelivering(i) {
-                // 
-              
                   // update the animationPoints and animations variables to reflect the starting position
                 animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
                 
@@ -602,58 +599,6 @@ useLayoutEffect(() => {
           }; 
         };
           
-        // function animateDelivering(i) {
-        //   if (drivers[i].counter === 0) {
-        //     // capture the start time when counter is zero
-        //     startTime2 = new Date().getTime();
-         
-        //     // update the animationPoints and animations variables to reflect the starting position
-        //     animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-        //   }
-        //   // calculate the time delta based on the selected speed
-        //   const timeDelta2 = new Date().getTime() - startTime;
-        //   const start =
-        //   animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
-        //       ];
-        //   const end =
-        //   animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter : drivers[i].counter + 1
-        //       ];
-        //   if (!start || !end) return;
-        
-        //   animationPoints2[i].features[0].geometry.coordinates =
-        //   animations2[i].features[0].geometry.coordinates[drivers[i].counter];
-        
-        //   animationPoints2[i].features[0].properties.bearing = turf.bearing(
-        //       turf.point(start),
-        //       turf.point(end)
-        //   );
-            
-        //   map.getSource(`point-${i}`).setData(animationPoints2[i]);
-        
-        //   if (drivers[i].counter < steps2[i]) {
-        //     requestAnimationFrame(() => animateDelivering(i));
-        //   }
-        //   drivers[i].counter += 1 ;
-        //   setDrivers(drivers);
-        
-        //   if (drivers[i].counter === Math.floor(steps2[i])) {
-        //     // Update the driver state when the second animation is complete
-        //     drivers[i].state = DONE;
-        //     setDrivers(drivers);
-        //     elapsed2 = (timeDelta2);
-        //     elapsedArray.push(elapsed2);
-        //     console.log("elapsed2 ", elapsed2);
-        //     console.log("elapsedArray ", elapsedArray);
-        //     var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
-        //     setTotalTime(sumElapsed);
-
-        //     prevCustomerNumber += 1;
-        //     setServedCustomers(prevCustomerNumber);
-
-        //     console.log(`Elapsed time: ${sumElapsed} ms`);
-        //     console.log(`${i} DONE`);
-        //   }; 
-        // };
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
@@ -688,8 +633,8 @@ useLayoutEffect(() => {
           for (let i = 0; i < minInput; i++) {
             drivers[i].counter=0;
             setDrivers(drivers);
-            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-            // animateFetching(i)
+            // animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+            run()
           }
         });
 
