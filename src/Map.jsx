@@ -25,7 +25,7 @@ mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
 let currentSpeed = 64;
-var elapsedArray = [];
+
 var currentdate = new Date(); 
 
 //food prep time
@@ -39,6 +39,8 @@ export var conditions = ['morning', 'normal', 'ebicycle'];
 export var driver_speed_array = [];
 
 const Map = () => {
+  var elapsedArray = [];
+  // console.log("START HEREEEEEEEEE");
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
@@ -58,19 +60,18 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
-  // function handleResetClick() {
-  //   setResetCount(resetCount + 1);
-  // }
+  function handleResetClick() {
+    setResetCount(resetCount + 1);
+  }
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
-    setResetCount(resetCount + 1);
   };
   
 
-useLayoutEffect(() => {
+  useLayoutEffect(() => {
   const speeds = [1, 8, 16, 32, 64]; // define the available speeds
-  
+  console.log("START  AT USEFFECT");
   const speedButtons = document.querySelectorAll('.speedbutton');
   // Add event listeners to each speed button
   speedButtons.forEach((button, index) => {
@@ -494,6 +495,7 @@ useLayoutEffect(() => {
 
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
         function animateFetching(i) {
+  
           if (drivers[i].counter === 0) {
             startTime = new Date().getTime();
            
@@ -527,11 +529,8 @@ useLayoutEffect(() => {
           }
           drivers[i].counter += 1 ;
           setDrivers(drivers);
-
-          // console.log(`${i} COUNTER`, drivers[i].counter);
-          // console.log(`${i} STEPS2`, Math.floor(steps[i]));
-          // console.log(`${i} DRIVER`, drivers[i]); 
-
+          // console.log("drivers[i].counter ", drivers[i].counter)
+          // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
           if (drivers[i].counter === Math.floor(steps[i])) {
             
             // Set the animation to run again with a different path and update the driver state
@@ -543,15 +542,17 @@ useLayoutEffect(() => {
             setTimeout(() => {
               drivers[i].counter = 0;
               drivers[i].state = DELIVERING;
-              // timeline.add(() => animateDelivering(i));
-              // animateDelivering(i)
-              animateDelivering(i)
+              setDrivers(drivers);
+
+              animateDelivering(i);
               function animateDelivering(i) {
-                // 
-              
+                if (drivers[i].counter === 0) {
+                  // capture the start time when counter is zero
+                  startTime2 = new Date().getTime();
+               
                   // update the animationPoints and animations variables to reflect the starting position
-                animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-                
+                  animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+                }
                 // calculate the time delta based on the selected speed
                 const timeDelta2 = new Date().getTime() - startTime;
                 const start =
@@ -588,28 +589,26 @@ useLayoutEffect(() => {
                   console.log("elapsedArray ", elapsedArray);
                   var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
                   setTotalTime(sumElapsed);
-
+      
                   prevCustomerNumber += 1;
                   setServedCustomers(prevCustomerNumber);
-
+      
                   console.log(`Elapsed time: ${sumElapsed} ms`);
                   console.log(`${i} DONE`);
                 }; 
               };
-              
+
+
             }, 5000*(1/currentSpeed));
-            setDrivers(drivers);
+           
           }; 
         };
-          
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
         function run() {
           for (let i = 0; i < minInput; i++) {
-            // console.log("drivers.length ", drivers.length)
             if ( drivers[i].state === FETCHING) {
-              // console.log("2 ", drivers[i])
               timeline.add(() => animateFetching(i));
             };
             // if ( drivers[i].state === DELIVERING) {
@@ -617,30 +616,7 @@ useLayoutEffect(() => {
             // };
           };
         };
-
-        document.getElementById('reset').addEventListener('click', () => { 
-          // handleResetClick();
-          handleReset();
-          console.log("RESET CLICKED");
-          // timeline.pause();
-          timeline.clear();    
     
-          setTotalTime(0);  
-          prevCustomerNumber = 0;
-          setServedCustomers(0);      
-          setDrivers(drivers);
-          elapsedArray = [];
-          driver_speed_array = [];
-      
-          // restart(nod, nou, minInput)
-          for (let i = 0; i < minInput; i++) {
-            drivers[i].counter=0;
-            setDrivers(drivers);
-            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-            // animateFetching(i)
-          }
-        });
-
         run();
      
       });});
@@ -651,10 +627,10 @@ useLayoutEffect(() => {
       map.update();
     }
 
-  },[userInput]); 
+  },[userInput, resetCount]); 
 
 
-//SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <SideBar 
@@ -662,7 +638,8 @@ useLayoutEffect(() => {
         totalTime ={totalTime}
         occupied ={occupied}
         unoccupied ={unoccupied}
-        // handleReset={handleReset}
+        handleResetClick={handleResetClick}
+        handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
         <Statbar></Statbar>
@@ -673,3 +650,4 @@ useLayoutEffect(() => {
 }
 
 export default Map;
+
