@@ -543,9 +543,12 @@ useLayoutEffect(() => {
             setTimeout(() => {
               drivers[i].counter = 0;
               drivers[i].state = DELIVERING;
-
+              // timeline.add(() => animateDelivering(i));
+              // animateDelivering(i)
               animateDelivering(i)
               function animateDelivering(i) {
+                // 
+              
                   // update the animationPoints and animations variables to reflect the starting position
                 animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
                 
@@ -633,8 +636,8 @@ useLayoutEffect(() => {
           for (let i = 0; i < minInput; i++) {
             drivers[i].counter=0;
             setDrivers(drivers);
-            // animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-            run()
+            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+            // animateFetching(i)
           }
         });
 
@@ -670,4 +673,3 @@ useLayoutEffect(() => {
 }
 
 export default Map;
-
