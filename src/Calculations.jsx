@@ -160,7 +160,6 @@ export function secondCalculations(nod, nou) {
       let driverIndex = driverFullDist[driver].indexOf(minDistance2);
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
-        console.log("driver ", driver);
         d = driver;
         if (minDistance2 === Infinity) break;
         else driverAssignments[d] = index;
@@ -170,7 +169,7 @@ export function secondCalculations(nod, nou) {
     //1. remove driver
     console.log("driverFullDist ", driverFullDist);
     delete driverFullDist[d];
-    console.log("driverFullDist ", driverFullDist);
+    // console.log("driverFullDist ", driverFullDist);
 
     //2. replace eatery index with infinity
     // console.log("index ", index); // index of eatery with minimum distance
@@ -178,7 +177,7 @@ export function secondCalculations(nod, nou) {
       driverFullDist[driver][index] = Infinity;
     }
 
-    console.log("driverFullDist ", driverFullDist);
+    // console.log("driverFullDist ", driverFullDist);
     console.log("d ", d);       // driver with minimum distance
   }
 
