@@ -58,12 +58,13 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
-  function handleResetClick() {
-    setResetCount(resetCount + 1);
-  }
+  // function handleResetClick() {
+  //   setResetCount(resetCount + 1);
+  // }
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
+    setResetCount(resetCount + 1);
   };
   
 
@@ -527,8 +528,11 @@ useLayoutEffect(() => {
           }
           drivers[i].counter += 1 ;
           setDrivers(drivers);
-          // console.log("drivers[i].counter ", drivers[i].counter)
-          // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
+
+          // console.log(`${i} COUNTER`, drivers[i].counter);
+          // console.log(`${i} STEPS2`, Math.floor(steps[i]));
+          // console.log(`${i} DRIVER`, drivers[i]); 
+
           if (drivers[i].counter === Math.floor(steps[i])) {
             
             // Set the animation to run again with a different path and update the driver state
@@ -604,17 +608,22 @@ useLayoutEffect(() => {
         const timeline = gsap.timeline();
         function run() {
           for (let i = 0; i < minInput; i++) {
+            // console.log("1 ", drivers[i])
             if ( drivers[i].state === FETCHING) {
+              console.log("2 ", drivers[i])
               timeline.add(() => animateFetching(i));
             };
-            if ( drivers[i].state === DELIVERING) {
-              timeline.add(() => animateDelivering(i));
-            };
+            // if ( drivers[i].state === DELIVERING) {
+            //   timeline.add(() => animateDelivering(i));
+            // };
           };
         };
+
+        run();
     
         document.getElementById('reset').addEventListener('click', () => { 
-          handleResetClick();
+          // handleResetClick();
+          handleReset();
           console.log("RESET CLICKED");
           // timeline.pause();
           timeline.clear();    
@@ -626,7 +635,7 @@ useLayoutEffect(() => {
           elapsedArray = [];
           driver_speed_array = [];
       
-          restart(nod, nou, minInput)
+          // restart(nod, nou, minInput)
           for (let i = 0; i < minInput; i++) {
             drivers[i].counter=0;
             setDrivers(drivers);
@@ -635,7 +644,7 @@ useLayoutEffect(() => {
           }
         });
 
-        run();
+        
      
       });});
 
@@ -645,7 +654,7 @@ useLayoutEffect(() => {
       map.update();
     }
 
-  },[userInput, resetCount]); 
+  },[userInput]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -656,7 +665,7 @@ useLayoutEffect(() => {
         totalTime ={totalTime}
         occupied ={occupied}
         unoccupied ={unoccupied}
-        handleReset={handleReset}
+        // handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
         <Statbar></Statbar>

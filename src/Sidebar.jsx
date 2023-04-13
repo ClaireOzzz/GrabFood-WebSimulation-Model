@@ -8,9 +8,9 @@ const SideBar  = (props) => {
         setInputValue(event.target.value);
     };
 
-    const handleReset = () => {
-        props.handleReset();
-    };
+    // const handleReset = () => {
+    //     props.handleReset();
+    // };
   
     return (
         <div className="wrapper">
@@ -123,7 +123,7 @@ const SideBar  = (props) => {
                     </div>
                 </div>
             
-                <button className ="resetbutton" id="reset" onClick={handleReset} >Simulate</button>
+                <button className ="resetbutton" id="reset" >Simulate</button>
    
             </ul>
         </div>
