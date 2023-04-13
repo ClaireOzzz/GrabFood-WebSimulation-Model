@@ -60,14 +60,21 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
+  
   function handleResetClick() {
     setResetCount(resetCount + 1);
+    setTotalTime(0);
+    setServedCustomers(0);
   }
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
+    setOccupied(0);
+    setUnoccupied(0);
+    setServedCustomers(0);
+    prevCustomerNumber=0;
   };
-  
+    
 
   useLayoutEffect(() => {
   const speeds = [1, 8, 16, 32, 64]; // define the available speeds
@@ -591,7 +598,7 @@ const Map = () => {
                   setTotalTime(sumElapsed);
       
                   prevCustomerNumber += 1;
-                  setServedCustomers(prevCustomerNumber);
+                  setServedCustomers((60/sumElapsed).toFixed(3))
       
                   console.log(`Elapsed time: ${sumElapsed} ms`);
                   console.log(`${i} DONE`);

@@ -9,6 +9,7 @@ const generate_speeds = function() {
   speed = 1
   all_drivers_speeds = driver_speed_array
     for (let i = 0; i < nod; i++) {
+      speed = 1;
       if (conditions[2] === 'ebicycle') { //if ebike
         speed = speed * (randomNormal({mean:19.5, dev:3.42}));
         if (conditions[0] === 'night' || conditions[0] === 'midnight') { //if ebike + night
@@ -18,6 +19,7 @@ const generate_speeds = function() {
             var will_slow_down = Math.random();
             if (will_slow_down < 0.34) { // if ebike + night + rain + driver did not slow down
               speed = speed;
+              console.log("speed before speed cap: ", speed);
               if (speed >25) { // if  ebike + night + rain + did not slow down + speeding
                 speed = 25;
               }
@@ -27,6 +29,7 @@ const generate_speeds = function() {
             }
             else {  //if  ebike + night + rain + slow down
               speed = speed*(1-(slow_down/100));
+
               if (speed >25) { // if  ebike + night + rain + slow down + speeding
                 speed = 25;
               }
@@ -171,6 +174,7 @@ const generate_speeds = function() {
         }
       }
       all_drivers_speeds.push(speed);
+      //speed = 0
     }
     console.log("All driver speeds: ", all_drivers_speeds);
     return all_drivers_speeds;
