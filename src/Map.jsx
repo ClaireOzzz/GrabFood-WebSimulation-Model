@@ -51,7 +51,8 @@ const Map = () => {
   const [unoccupied, setUnoccupied] = useState(0);
   const [servedCustomers, setServedCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
- 
+  // setTotalTime(0);
+
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
   const DELIVERING = 2; // DELIVERING THE FOOD TO THE CUSTOMER
@@ -69,14 +70,12 @@ const Map = () => {
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
-    setOccupied(0);
-    setUnoccupied(0);
-    setServedCustomers(0);
-    prevCustomerNumber=0;
   };
     
 
   useLayoutEffect(() => {
+  setTotalTime(0);
+  
   const speeds = [1, 8, 16, 32, 64]; // define the available speeds
   console.log("START  AT USEFFECT");
   const speedButtons = document.querySelectorAll('.speedbutton');
