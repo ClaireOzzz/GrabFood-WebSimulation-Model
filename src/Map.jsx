@@ -27,7 +27,10 @@ mapboxgl.accessToken =
 let currentSpeed = 64;
 var elapsedArray = [];
 var currentdate = new Date(); 
-var foodPrepTime = 0;
+
+//food prep time
+var randomValue = Math.floor(Math.random() * 6);
+var foodPrepTime = randomValue;
 
 export var nod; 
 export var customerInput = 5;
@@ -38,10 +41,10 @@ const Map = () => {
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [userInput, setUserInput] = useState(1);
-  // const [userInput2, setUserInput2] = useState(5);
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const [totalTime, setTotalTime] = useState(0);
+  const [resetCount, setResetCount] = useState(0);
  
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -51,9 +54,16 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
+  function handleResetClick() {
+    setResetCount(resetCount + 1);
+  }
+
+  // const handleInputChange = (event) => {
+  //   setUserInput(event.target.value);
+  // };
+
   const handleReset = () => {
     setUserInput(inputRef.current.value);
-    // setUserInput2(inputRef2.current.value);
   };
   
 
@@ -154,7 +164,24 @@ useEffect(() => {
   document.getElementById('fpt').addEventListener('change', (event) => {
     if (event.target.value === "0 - 5 mins") {
       console.log("0 - 5 mins");
-      customerInput = 10;
+      randomValue = Math.floor(Math.random() * 6);
+      foodPrepTime = randomValue;
+    }
+  });
+
+  document.getElementById('fpt').addEventListener('change', (event) => {
+    if (event.target.value === "5 - 15 mins") {
+      console.log("5 - 15 mins");
+      randomValue = Math.floor(Math.random() * 10) + 5;
+      foodPrepTime = randomValue;
+    }
+  });
+
+  document.getElementById('fpt').addEventListener('change', (event) => {
+    if (event.target.value === "15 - 30 mins") {
+      console.log("15 - 30 mins");
+      randomValue = Math.floor(Math.random() * 16) + 15;
+      foodPrepTime = randomValue;
     }
   });
 
@@ -162,6 +189,7 @@ useEffect(() => {
 
   // Initialize map when component mounts
   useEffect(() => {
+    console.log("USEEFFECT CALLEDDDDDDDDDD");
     //time & speed
     let startTime; // declare a variable to store the start time
     let elapsedTime; // declare a variable to store the elapsed time
@@ -260,10 +288,12 @@ useEffect(() => {
     restart(nod, nou, minInput);
     console.log("called again");
 
+
     function restart(nod, nou, minInput) {
       console.log("NOUUUU ", nou);
       console.log("NODDDD ", nod);
       console.log("minInput ", minInput);
+      console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
       secondCalculations(nod, nou);
@@ -574,7 +604,7 @@ useEffect(() => {
             elapsedArray.push(elapsed2);
             console.log("elapsed2 ", elapsed2);
             console.log("elapsedArray ", elapsedArray);
-            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod);
+            var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
             setTotalTime(sumElapsed);
             console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);
@@ -595,12 +625,11 @@ useEffect(() => {
         };
     
         document.getElementById('reset').addEventListener('click', () => { 
+          handleResetClick();
           console.log("reset clicked");
           // timeline.pause();
           timeline.clear();    
-          // setDrivers([]);
-            // var sumElapsed = 0;
-         
+          
           setTotalTime(0);
           
           setDrivers(drivers);
@@ -609,26 +638,17 @@ useEffect(() => {
        
           restart(nod, nou, minInput)
           // setTimeout(() => {
-            console.log("CLICKEDDDDDDDDDDDDDDD");
-            for (let i = 0; i < minInput; i++) {
-            drivers[i].counter=0;
-            console.log("STEPS ", steps[i]);
-            setDrivers(drivers);
-            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-            // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
-            animateFetching(i)
-            }
+          console.log("CLICKEDDDDDDDDDDDDDDD");
+          for (let i = 0; i < minInput; i++) {
+          drivers[i].counter=0;
+          console.log("STEPS ", steps[i]);
+          setDrivers(drivers);
+          animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+          // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
+          animateFetching(i)
+          }
             // }, 7000);
-          // restart((nod, nou, minInput) => { 
-          //     console.log("This message is shown after 3 seconds");
-          //     for (let i = 0; i < minInput; i++) {
-          //       drivers[i].counter=0;
-          //       console.log("STEPS ", steps[i]);
-          //       setDrivers(drivers);
-          //       animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-          //       // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
-          //       animateFetching(i)
-          //     }})
+        
         });
 
         run();
@@ -641,20 +661,22 @@ useEffect(() => {
       map.update();
     }
 
-  },[userInput]); 
+  },[userInput, resetCount]); 
 
 
 //SIDE BAR /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <div>
       <SideBar 
+        // onClick={handleResetClick}
         totalTime ={totalTime}
+        // userInput={userInput}
+        // handleInputChange={handleInputChange}
         handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
         <Statbar></Statbar>
         <div id="elapsed-time"></div>
-      {/* <script src="/Listeners.jsx"></script> */}
       <div className='map-container' ref={mapContainerRef} />
     </div>
   );

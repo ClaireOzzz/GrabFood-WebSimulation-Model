@@ -3,17 +3,10 @@ import React, { useState } from 'react';
 const SideBar  = (props) => {
 
     const [inputValue, setInputValue] = useState(1);
-    const [inputValue2, setInputValue2] = useState(5);
-
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     };
-
-    const handleInputChange2 = (event) => {
-        setInputValue2(event.target.value);
-    };
-    
 
     const handleReset = () => {
         props.handleReset();
@@ -131,7 +124,7 @@ const SideBar  = (props) => {
                 </div>
             
                 <button className ="resetbutton" id="reset" onClick={handleReset} >Simulate</button>
-                
+   
             </ul>
         </div>
 
