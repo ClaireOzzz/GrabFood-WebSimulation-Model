@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { gsap } from 'gsap';
@@ -31,6 +31,7 @@ var currentdate = new Date();
 //food prep time
 var randomValue = Math.floor(Math.random() * 6);
 var foodPrepTime = randomValue;
+var prevCustomerNumber = 0;
 
 export var nod; 
 export var customerInput = 5;
@@ -44,6 +45,9 @@ const Map = () => {
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const [totalTime, setTotalTime] = useState(0);
+  const [occupied, setOccupied] = useState(0);
+  const [unoccupied, setUnoccupied] = useState(0);
+  const [servedCustomers, setServedCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
  
   const IDLE = 0;
@@ -58,17 +62,12 @@ const Map = () => {
     setResetCount(resetCount + 1);
   }
 
-  // const handleInputChange = (event) => {
-  //   setUserInput(event.target.value);
-  // };
-
   const handleReset = () => {
     setUserInput(inputRef.current.value);
   };
   
 
-useEffect(() => {
-  console.log("run again");
+useLayoutEffect(() => {
   const speeds = [1, 8, 16, 32, 64]; // define the available speeds
   
   const speedButtons = document.querySelectorAll('.speedbutton');
@@ -84,7 +83,6 @@ useEffect(() => {
 
   document.getElementById('weather').addEventListener('change', (event) => {
     if (event.target.value === 'Rainy') {
-      console.log("rainy");
       conditions[1] = 'rainy';
       console.log(conditions);
     }
@@ -92,7 +90,6 @@ useEffect(() => {
 
   document.getElementById('weather').addEventListener('change', (event) => {
     if (event.target.value === 'Normal') {
-      console.log("normal");
       conditions[1] = 'normal';
       console.log(conditions);
     }
@@ -100,7 +97,6 @@ useEffect(() => {
 
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Morning') {
-      console.log("morning");
       conditions[0] = 'morning';
       console.log(conditions);
     }
@@ -108,7 +104,6 @@ useEffect(() => {
 
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Afternoon') {
-      console.log("afternoon");
       conditions[0] = 'afternoon';
       console.log(conditions);
     }
@@ -116,7 +111,6 @@ useEffect(() => {
 
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Night') {
-      console.log("night");
       conditions[0] = 'night';
       console.log(conditions);
     }
@@ -124,7 +118,6 @@ useEffect(() => {
 
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Midnight') {
-      console.log("midnight");
       conditions[0] = 'midnight';
       console.log(conditions);
     }
@@ -132,7 +125,6 @@ useEffect(() => {
 
   document.getElementById('transport').addEventListener('change', (event) => {
     if (event.target.value === 'Motorcycle') {
-      console.log("motorcycle");
       conditions[2] = 'motorcycle';
       console.log(conditions);
     }
@@ -140,7 +132,6 @@ useEffect(() => {
 
   document.getElementById('transport').addEventListener('change', (event) => {
     if (event.target.value === 'Ebicycle') {
-      console.log("ebicycle");
       conditions[2] = 'ebicycle';
       console.log(conditions);
     }
@@ -189,7 +180,6 @@ useEffect(() => {
 
   // Initialize map when component mounts
   useEffect(() => {
-    console.log("USEEFFECT CALLEDDDDDDDDDD");
     //time & speed
     let startTime; // declare a variable to store the start time
     let elapsedTime; // declare a variable to store the elapsed time
@@ -210,8 +200,9 @@ useEffect(() => {
     generate_number_of_customers()
     console.log("number_of_customers ", number_of_customers);
     const nou = number_of_customers;
-    console.log(nou)
     var minInput = Math.min(nod, nou);
+    setOccupied(minInput);
+    setUnoccupied(nod-minInput);
 
     var drivers =[];
   
@@ -265,9 +256,9 @@ useEffect(() => {
 
       //theorhetical time calculation
       const theorheticaltime = currentSpeed*((calcSteps * 16.67)/60000);
-      console.log("theorheticaltime ", theorheticaltime);
-      console.log("lineDistance ", lineDistance);
-      console.log("vehicleSpeed ", vehicleSpeed);
+      console.log("THEORY TIME ", theorheticaltime);
+      console.log("DISTANCE KM ", lineDistance);
+      console.log("VEHICLE SPEED ", vehicleSpeed);
 
       // Update the route with calculated arc coordinates
       route.features[0].geometry.coordinates = arc;
@@ -282,17 +273,14 @@ useEffect(() => {
         animations2.push(route);
         animationPoints2.push(point2);
         steps2.push(calcSteps);
-        console.log(` animations2length `, animations2.length);
       };
     }
     restart(nod, nou, minInput);
-    console.log("called again");
-
 
     function restart(nod, nou, minInput) {
-      console.log("NOUUUU ", nou);
-      console.log("NODDDD ", nod);
-      console.log("minInput ", minInput);
+      console.log("NOU ", nou);
+      console.log("NOD ", nod);
+      console.log("MININPUT ", minInput);
       console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
@@ -322,7 +310,6 @@ useEffect(() => {
       animationPoints2 = [];
       steps = [];
       steps2 = [];
-      console.log("new restart function");
 
       for (let i = 0; i < minInput; i++) {
         if (drivers[0].state === FETCHING) {
@@ -338,8 +325,8 @@ useEffect(() => {
         setDrivers(drivers);
       };
 
-      console.log("stepD ", steps2);
-      console.log("stepF ", steps);
+      console.log("STEPS2 ", steps2);
+      console.log("STEPS ", steps);
     }
    
 
@@ -550,19 +537,17 @@ useEffect(() => {
             console.log("elapsed ", elapsed);
             elapsedArray.push(elapsed);
             console.log("elapsedArray ", elapsedArray);
-            drivers[i].state = DELIVERING;
-            setDrivers(drivers);
-            // console.log(`driver.state${i} = ` + drivers[i].state);
             setTimeout(() => {
               drivers[i].counter = 0;
+              drivers[i].state = DELIVERING;
               // timeline.add(() => animateDelivering(i));
               animateDelivering(i)
             }, 5000*(1/currentSpeed));
+            setDrivers(drivers);
           }; 
         };
           
         function animateDelivering(i) {
-          // console.log("DELIVERING NOWWWWWWWWWWW")
           if (drivers[i].counter === 0) {
             // capture the start time when counter is zero
             startTime2 = new Date().getTime();
@@ -606,6 +591,10 @@ useEffect(() => {
             console.log("elapsedArray ", elapsedArray);
             var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
             setTotalTime(sumElapsed);
+
+            prevCustomerNumber += 1;
+            setServedCustomers(prevCustomerNumber);
+
             console.log(`Elapsed time: ${sumElapsed} ms`);
             console.log(`${i} DONE`);
           }; 
@@ -626,29 +615,24 @@ useEffect(() => {
     
         document.getElementById('reset').addEventListener('click', () => { 
           handleResetClick();
-          console.log("reset clicked");
+          console.log("RESET CLICKED");
           // timeline.pause();
           timeline.clear();    
-          
-          setTotalTime(0);
-          
+    
+          setTotalTime(0);  
+          prevCustomerNumber = 0;
+          setServedCustomers(0);      
           setDrivers(drivers);
           elapsedArray = [];
           driver_speed_array = [];
-       
+      
           restart(nod, nou, minInput)
-          // setTimeout(() => {
-          console.log("CLICKEDDDDDDDDDDDDDDD");
           for (let i = 0; i < minInput; i++) {
-          drivers[i].counter=0;
-          console.log("STEPS ", steps[i]);
-          setDrivers(drivers);
-          animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-          // animationPoints2[i].features[0].geometry.coordinates = animations2[i].features[0].geometry.coordinates[0];
-          animateFetching(i)
+            drivers[i].counter=0;
+            setDrivers(drivers);
+            animationPoints[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+            animateFetching(i)
           }
-            // }, 7000);
-        
         });
 
         run();
@@ -668,10 +652,10 @@ useEffect(() => {
   return (
     <div>
       <SideBar 
-        // onClick={handleResetClick}
+        servedCustomers ={servedCustomers}
         totalTime ={totalTime}
-        // userInput={userInput}
-        // handleInputChange={handleInputChange}
+        occupied ={occupied}
+        unoccupied ={unoccupied}
         handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>

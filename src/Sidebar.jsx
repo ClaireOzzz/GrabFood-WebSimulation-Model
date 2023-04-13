@@ -99,13 +99,13 @@ const SideBar  = (props) => {
                     Occupied to Unoccupied Drivers:
                     </div>
                     <div className = 'answer'>
-                    {props.totalTime} minutes
+                    {props.occupied} : {props.unoccupied}
                     </div>
                     <div className = 'output'>
                     Average Customers Served/h:
                     </div>
                     <div className = 'answer'>
-                    {props.totalTime} minutes
+                    {props.servedCustomers}
                     </div>
                 
                 <li>

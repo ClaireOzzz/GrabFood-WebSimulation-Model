@@ -173,7 +173,7 @@ export function secondCalculations(nod, nou) {
     console.log("driverFullDist ", driverFullDist);
 
     //2. replace eatery index with infinity
-    console.log("index ", index); // index of eatery with minimum distance
+    // console.log("index ", index); // index of eatery with minimum distance
     for (let driver in driverFullDist) {
       driverFullDist[driver][index] = Infinity;
     }
