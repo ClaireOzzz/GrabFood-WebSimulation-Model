@@ -302,8 +302,6 @@ const Map = () => {
       secondCalculations(nod, nou);
       
       drivers = [];
-      let newPath = 0;
-      let newPath2 = 0;
       setDrivers(drivers);
 
       for (let i = 0; i < nod; i++) {
@@ -337,39 +335,22 @@ const Map = () => {
       animationPoints2 = [];
       steps = [];
       steps2 = [];
-      
-      const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-      for (let i = 0; i < nod; i++) {
+      // let newPath = 0;
+      // let newPath2 = 0;
 
-        if ( drivers[i].pathobj1 !== undefined) {
+      
+
+      for (let i = 0; i < nod; i++) {
+        console.log("drivers[i].pathobj1.path[0] ", drivers[i].pathobj1.path[0]);
+        if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
-          console.log("NOT UNDEFINED");
-        }
-        else {
-          let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-          newPath = pathFinder.findPath(
-            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
-            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
-            );
-          prepAnimate(newPath, driverCoordinates[i], i)
         };
       };
   
       for (let i = 0; i < nod; i++) {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
-
-        if ( drivers[i].pathobj2 !== undefined) {
-          prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
-        }
-        else {
-          let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-          newPath2 = pathFinder.findPath(
-            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
-            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
-            );
-          prepAnimate(newPath2, driverCoordinates[i], i)
-        };
+        prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
         drivers[i].state = FETCHING
         setDrivers(drivers);
       };
@@ -547,112 +528,125 @@ const Map = () => {
 
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
         function animateFetching(i) {
+         
+          if ( ((drivers[i].pathobj1).path).length < 3) {
+            console.log("BUSTED");
+            // animationPoints[i].features[0].geometry.coordinates = drivers[i].location;
+            // map.getSource(`point-${i}`).setData(animationPoints[i]);
+            return;
+          }
+
+          else {
+
+            if (drivers[i].counter === 0) {
+              startTime = new Date().getTime();
+             
+            }
+            // calculate the time delta based on the selected speed
+            const timeDelta = (new Date().getTime() - startTime);
+            const start =
+            animations[i].features[0].geometry.coordinates[
+              drivers[i].counter >= steps[i] ? drivers[i].counter - 1 : drivers[i].counter
+                ];
+            const end =
+            animations[i].features[0].geometry.coordinates[
+              drivers[i].counter >= steps[i] ? drivers[i].counter : drivers[i].counter + 1
+                ];
+            if (!start || !end) return;
   
-          if (drivers[i].counter === 0) {
-            startTime = new Date().getTime();
-           
-          }
-          // calculate the time delta based on the selected speed
-          const timeDelta = (new Date().getTime() - startTime);
-          const start =
-          animations[i].features[0].geometry.coordinates[
-            drivers[i].counter >= steps[i] ? drivers[i].counter - 1 : drivers[i].counter
-              ];
-          const end =
-          animations[i].features[0].geometry.coordinates[
-            drivers[i].counter >= steps[i] ? drivers[i].counter : drivers[i].counter + 1
-              ];
-          if (!start || !end) return;
-
-          animationPoints[i].features[0].geometry.coordinates =
-          animations[i].features[0].geometry.coordinates[drivers[i].counter];
-
-          animationPoints[i].features[0].properties.bearing = turf.bearing(
-              turf.point(start),
-              turf.point(end)
-          );
-
-          // Update the source with this new data
-          map.getSource(`point-${i}`).setData(animationPoints[i]);
-
-          // Request the next frame of animation as long as the end has not been reached
-          if (drivers[i].counter < steps[i]) {
-            requestAnimationFrame(() => animateFetching(i));
-          }
-          drivers[i].counter += 1 ;
-          setDrivers(drivers);
-          // console.log("drivers[i].counter ", drivers[i].counter)
-          // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
-          if (drivers[i].counter === Math.floor(steps[i])) {
-            
-            // Set the animation to run again with a different path and update the driver state
-            console.log(`done for - ${i}`);
-            elapsed = (timeDelta);
-            console.log("elapsed ", elapsed);
-            elapsedArray.push(elapsed);
-            console.log("elapsedArray ", elapsedArray);
-            setTimeout(() => {
-              drivers[i].counter = 0;
-              drivers[i].state = DELIVERING;
-              setDrivers(drivers);
-
-              animateDelivering(i);
-              function animateDelivering(i) {
-                if (drivers[i].counter === 0) {
-                  // capture the start time when counter is zero
-                  startTime2 = new Date().getTime();
-               
-                  // update the animationPoints and animations variables to reflect the starting position
-                  animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
-                }
-                // calculate the time delta based on the selected speed
-                const timeDelta2 = new Date().getTime() - startTime;
-                const start =
-                animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
-                    ];
-                const end =
-                animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter : drivers[i].counter + 1
-                    ];
-                if (!start || !end) return;
+            animationPoints[i].features[0].geometry.coordinates =
+            animations[i].features[0].geometry.coordinates[drivers[i].counter];
+  
+            animationPoints[i].features[0].properties.bearing = turf.bearing(
+                turf.point(start),
+                turf.point(end)
+            );
+  
+            // Update the source with this new data
+            map.getSource(`point-${i}`).setData(animationPoints[i]);
+  
+            // Request the next frame of animation as long as the end has not been reached
+            if (drivers[i].counter < steps[i]) {
+              requestAnimationFrame(() => animateFetching(i));
+            }
+            drivers[i].counter += 1 ;
+            setDrivers(drivers);
+            // console.log("drivers[i].counter ", drivers[i].counter)
+            // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
+            if (drivers[i].counter === Math.floor(steps[i])) {
               
-                animationPoints2[i].features[0].geometry.coordinates =
-                animations2[i].features[0].geometry.coordinates[drivers[i].counter];
-              
-                animationPoints2[i].features[0].properties.bearing = turf.bearing(
-                    turf.point(start),
-                    turf.point(end)
-                );
-                  
-                map.getSource(`point-${i}`).setData(animationPoints2[i]);
-              
-                if (drivers[i].counter < steps2[i]) {
-                  requestAnimationFrame(() => animateDelivering(i));
-                }
-                drivers[i].counter += 1 ;
+              // Set the animation to run again with a different path and update the driver state
+              console.log(`done for - ${i}`);
+              elapsed = (timeDelta);
+              console.log("elapsed ", elapsed);
+              elapsedArray.push(elapsed);
+              console.log("elapsedArray ", elapsedArray);
+              setTimeout(() => {
+                drivers[i].counter = 0;
+                drivers[i].state = DELIVERING;
                 setDrivers(drivers);
-              
-                if (drivers[i].counter === Math.floor(steps2[i])) {
-                  // Update the driver state when the second animation is complete
-                  drivers[i].state = IDLE;
+  
+                animateDelivering(i);
+                function animateDelivering(i) {
+                  if (drivers[i].counter === 0) {
+                    // capture the start time when counter is zero
+                    startTime2 = new Date().getTime();
+                 
+                    // update the animationPoints and animations variables to reflect the starting position
+                    animationPoints2[i].features[0].geometry.coordinates = animations[i].features[0].geometry.coordinates[0];
+                  }
+                  // calculate the time delta based on the selected speed
+                  const timeDelta2 = new Date().getTime() - startTime;
+                  const start =
+                  animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter - 1 : drivers[i].counter
+                      ];
+                  const end =
+                  animations2[i].features[0].geometry.coordinates[    drivers[i].counter >= steps2[i] ? drivers[i].counter : drivers[i].counter + 1
+                      ];
+                  if (!start || !end) return;
+                
+                  animationPoints2[i].features[0].geometry.coordinates =
+                  animations2[i].features[0].geometry.coordinates[drivers[i].counter];
+                
+                  animationPoints2[i].features[0].properties.bearing = turf.bearing(
+                      turf.point(start),
+                      turf.point(end)
+                  );
+                    
+                  map.getSource(`point-${i}`).setData(animationPoints2[i]);
+                
+                  if (drivers[i].counter < steps2[i]) {
+                    requestAnimationFrame(() => animateDelivering(i));
+                  }
+                  drivers[i].counter += 1 ;
                   setDrivers(drivers);
-                  elapsed2 = (timeDelta2);
-                  elapsedArray.push(elapsed2);
-                  console.log("elapsed2 ", elapsed2);
-                  console.log("elapsedArray ", elapsedArray);
-                  var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
-                  setTotalTime(sumElapsed);
-      
-                  prevCustomerNumber += 1;
-                  setServedCustomers((60/sumElapsed).toFixed(3));
-      
-                  console.log(`Elapsed time: ${sumElapsed} ms`);
-                  console.log(`${i} IDLE`);
-                }; 
-              };
+                
+                  if (drivers[i].counter === Math.floor(steps2[i])) {
+                    // Update the driver state when the second animation is complete
+                    drivers[i].state = IDLE;
+                    setDrivers(drivers);
+                    elapsed2 = (timeDelta2);
+                    elapsedArray.push(elapsed2);
+                    console.log("elapsed2 ", elapsed2);
+                    console.log("elapsedArray ", elapsedArray);
+                    var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
+                    setTotalTime(sumElapsed);
+        
+                    prevCustomerNumber += 1;
+                    setServedCustomers((60/sumElapsed).toFixed(3));
+        
+                    console.log(`Elapsed time: ${sumElapsed} ms`);
+                    console.log(`${i} IDLE`);
+                  }; 
+                };
+  
+              }, 5000*(1/currentSpeed));
+             
+            }; 
 
-            }, 5000*(1/currentSpeed));
-           
-          }; 
+          }
+  
+          
         };
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

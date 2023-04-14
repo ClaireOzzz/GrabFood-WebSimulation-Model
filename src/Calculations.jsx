@@ -138,6 +138,8 @@ export function secondCalculations(nod, nou) {
       // console.log("fullDistance= ", fullDistance, "ptE.weight= ", ptE.weight, "eateryToCustomerDist[j]= ", eateryToCustomerDist[j]);
       driverFullDistances.push(fullDistance);
       j += 1;
+      // console.log("userAssignments[index] ", userAssignments[[Lat, Lng]]);
+      // console.log("userAssignments[index] ", Object.keys(userAssignments)[index]);
     }
     // add the driverFullDistances array to the driverFullDist object
 
@@ -153,22 +155,38 @@ export function secondCalculations(nod, nou) {
   function getMinDistance(driverFullDist) {
     let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
     console.log("minDistance2 ", minDistance2);
-    index = -1
     for (let driver in driverFullDist) {
+      index = -1;
       let driverIndex = driverFullDist[driver].indexOf(minDistance2);
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
         d = driver;
+        let newPath = 0;
+        // let spawnpoint2 = [ driverCoordinates[0][0], driverCoordinates[0][1] ];
+        // console.log("spawnpoint2 ", index)
         if (minDistance2 === Infinity) {
+          newPath = 0;
+          const pain = parseInt(driver.match(/\d+/)[0]);
+          let spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
+          console.log("spawnpoint2 ", pain)
+          console.log("spawnpoint2 ", driver);
+          newPath = pathFinder.findPath(
+            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
+            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
+            );
+          driverToEateryDict[d][driverAssignments[d]] = newPath;
+          eateryToCustomerArray[driverAssignments[d]] = newPath;
           console.log(" BROKE ");
           break;
         }
+
         else driverAssignments[d] = index;
         break; // Exit the loop once min is found
       }
     }
     //1. remove driver
     console.log("userAssignments ", userAssignments);
+    console.log("userAssignments[index] ", Object.keys(userAssignments)[index]);
     delete driverFullDist[d];
     // console.log("driverFullDist2 ", driverFullDist);
 
@@ -190,6 +208,9 @@ export function secondCalculations(nod, nou) {
  // index of eatery with minimum distance
       console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
       console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
+
+      // console.log((driverToEateryDict[d][driverAssignments[d]].path).length);
+      // console.log((eateryToCustomerArray[driverAssignments[d]].path).length);
     }
   
 };
