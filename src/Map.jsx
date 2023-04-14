@@ -213,7 +213,7 @@ const Map = () => {
     nod = userInput; // NOD = number of drivers
     generate_number_of_customers()
     console.log("number_of_customers ", number_of_customers);
-    const nou = number_of_customers;
+    var nou = number_of_customers;
     var minInput = Math.min(nod, nou);
     var maxInput = Math.max(nod, nou);
     setOccupied(minInput);
@@ -299,7 +299,7 @@ const Map = () => {
       console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
-      secondCalculations(nod, nou);
+      secondCalculations(nod, userAssignments);
       
       drivers = [];
       setDrivers(drivers);
@@ -566,8 +566,7 @@ const Map = () => {
             }
             drivers[i].counter += 1 ;
             setDrivers(drivers);
-            // console.log("drivers[i].counter ", drivers[i].counter)
-            // console.log("Math.floor(steps[i]) ", Math.floor(steps[i]))
+        
             if (drivers[i].counter === Math.floor(steps[i])) {
               
               // Set the animation to run again with a different path and update the driver state
@@ -632,6 +631,18 @@ const Map = () => {
         
                     console.log(`Elapsed time: ${sumElapsed} ms`);
                     console.log(`${i} IDLE`);
+                     
+                    setOccupied(prevOccupied => prevOccupied - 1);
+                    setUnoccupied(prevUnoccupied => prevUnoccupied + 1);
+                   
+                    // var userAssignments2 = userAssignments;
+                    // delete userAssignments[`${Object.keys(userAssignments)[[driverAssignments[`driver${i}`]]]}`];
+                    // console.log("userAssignments2 ", userAssignments);
+                    // console.log("userAssignments ", userAssignments);
+        
+                    // secondCalculations(1, userAssignments);
+                    // restart(1, nou);
+                    
                   }; 
                 };
   

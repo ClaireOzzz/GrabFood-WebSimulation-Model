@@ -11,7 +11,7 @@ import mapLines from './data/road_line.json';
 export var driverCoordinates = [];
 export var userCoordinates = [];
 var endCoordinates = [];
-var userAssignments = {};
+export var userAssignments = {};
 var paths = [];
 var distances = [];
 var spawnpoint =[];
@@ -104,7 +104,7 @@ let eateryToCustomerDist = []
 export var driverToEateryDict ={}
 var driverFullDist = {};
 
-export function secondCalculations(nod, nou) {
+export function secondCalculations(nod, userAssignments) {
   driverToEateryDict ={}
   driverFullDist = {};
   
@@ -179,25 +179,20 @@ export function secondCalculations(nod, nou) {
           console.log(" BROKE ");
           break;
         }
-
+        
         else driverAssignments[d] = index;
         break; // Exit the loop once min is found
       }
     }
     //1. remove driver
-    console.log("userAssignments ", userAssignments);
-    console.log("userAssignments[index] ", Object.keys(userAssignments)[index]);
     delete driverFullDist[d];
-    // console.log("driverFullDist2 ", driverFullDist);
-
+   
     //2. replace eatery index with infinity
     console.log("index ", index); // index of eatery with minimum distance
     for (let driver in driverFullDist) {
       driverFullDist[driver][index] = Infinity;
     }
-    
-
-    // console.log("driverFullDist ", driverFullDist);
+  
     console.log("d ", d);       // driver with minimum distance
   }
 
