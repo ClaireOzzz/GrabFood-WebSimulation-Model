@@ -341,7 +341,10 @@ const Map = () => {
   
       for (let i = 0; i < nod; i++) {
 
-        if ( drivers[i].pathobj1 === undefined) {
+        if ( drivers[i].pathobj1 !== undefined) {
+          prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
+        }
+        else {
           console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
           let newPath = pathFinder.findPath(
@@ -349,9 +352,6 @@ const Map = () => {
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             );
           prepAnimate(newPath, driverCoordinates[i], i)
-        }
-        else {
-          prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
       };
   
@@ -359,7 +359,10 @@ const Map = () => {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
 
-        if ( drivers[i].pathobj2 === undefined) {
+        if ( drivers[i].pathobj2 !== undefined) {
+          prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
+        }
+        else {
           console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
           let newPath = pathFinder.findPath(
@@ -367,9 +370,6 @@ const Map = () => {
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             );
           prepAnimate(newPath, driverCoordinates[i], i)
-        }
-        else {
-          prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
         };
         drivers[i].state = FETCHING
         setDrivers(drivers);
