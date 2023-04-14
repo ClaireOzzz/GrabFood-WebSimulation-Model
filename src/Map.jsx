@@ -8,7 +8,8 @@ import { gsap } from 'gsap';
 //Seperate components
 import SideBar from './Sidebar';
 import Statbar from './Statbar';
-import calculations, { secondCalculations, eateryToCustomerArray, driverToEateryDict, driverAssignments, driverCoordinates, userCoordinates } from './Calculations';
+import calculations, { secondCalculations, eateryToCustomerArray, driverToEateryDict, driverAssignments, 
+                      userAssignments, driverCoordinates, userCoordinates } from './Calculations';
 import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
@@ -28,7 +29,6 @@ mapboxgl.accessToken =
 
 let currentSpeed = 64;
 const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
-var currentdate = new Date(); 
 
 //food prep time
 var randomValue = Math.floor(Math.random() * 6);
@@ -216,6 +216,7 @@ const Map = () => {
     console.log("number_of_customers ", number_of_customers);
     const nou = number_of_customers;
     var minInput = Math.min(nod, nou);
+    var maxInput = Math.max(nod, nou);
     setOccupied(minInput);
     setUnoccupied(nod-minInput);
 
@@ -299,13 +300,13 @@ const Map = () => {
       console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
-      secondCalculations(nod, nou, driverCoordinates);
+      secondCalculations(nod, nou);
       
       drivers = [];
       setDrivers(drivers);
       //generate_speeds()
 
-      for (let i = 0; i < minInput; i++) {
+      for (let i = 0; i < nod; i++) {
         const driver = {
           "type": DRIVER,
           "index": i,
@@ -338,8 +339,7 @@ const Map = () => {
       steps2 = [];
 
   
-      for (let i = 0; i < minInput; i++) {
-        console.log("drivers[i].pathobj1.path[0] ", drivers[i].pathobj1);
+      for (let i = 0; i < nod; i++) {
 
         if ( drivers[i].pathobj1 === undefined) {
           console.log("UNDEFINED");
@@ -355,7 +355,7 @@ const Map = () => {
         };
       };
   
-      for (let i = 0; i < minInput; i++) {
+      for (let i = 0; i < nod; i++) {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
 
@@ -659,7 +659,7 @@ const Map = () => {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         const timeline = gsap.timeline();
         function run() {
-          for (let i = 0; i < minInput; i++) {
+          for (let i = 0; i < nod; i++) {
             if ( drivers[i].state === FETCHING) {
               timeline.add(() => animateFetching(i));
             };

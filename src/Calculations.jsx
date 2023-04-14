@@ -104,30 +104,11 @@ let eateryToCustomerDist = []
 export var driverToEateryDict ={}
 var driverFullDist = {};
 
-export function secondCalculations(nod, nou, driverCoordinates) {
-  // eateryToCustomerArray = []
-  // eateryToCustomerDist = []
+export function secondCalculations(nod, nou) {
   driverToEateryDict ={}
   driverFullDist = {};
-
-  // //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
-  // var counter = 0;
-  // for (const eateryCoord of Object.keys(userAssignments)) {
-  //   var LatLng = eateryCoord.replace(",", ", ").split(", ")
-  //   var Lat = parseFloat(LatLng[0]);
-  //   var Lng = parseFloat(LatLng[1]);
-  //   for (const userCoord of userAssignments[eateryCoord]) {
-  //     counter += 1;
-  //     const pathToCustomer =  pathFinder.findPath(
-  //       point([Lat, Lng]),
-  //       point([userCoord[0], userCoord[1]])
-  //     ); 
-  //     eateryToCustomerArray.push(pathToCustomer);
-  //     eateryToCustomerDist.push(pathToCustomer.weight);
-  //   }
-  // }
   
-  ////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   var ptE;
   // BUILD THE DICTIONARY THAT HOLDS THE FULL CYCLE DISTANCES FOR ALL DRIVERS
   for (let i = 0; i < nod; i++) {
@@ -187,15 +168,16 @@ export function secondCalculations(nod, nou, driverCoordinates) {
       }
     }
     //1. remove driver
-    console.log("driverFullDist ", driverFullDist);
+    console.log("userAssignments ", userAssignments);
     delete driverFullDist[d];
-    // console.log("driverFullDist ", driverFullDist);
+    // console.log("driverFullDist2 ", driverFullDist);
 
     //2. replace eatery index with infinity
-    // console.log("index ", index); // index of eatery with minimum distance
+    console.log("index ", index); // index of eatery with minimum distance
     for (let driver in driverFullDist) {
       driverFullDist[driver][index] = Infinity;
     }
+    
 
     // console.log("driverFullDist ", driverFullDist);
     console.log("d ", d);       // driver with minimum distance
@@ -205,9 +187,10 @@ export function secondCalculations(nod, nou, driverCoordinates) {
     for (let k = 0; k < nod; k++ ) {
       console.log("k ", k);
       getMinDistance(driverFullDist) 
-
+ // index of eatery with minimum distance
       console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
       console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
     }
+  
 };
 
