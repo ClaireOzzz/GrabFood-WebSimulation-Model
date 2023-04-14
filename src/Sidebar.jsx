@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import handleClear from './Statbar';
+// import handleClear from './Statbar';
 
 const SideBar  = (props) => {
 
@@ -128,7 +128,7 @@ const SideBar  = (props) => {
                     </div>
                 </div>
             
-                <button className ="resetbutton" id="reset" onClick={() => { handleReset(); handleResetClick(); handleClear();}}>Simulate</button>
+                <button className ="resetbutton" id="reset" onClick={() => { handleReset(); handleResetClick();}}>Simulate</button>
    
             </ul>
         </div>
