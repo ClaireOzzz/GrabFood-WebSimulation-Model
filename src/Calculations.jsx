@@ -161,13 +161,13 @@ export function secondCalculations(nod, nou) {
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
         d = driver;
-        let newPath = 0;
-        // let spawnpoint2 = [ driverCoordinates[0][0], driverCoordinates[0][1] ];
-        // console.log("spawnpoint2 ", index)
+       
         if (minDistance2 === Infinity) {
-          newPath = 0;
-          const pain = parseInt(driver.match(/\d+/)[0]);
-          let spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
+          var newPath = 0;
+          var pain = 0;
+          var spawnpoint2 = 0;
+          pain = parseInt(driver.match(/\d+/)[0]);
+          spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
           console.log("spawnpoint2 ", pain)
           console.log("spawnpoint2 ", driver);
           newPath = pathFinder.findPath(

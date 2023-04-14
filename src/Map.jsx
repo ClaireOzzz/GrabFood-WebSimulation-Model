@@ -335,13 +335,8 @@ const Map = () => {
       animationPoints2 = [];
       steps = [];
       steps2 = [];
-      // let newPath = 0;
-      // let newPath2 = 0;
-
-      
-
+  
       for (let i = 0; i < nod; i++) {
-        console.log("drivers[i].pathobj1.path[0] ", drivers[i].pathobj1.path[0]);
         if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
@@ -529,7 +524,7 @@ const Map = () => {
         // ANIMATION UPDATE FUNCTION ///////////////////////////////////////////////////////////////////////////////////////
         function animateFetching(i) {
          
-          if ( ((drivers[i].pathobj1).path).length < 3) {
+          if ( ((drivers[i].pathobj1).path).length < 2) {
             console.log("BUSTED");
             // animationPoints[i].features[0].geometry.coordinates = drivers[i].location;
             // map.getSource(`point-${i}`).setData(animationPoints[i]);
