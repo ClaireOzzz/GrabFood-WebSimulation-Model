@@ -53,7 +53,6 @@ const Map = () => {
   const [unoccupied, setUnoccupied] = useState(0);
   const [servedCustomers, setServedCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
-  // setTotalTime(0);
 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -617,6 +616,9 @@ const Map = () => {
                 
                   if (drivers[i].counter === Math.floor(steps2[i])) {
                     // Update the driver state when the second animation is complete
+                    setOccupied(prevOccupied => prevOccupied - 1);
+                    setUnoccupied(prevUnoccupied => prevUnoccupied + 1);
+                   
                     drivers[i].state = IDLE;
                     setDrivers(drivers);
                     elapsed2 = (timeDelta2);
@@ -632,9 +634,9 @@ const Map = () => {
                     console.log(`Elapsed time: ${sumElapsed} ms`);
                     console.log(`${i} IDLE`);
                      
-                    setOccupied(prevOccupied => prevOccupied - 1);
-                    setUnoccupied(prevUnoccupied => prevUnoccupied + 1);
-                   
+                    // if (prevOccupied > 0) {
+                    //   setOccupied(prevOccupied => prevOccupied - 1);
+                    // }
                     // var userAssignments2 = userAssignments;
                     // delete userAssignments[`${Object.keys(userAssignments)[[driverAssignments[`driver${i}`]]]}`];
                     // console.log("userAssignments2 ", userAssignments);
@@ -690,7 +692,12 @@ const Map = () => {
         handleReset={handleReset}
         inputRef={inputRef}
         inputRef2={inputRef2}/>
-        <Statbar></Statbar>
+
+      <Statbar
+        servedCustomers ={servedCustomers}
+        totalTime ={totalTime}
+        ></Statbar>
+
         <div id="elapsed-time"></div>
       <div className='map-container' ref={mapContainerRef} />
     </div>
