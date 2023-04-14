@@ -28,7 +28,6 @@ mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
 let currentSpeed = 64;
-const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
 
 //food prep time
 var randomValue = Math.floor(Math.random() * 6);
@@ -291,9 +290,9 @@ const Map = () => {
         steps2.push(calcSteps);
       };
     }
-    restart(nod, nou, minInput);
+    restart(nod, nou);
 
-    function restart(nod, nou, minInput) {
+    function restart(nod, nou) {
       console.log("NOU ", nou);
       console.log("NOD ", nod);
       console.log("MININPUT ", minInput);
@@ -303,8 +302,9 @@ const Map = () => {
       secondCalculations(nod, nou);
       
       drivers = [];
+      let newPath = 0;
+      let newPath2 = 0;
       setDrivers(drivers);
-      //generate_speeds()
 
       for (let i = 0; i < nod; i++) {
         const driver = {
@@ -329,7 +329,7 @@ const Map = () => {
         };
         customers.push(customer);
       }
-      setDrivers(drivers);
+      setCustomers(customers);
     
       animations = [];
       animations2 = [];
@@ -337,17 +337,17 @@ const Map = () => {
       animationPoints2 = [];
       steps = [];
       steps2 = [];
-
-  
+      
+      const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
       for (let i = 0; i < nod; i++) {
 
         if ( drivers[i].pathobj1 !== undefined) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
+          console.log("NOT UNDEFINED");
         }
         else {
-          console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-          let newPath = pathFinder.findPath(
+          newPath = pathFinder.findPath(
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             );
@@ -363,13 +363,12 @@ const Map = () => {
           prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
         }
         else {
-          console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
-          let newPath = pathFinder.findPath(
+          newPath2 = pathFinder.findPath(
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
             );
-          prepAnimate(newPath, driverCoordinates[i], i)
+          prepAnimate(newPath2, driverCoordinates[i], i)
         };
         drivers[i].state = FETCHING
         setDrivers(drivers);
@@ -663,9 +662,6 @@ const Map = () => {
             if ( drivers[i].state === FETCHING) {
               timeline.add(() => animateFetching(i));
             };
-            // if ( drivers[i].state === DELIVERING) {
-            //   timeline.add(() => animateDelivering(i));
-            // };
           };
         };
     
