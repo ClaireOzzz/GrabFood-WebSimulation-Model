@@ -32,7 +32,9 @@ export default function calculations(nod, nou) {
   distances = [];
   spawnpoint = [];
   paths =[];
- 
+
+  eateryToCustomerArray = []
+  eateryToCustomerDist = []
  
   // GETS RANDOM DRIVER COORDINATES 
   console.log('calc restart')
@@ -76,20 +78,6 @@ export default function calculations(nod, nou) {
     }
     userAssignments[eateryCoord].push(endCoordinates[i]);
   }
-};
-
-// calculations(2, 3);
-
-export var eateryToCustomerArray = []
-let eateryToCustomerDist = []
-export var driverToEateryDict ={}
-var driverFullDist = {};
-
-export function secondCalculations(nod, nou) {
-  eateryToCustomerArray = []
-  eateryToCustomerDist = []
-  driverToEateryDict ={}
-  driverFullDist = {};
 
   //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
   var counter = 0;
@@ -106,10 +94,39 @@ export function secondCalculations(nod, nou) {
       eateryToCustomerArray.push(pathToCustomer);
       eateryToCustomerDist.push(pathToCustomer.weight);
     }
-    
   }
   console.log("eateryToCustomerDist ", eateryToCustomerDist);
   console.log("userAssignments ", userAssignments);
+};
+
+export var eateryToCustomerArray = []
+let eateryToCustomerDist = []
+export var driverToEateryDict ={}
+var driverFullDist = {};
+
+export function secondCalculations(nod, nou, driverCoordinates) {
+  // eateryToCustomerArray = []
+  // eateryToCustomerDist = []
+  driverToEateryDict ={}
+  driverFullDist = {};
+
+  // //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
+  // var counter = 0;
+  // for (const eateryCoord of Object.keys(userAssignments)) {
+  //   var LatLng = eateryCoord.replace(",", ", ").split(", ")
+  //   var Lat = parseFloat(LatLng[0]);
+  //   var Lng = parseFloat(LatLng[1]);
+  //   for (const userCoord of userAssignments[eateryCoord]) {
+  //     counter += 1;
+  //     const pathToCustomer =  pathFinder.findPath(
+  //       point([Lat, Lng]),
+  //       point([userCoord[0], userCoord[1]])
+  //     ); 
+  //     eateryToCustomerArray.push(pathToCustomer);
+  //     eateryToCustomerDist.push(pathToCustomer.weight);
+  //   }
+  // }
+  
   ////////////////////////////////////////////////
   var ptE;
   // BUILD THE DICTIONARY THAT HOLDS THE FULL CYCLE DISTANCES FOR ALL DRIVERS

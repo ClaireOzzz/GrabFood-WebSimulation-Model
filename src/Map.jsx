@@ -45,6 +45,7 @@ const Map = () => {
   // console.log("START HEREEEEEEEEE");
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [userInput, setUserInput] = useState(1);
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
@@ -58,7 +59,9 @@ const Map = () => {
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
   const DELIVERING = 2; // DELIVERING THE FOOD TO THE CUSTOMER
-  const DONE = 3;
+
+  const ORDERING = 0;
+  const WAITING = 1;
 
   const DRIVER = 0;
   const CUSTOMER = 1;
@@ -66,8 +69,6 @@ const Map = () => {
   function handleResetClick() {
     setResetCount(resetCount + 1);
     setTotalTime(0);
-    setServedCustomers(0);
-   
   }
 
   const handleReset = () => {
@@ -298,7 +299,7 @@ const Map = () => {
       console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
-      secondCalculations(nod, nou);
+      secondCalculations(nod, nou, driverCoordinates);
       
       drivers = [];
       setDrivers(drivers);
@@ -317,6 +318,17 @@ const Map = () => {
         drivers.push(driver);
       }
       setDrivers(drivers);
+
+      for (let i = 0; i < nou; i++) {
+        const customer = {
+          "type": CUSTOMER,
+          "index": i,
+          "location": [userCoordinates[i]],
+          "state": WAITING,
+        };
+        customers.push(customer);
+      }
+      setDrivers(drivers);
     
       animations = [];
       animations2 = [];
@@ -329,7 +341,7 @@ const Map = () => {
       for (let i = 0; i < minInput; i++) {
         console.log("drivers[i].pathobj1.path[0] ", drivers[i].pathobj1);
 
-        if ( drivers[i].pathobj1 == undefined) {
+        if ( drivers[i].pathobj1 === undefined) {
           console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
           let newPath = pathFinder.findPath(
@@ -347,7 +359,7 @@ const Map = () => {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
 
-        if ( drivers[i].pathobj2 == undefined) {
+        if ( drivers[i].pathobj2 === undefined) {
           console.log("UNDEFINED");
           let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
           let newPath = pathFinder.findPath(
@@ -403,6 +415,8 @@ const Map = () => {
           source: "markers",
           layout: {
             "icon-image": "eatery",
+            "icon-allow-overlap" : true,
+            "text-allow-overlap": true,
             "icon-size": 0.035,
           },
         });
@@ -444,6 +458,8 @@ const Map = () => {
           source: "points",
           layout: {
             "icon-image": "custom-marker",
+            "icon-allow-overlap" : true,
+            "text-allow-overlap": true,
             "icon-size": 0.035,
           },
         });
@@ -520,6 +536,7 @@ const Map = () => {
             'type': 'symbol',
             'layout': {
               'icon-allow-overlap': true,
+              "text-allow-overlap": true,
               'icon-ignore-placement': true,
               'icon-image': 'taxi',
               'icon-size': 0.1,
@@ -617,7 +634,7 @@ const Map = () => {
               
                 if (drivers[i].counter === Math.floor(steps2[i])) {
                   // Update the driver state when the second animation is complete
-                  drivers[i].state = DONE;
+                  drivers[i].state = IDLE;
                   setDrivers(drivers);
                   elapsed2 = (timeDelta2);
                   elapsedArray.push(elapsed2);
@@ -627,13 +644,12 @@ const Map = () => {
                   setTotalTime(sumElapsed);
       
                   prevCustomerNumber += 1;
-                  setServedCustomers(Math.ceil(60/sumElapsed));
+                  setServedCustomers((60/sumElapsed).toFixed(3));
       
                   console.log(`Elapsed time: ${sumElapsed} ms`);
-                  console.log(`${i} DONE`);
+                  console.log(`${i} IDLE`);
                 }; 
               };
-
 
             }, 5000*(1/currentSpeed));
            
