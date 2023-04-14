@@ -90,6 +90,7 @@ export function secondCalculations(nod, nou) {
   eateryToCustomerDist = []
   driverToEateryDict ={}
   driverFullDist = {};
+
   //FINDING DISTANCE BETWEEN EATERY AND CUSTOMER
   var counter = 0;
   for (const eateryCoord of Object.keys(userAssignments)) {
@@ -143,13 +144,12 @@ export function secondCalculations(nod, nou) {
     // add the driverFullDistances array to the driverFullDist object
 
     driverFullDist[driverName] = driverFullDistances;
-    // console.log("driverFullDistances33 ", driverFullDistances);
     driverToEateryDict[driverName] = driverToEateryPath
    
     //////////////////////////////////////////////
   }
 
-  // move inside 
+  // GETING MINIMUM DISTANCE AND ASSIGN TO THE CUSTOMER FOR EACH DRIVER 
   var d = "";
   let index = -1; // Initialize index to -1 as a flag value
   function getMinDistance(driverFullDist) {
@@ -161,7 +161,10 @@ export function secondCalculations(nod, nou) {
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
         d = driver;
-        if (minDistance2 === Infinity) break;
+        if (minDistance2 === Infinity) {
+          console.log(" BROKE ");
+          break;
+        }
         else driverAssignments[d] = index;
         break; // Exit the loop once min is found
       }
@@ -189,24 +192,5 @@ export function secondCalculations(nod, nou) {
       console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
       console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
     }
-}
-
-
-
-// secondCalculations(2, 3);
-
-
-// console.log("driverAssignments ", driverAssignments);
-// console.log("Object.keys(driverAssignments)[0] ", Object.keys(driverAssignments)[0]);
-// console.log("driverToEateryPath ", driverToEateryPath);
-
-// //gives path 1
-// console.log("driverToEateryPath333 ", driverToEateryDict["driver0"][driverAssignments["driver0"]]);
-
-// //gives path 2
-// console.log("eateryToCustomerArray ", eateryToCustomerArray[driverAssignments["driver0"]])
-
-
-//driverToEateryDict[driverName] = driverToEateryPath
-//eateryToCustomerArray.push(pathToCustomer);
+};
 

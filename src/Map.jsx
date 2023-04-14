@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import PathFinder from "geojson-path-finder";
 import * as turf from '@turf/turf';
+import { point } from "@turf/helpers";
 import { gsap } from 'gsap';
 
 //Seperate components
@@ -25,7 +27,7 @@ mapboxgl.accessToken =
 'pk.eyJ1IjoiY2xhaXJlb3p6IiwiYSI6ImNsZGp4bmpybTA0d3EzbnFrbHJnMGNjbm0ifQ.VMGh4lz5DFS0na-hJKUPsA';
 
 let currentSpeed = 64;
-
+const pathFinder = new PathFinder(mapLines, { tolerance: 1e-4 });
 var currentdate = new Date(); 
 
 //food prep time
@@ -61,17 +63,21 @@ const Map = () => {
   const DRIVER = 0;
   const CUSTOMER = 1;
 
-  
   function handleResetClick() {
     setResetCount(resetCount + 1);
     setTotalTime(0);
     setServedCustomers(0);
+   
   }
 
   const handleReset = () => {
     setUserInput(inputRef.current.value);
+    setOccupied(0);
+    setUnoccupied(0);
+    setServedCustomers(0);
+    prevCustomerNumber = 0;
   };
-    
+  
 
   useLayoutEffect(() => {
   setTotalTime(0);
@@ -319,8 +325,20 @@ const Map = () => {
       steps = [];
       steps2 = [];
 
+  
       for (let i = 0; i < minInput; i++) {
-        if (drivers[0].state === FETCHING) {
+        console.log("drivers[i].pathobj1.path[0] ", drivers[i].pathobj1);
+
+        if ( drivers[i].pathobj1 == undefined) {
+          console.log("UNDEFINED");
+          let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
+          let newPath = pathFinder.findPath(
+            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+            );
+          prepAnimate(newPath, driverCoordinates[i], i)
+        }
+        else {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
       };
@@ -328,7 +346,19 @@ const Map = () => {
       for (let i = 0; i < minInput; i++) {
         drivers[i].state = DELIVERING
         setDrivers(drivers);
-        prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
+
+        if ( drivers[i].pathobj2 == undefined) {
+          console.log("UNDEFINED");
+          let spawnpoint = [ driverCoordinates[i][0], driverCoordinates[i][1] ];
+          let newPath = pathFinder.findPath(
+            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+            point([parseFloat(spawnpoint[0]), parseFloat(spawnpoint[1])]),
+            );
+          prepAnimate(newPath, driverCoordinates[i], i)
+        }
+        else {
+          prepAnimate(drivers[i].pathobj2, drivers[i].pathobj2.path[0], i)
+        };
         drivers[i].state = FETCHING
         setDrivers(drivers);
       };
@@ -597,7 +627,7 @@ const Map = () => {
                   setTotalTime(sumElapsed);
       
                   prevCustomerNumber += 1;
-                  setServedCustomers((60/sumElapsed).toFixed(3))
+                  setServedCustomers(Math.ceil(60/sumElapsed));
       
                   console.log(`Elapsed time: ${sumElapsed} ms`);
                   console.log(`${i} DONE`);
