@@ -12,7 +12,7 @@ const Statbar = (props) => {
 
   return (
     <div>
-      <div className={`menu ${isOpen ? 'menu-open' : ''}`} onClick={handleClick}>
+      <div className={`menu ${isOpen ? 'menu-open' : ''}`} tabIndex="0" onClick={handleClick}>
 
       <div className="graph-container">
         <div className="graph">

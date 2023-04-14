@@ -252,7 +252,7 @@ body {
   color: #ffffff;
 }
 
-.menu:hover, .menu:focus {
+.menu:focus {
   transform: translate3d(-95%, 0, 0);
   animation-timing-function: 2s ease-in;
 }
