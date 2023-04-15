@@ -115,11 +115,11 @@ const SideBar  = (props) => {
                     </div>
                 
                 <li>
-                    <span className="item">Settings</span>
+                    <span className="item">Speed:</span>
                 </li>
                 
                 <div className='speedContainer'>
-                    <div className='speedText'> Speed: </div>
+                    {/* <div className='speedText'> Speed: </div> */}
                     <div className='speedButtons'>
                         <button className='speedbutton active' id='1x-speed'>Real time </button>
                         <button className='speedbutton' id='8x-speed'>8x </button>

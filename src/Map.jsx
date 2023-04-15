@@ -9,7 +9,7 @@ import { gsap } from 'gsap';
 import SideBar from './Sidebar';
 import Statbar from './Statbar';
 import calculations, { secondCalculations, eateryToCustomerArray, driverToEateryDict, driverAssignments, 
-                      userAssignments, driverCoordinates, userCoordinates } from './Calculations';
+                      userAssignments, driverCoordinates, userCoordinates, totalDistTravelled } from './Calculations';
 import generate_speeds, {all_drivers_speeds} from './SpeedInputs';
 import generate_number_of_customers, {number_of_customers} from './CustomerInput'
 
@@ -33,6 +33,8 @@ let currentSpeed = 64;
 var randomValue = Math.floor(Math.random() * 6);
 var foodPrepTime = randomValue;
 var prevCustomerNumber = 0;
+var distElapsed;
+var minSpeed;
 
 export var nod; 
 export var customerInput = 5;
@@ -41,7 +43,6 @@ export var driver_speed_array = [];
 
 const Map = () => {
   var elapsedArray = [];
-  // console.log("START HEREEEEEEEEE");
   const mapContainerRef = useRef(null);
   const [drivers, setDrivers] = useState([]);
   const [customers, setCustomers] = useState([]);
@@ -54,6 +55,7 @@ const Map = () => {
   const [servedCustomers, setServedCustomers] = useState(0);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
+  const [mapStyle, setMapStyle] = useState('streets-v10');
 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -78,6 +80,10 @@ const Map = () => {
     prevCustomerNumber = 0;
   };
   
+
+  const changeMapStyle = (style) => {
+    setMapStyle(style);
+  };
 
   useLayoutEffect(() => {
   setTotalTime(0);
@@ -112,6 +118,7 @@ const Map = () => {
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Morning') {
       conditions[0] = 'morning';
+      changeMapStyle('streets-v10');
       console.log(conditions);
     }
   });
@@ -119,6 +126,7 @@ const Map = () => {
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Afternoon') {
       conditions[0] = 'afternoon';
+      changeMapStyle('streets-v10');
       console.log(conditions);
     }
   });
@@ -126,6 +134,7 @@ const Map = () => {
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Night') {
       conditions[0] = 'night';
+      changeMapStyle('dark-v10');
       console.log(conditions);
     }
   });
@@ -133,6 +142,7 @@ const Map = () => {
   document.getElementById('time').addEventListener('change', (event) => {
     if (event.target.value === 'Midnight') {
       conditions[0] = 'midnight';
+      changeMapStyle('dark-v10');
       console.log(conditions);
     }
   });
@@ -211,12 +221,12 @@ const Map = () => {
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v10',
+      style: `mapbox://styles/mapbox/${mapStyle}`,
       center: [103.85299393647626, 1.3005577339241654],
       zoom: 15.5,
       fadeDuration: 0
     });
-    
+
     nod = userInput; // NOD = number of drivers
     generate_number_of_customers()
     console.log("number_of_customers ", number_of_customers);
@@ -225,7 +235,6 @@ const Map = () => {
     var maxInput = Math.max(nod, nou);
     setOccupied(minInput);
     setUnoccupied(nod-minInput);
-
     var drivers =[];
   
     generate_speeds();
@@ -236,7 +245,8 @@ const Map = () => {
     var animations2 = [];  
     var animationPoints2 = [];    // for the second part of the cycle
     var steps2 = [];
-
+    minSpeed = Math.min.apply(Math, all_drivers_speeds);
+    
     function prepAnimate(path, begin, i) {
       var point2 = {
         'type': 'FeatureCollection',
@@ -307,7 +317,8 @@ const Map = () => {
   
       calculations(nod, nou);
       secondCalculations(nod, nou, userAssignments);
-      
+      distElapsed = (totalDistTravelled.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+      console.log("DISTANCE ELAPSED ", distElapsed);
       drivers = [];
       setDrivers(drivers);
 
@@ -468,7 +479,7 @@ const Map = () => {
           'type': 'line',
           'paint': {
               'line-width': 2,
-              'line-color': '#305c16'
+              'line-color': '#52942b'
           }
         });
 
@@ -709,6 +720,10 @@ const Map = () => {
         totalTime ={totalTime}
         occupied ={occupied}
         unoccupied ={unoccupied}
+        foodPrepTime={foodPrepTime}
+        minSpeed={minSpeed}
+        distElapsed={distElapsed}
+      
         ></Statbar>
 
         <div id="elapsed-time"></div>

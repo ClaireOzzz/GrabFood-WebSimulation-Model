@@ -10,22 +10,6 @@
   right: 0;
 }
 
-/* .sidebarStyle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 1%;
-  height: 97%;
-  background-color: #305c16;
-  border-radius: 10px;
-  justify-content:center;
-  align-items:center;
-  color: #ffffff;
-  z-index: 1 !important;
-  padding: 20px 60px 6px 30px;
-  font-weight: bold;
-  max-width: 35%;
-} */
 
 @media (max-width: 600px) {
   .sidebarStyle {
@@ -124,7 +108,7 @@
 }
 
 input {
-  padding: 1px 30px;
+  padding: 1px 27px;
   border-radius:5px;
   float: right;
   margin-right: 40px;
@@ -191,7 +175,7 @@ select{
   display: flex;
   flex-direction: row;
   position: relative;
-  /* top: 1px; */
+  top: 5px;
 }
 
 .speedbutton {
@@ -216,7 +200,7 @@ select{
   cursor: pointer;
   border-radius: 3px;
   position: relative;
-  margin: 5px 0px 10px 40px
+  margin: 10px 0px 10px 40px
 }
 
 .overlay button.active,
@@ -251,11 +235,7 @@ body {
   -webkit-transition: all 0.3s;
   color: #ffffff;
 }
-/* 
-.menu:focus {
-  transform: translate3d(-95%, 0, 0);
-  animation-timing-function: 2s ease-in;
-} */
+
 
 .menu .title2 {
   top: 50%;
@@ -323,8 +303,8 @@ body {
 }
 
 .statButtonContain {
-  flex: 2;
   margin: 1px;
+  display: flex;
   align-items: center;
   /* background-color: #3da338;
   width: 250px;
@@ -343,13 +323,12 @@ body {
   cursor: pointer;
   border-radius: 3px;
   position: relative;
-  margin: 15px 0px 10px 40px
-
+  margin: 15px 0px 0px 20px
 }
 
 .x-icon {
   position: relative;
-  /* display: inline-block; */
+ 
   width: 16px;
   height: 16px;
 }
@@ -358,7 +337,6 @@ body {
   position: fixed;
   content: "";
   width: 3px;
-  margin-top: 5px;
   height: 16px;
   background-color: white;
 }
@@ -369,4 +347,35 @@ body {
 
 .x-icon:after {
   transform: rotate(-45deg);
+}
+
+table {
+  border-collapse: collapse;
+  width: 95%;
+  height: fit-content;
+  margin-top: 1%;
+  background-color: #1f7b22;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+td {
+  height: fit-content;
+  padding: 10px;
+  text-align: center;
+}
+
+td:first-child {
+  font-weight: bold;
+  width: 30%;
+  border-right: 1px solid white;
+}
+
+td:last-child {
+  border-left: none;
+}
+
+td.separator {
+  border-top: 2px solid black;
+  height: 10px;
 }

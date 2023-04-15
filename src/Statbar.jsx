@@ -10,7 +10,7 @@ const Statbar = (props) => {
       y: [],
       type: 'curve',
       marker: {color: 'orange'},
-      fill: 'tonexty',
+      // fill: 'tonexty',
       name: 'Customers',
     },
     // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},
@@ -23,7 +23,7 @@ const Statbar = (props) => {
       y: [],
       type: 'curve',
       marker: {color: 'orange'},
-      fill: 'tonexty',
+      // fill: 'tonexty',
       name: 'Drivers',
     },
     // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},          
@@ -36,7 +36,7 @@ const Statbar = (props) => {
         const updatedY = [...prevData[0].y, props.totalTime];
         return [{ ...prevData[0], x: updatedX, y: updatedY }];
       });
-    }, 3000);
+    }, 100);
 
     document.getElementById('clear').addEventListener('click', () => { 
       setData((prevData) => {
@@ -54,10 +54,10 @@ const Statbar = (props) => {
     const intervalId2 = setInterval(() => {
       setData2((prevData2) => {
         const updatedX2 = [...prevData2[0].x, props.totalTime];
-        const updatedY2 = [...prevData2[0].y, props.occupied];
+        const updatedY2 = [...prevData2[0].y, (props.occupied/nod)*100];
         return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
       });
-    }, 3000);
+    }, 100);
 
     document.getElementById('clear').addEventListener('click', () => { 
       setData2((prevData2) => {
@@ -110,31 +110,20 @@ const Statbar = (props) => {
                 paper_bgcolor: '#rgba(0,0,0,0)'          
   };
 
-  // const handleClear = () => {
-  //   setData((prevData) => {
-  //     const updatedX = [0];
-  //     const updatedY = [0];
-  //     return [{ ...prevData[0], x: updatedX, y: updatedY }];
-  //   });
-  //   setData2((prevData2) => {
-  //     const updatedX2 = [0];
-  //     const updatedY2 = [0];
-  //     return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
-  //   });
-  // };
-
-  const downloadCsv = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + data[0].x.map((xVal, i) => [xVal, data[0].y[i]].join(',')).join('\n');
-    
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "data.csv");
-    document.body.appendChild(link); // Required for FF
-    link.click();
-    document.body.removeChild(link);
-  };            
+  const downloadCsv = (datas, filenames) => {
+    datas.forEach((data, i) => {
+      const csvContent = "data:text/csv;charset=utf-8," 
+        + data.x.map((xVal, j) => [xVal, data.y[j]].join(',')).join('\n');
+      
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", filenames[i]);
+      document.body.appendChild(link); // Required for FF
+      link.click();
+      document.body.removeChild(link);
+    });
+  };        
 
   function openStats() {
     document.getElementById("menu").style.transform = " translate3d(-95%, 0, 0)";
@@ -149,7 +138,7 @@ const Statbar = (props) => {
     <div  className="statButtonContain">
       <button className="x-icon" onClick={closeStats}  ></button>
       <button className="downloadButton" id= 'clear' >Clear</button>
-      <button className="downloadButton" onClick={downloadCsv}>Download CSV</button>
+      <button className="downloadButton" onClick={() => downloadCsv([data[0], data2[0]], ['graph1.csv', 'graph2.csv'])} >Download CSV</button>
     </div>
     
     <div className="graph-container">
@@ -163,9 +152,36 @@ const Statbar = (props) => {
         </div>
 
     </div>
-    <div className = 'answer'>
-    {props.occupied} : {props.unoccupied}
+    <div className='item' style={{position: 'absolute', textAlign: 'right', right: '6%', fontWeight: 'bold', textDecoration: 'underline'}}>
+     Current Simulation Run Information
     </div>
+
+    <table style={{ marginTop: '5%' }}>
+    <tbody>
+      <tr>
+        <td>Food Preperation Time (mins)</td>
+        <td>{props.foodPrepTime}</td>
+      </tr>
+    </tbody>
+    </table>
+
+    <table>
+    <tbody>
+      <tr>
+        <td> Min Driver Speed (km/h)</td>
+        <td>{props.minSpeed}</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <table>
+    <tbody>
+      <tr>
+        <td> Total Distance Travelled (km)</td>
+        <td>{props.distElapsed}</td>
+      </tr>
+      </tbody>
+    </table>
    
       <button className="menuButton">
       <div className="title2" onClick={openStats}  >DATA VISUALISATIONS</div>

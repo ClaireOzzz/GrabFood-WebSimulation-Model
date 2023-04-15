@@ -10,8 +10,9 @@ import mapLines from './data/road_line.json';
 
 export var driverCoordinates = [];
 export var userCoordinates = [];
-var endCoordinates = [];
+export var totalDistTravelled = [];
 export var userAssignments = {};
+var endCoordinates = [];
 var paths = [];
 var distances = [];
 var spawnpoint =[];
@@ -153,6 +154,7 @@ export function secondCalculations(nod, nou, userAssignments) {
   // GETING MINIMUM DISTANCE AND ASSIGN TO THE CUSTOMER FOR EACH DRIVER 
   var d = "";
   var k = nou;
+  
   let index = -1; // Initialize index to -1 as a flag value
   function getMinDistance(driverFullDist) {
     let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
@@ -163,7 +165,7 @@ export function secondCalculations(nod, nou, userAssignments) {
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
         d = driver;
-       
+       totalDistTravelled.push(minDistance2);
         if (minDistance2 === Infinity) {
           driverAssignments[d] = k;
           k++;
