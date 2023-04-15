@@ -341,11 +341,8 @@ const Map = () => {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
 
-        // console.log("pathobj1 ", drivers[i].pathobj1.path);
-        // console.log("pathobj2 ", drivers[i].pathobj2.path);
         console.log("nou ", nou);
         console.log("userAssignments ", userAssignments);
-        
       };
   
       for (let i = 0; i < nod; i++) {
@@ -355,8 +352,6 @@ const Map = () => {
         drivers[i].state = FETCHING
         setDrivers(drivers);
       };
-
-      
     }
    
 

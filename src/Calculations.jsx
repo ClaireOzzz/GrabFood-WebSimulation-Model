@@ -202,12 +202,13 @@ export function secondCalculations(nod, nou, userAssignments) {
 
     k = nou;
     for (const driver in driverAssignments) {
-      if (driverAssignments[driver] === nou) {
+      if (driverAssignments[driver] >= nou) {
         var newPathArray = [];
+        var newPath;
         const p = nod - nou;
         for (let i = 0; i < k+ p; i++) {
 
-          var newPath = 0;
+          newPath = 0;
           var pain = 0;
           var spawnpoint2 = 0;
             
@@ -224,7 +225,7 @@ export function secondCalculations(nod, nou, userAssignments) {
         }
         // driverWithMinusOne = driver;
         console.log(  "ITS MINUS ONE");
-
+        eateryToCustomerArray.push(newPath);
         driverToEateryDict[driver] = newPathArray; // path from driver to customer 
       }
     }
