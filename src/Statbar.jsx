@@ -119,6 +119,10 @@ const Statbar = (props) => {
 
   useEffect(() => {
 
+    document.getElementById('reset').addEventListener('click', () => { 
+      handleClear();
+    });
+
     setData((prevData) => {
       const updatedY = [...prevData[0].y, props.servedCustomers];
       const updatedX = [...prevData[0].x, props.totalTime];
@@ -149,6 +153,7 @@ const Statbar = (props) => {
   const handleClear = () => {
     setData([])
   };
+
 
   const downloadCsv = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
