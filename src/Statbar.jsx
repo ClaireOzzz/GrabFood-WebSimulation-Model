@@ -108,7 +108,7 @@ const Statbar = (props) => {
     {
       x: [0] ,
       y: [0],
-      type: 'line',
+      type: 'curve',
       marker: {color: 'orange'},
       fill: 'tonexty',
       name: 'Customers',
@@ -175,6 +175,7 @@ const Statbar = (props) => {
     <div id="menu" className="menu" tabIndex="0" > 
     <div  className="statButtonContain">
       <button className="x-icon" onClick={closeStats}  ></button>
+      <button className="downloadButton" onClick={handleClear}>Clear</button>
       <button className="downloadButton" onClick={downloadCsv}>Download CSV</button>
     </div>
        
@@ -185,6 +186,8 @@ const Statbar = (props) => {
       <div style={{ width: "100%", height: "100%" }}>
         <PlotComponent data={data} layout={layout} />
       </div>
+
+      <div className="graph"></div>
    
       <button className="menuButton">
       <div className="title2" onClick={openStats}  >DATA VISUALISATIONS</div>

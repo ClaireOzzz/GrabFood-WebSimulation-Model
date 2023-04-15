@@ -107,6 +107,7 @@ var driverFullDist = {};
 export function secondCalculations(nod, userAssignments) {
   driverToEateryDict ={}
   driverFullDist = {};
+  driverAssignments = {};
   
   ////////////////////////////////////////////////////////////////////////////////////////////////
   var ptE;
@@ -166,17 +167,21 @@ export function secondCalculations(nod, userAssignments) {
           var newPath = 0;
           var pain = 0;
           var spawnpoint2 = 0;
+          
           pain = parseInt(driver.match(/\d+/)[0]);
           spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
           console.log("spawnpoint2 ", pain)
           console.log("spawnpoint2 ", driver);
+
           newPath = pathFinder.findPath(
             point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
             point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
             );
-          driverToEateryDict[d][driverAssignments[d]] = newPath;
-          eateryToCustomerArray[driverAssignments[d]] = newPath;
+
+          driverToEateryDict[d][driverAssignments[d]] = newPath; // path from driver to customer
+          eateryToCustomerArray[driverAssignments[d]] = newPath; // path from eatery to customer
           console.log(" BROKE ");
+
           break;
         }
         

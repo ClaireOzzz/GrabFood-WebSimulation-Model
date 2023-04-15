@@ -34,25 +34,18 @@ state: complete/waiting/unassigned
 "start": "react-scripts --max_old_space_size=4096 start",
 "build": "react-scripts --max_old_space_size=4096 build"
 
-FIXME:
-2. Reset button bug (when journey ends)
-3. Reset button bug (when clicked twice)
-4. Dashboard resize bug
-5. Input waiting time, change to minutes
-
 TODO: 
 1. Driver moves onto next customer after first job is done
-2, Output 2: occupied to unoccupied driver
-3. Output 3: Customers served by hour (len of elapsed time array)
+3, Output 2: occupied to unoccupied driver update
 4. Dynamic graphs for statsbar
 
-3. Option to export data as json/CSV on statsbar
-4. Dashboard: checkbox for path viewing
-5. Dashboard: checkbox for icons/points
-6. Run 30 times in backend
-9. Add food waiting time range bar
-10. Make the statsbar slide out when click instead of hover
+5. Option to export data as json/CSV on statsbar
+6. Dashboard: checkbox for path viewing
+7. Dashboard: checkbox for icons/points
+9. Make the statsbar slide out when click instead of 
+10. MORE INFO DISPLAYED ON STATS BAR (eg. driver speeds, all distances travelled, total distances travelled. etc )
 
+11. Run 30 times in backend
 
 DASHBOARD LAYOUT
 AGENTS:
