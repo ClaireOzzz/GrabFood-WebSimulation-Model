@@ -104,7 +104,7 @@ let eateryToCustomerDist = []
 export var driverToEateryDict ={}
 var driverFullDist = {};
 
-export function secondCalculations(nod, userAssignments) {
+export function secondCalculations(nod, nou, userAssignments) {
   driverToEateryDict ={}
   driverFullDist = {};
   driverAssignments = {};
@@ -152,6 +152,7 @@ export function secondCalculations(nod, userAssignments) {
 
   // GETING MINIMUM DISTANCE AND ASSIGN TO THE CUSTOMER FOR EACH DRIVER 
   var d = "";
+  var k = nou;
   let index = -1; // Initialize index to -1 as a flag value
   function getMinDistance(driverFullDist) {
     let minDistance2 = Math.min(...Object.values(driverFullDist).flat());
@@ -164,24 +165,10 @@ export function secondCalculations(nod, userAssignments) {
         d = driver;
        
         if (minDistance2 === Infinity) {
-          var newPath = 0;
-          var pain = 0;
-          var spawnpoint2 = 0;
+          driverAssignments[d] = k;
+          k++;
           
-          pain = parseInt(driver.match(/\d+/)[0]);
-          spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
-          console.log("spawnpoint2 ", pain)
-          console.log("spawnpoint2 ", driver);
-
-          newPath = pathFinder.findPath(
-            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
-            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
-            );
-
-          driverToEateryDict[d][driverAssignments[d]] = newPath; // path from driver to customer
-          eateryToCustomerArray[driverAssignments[d]] = newPath; // path from eatery to customer
           console.log(" BROKE ");
-
           break;
         }
         
@@ -209,9 +196,41 @@ export function secondCalculations(nod, userAssignments) {
       console.log("CALL 1 ", driverToEateryDict[d][index].weight); // path from driver to eatery
       console.log("CALL 2 ", eateryToCustomerDist[index]); // path from eatery to customer
 
-      // console.log((driverToEateryDict[d][driverAssignments[d]].path).length);
-      // console.log((eateryToCustomerArray[driverAssignments[d]].path).length);
+      console.log("driverAssignments ", driverAssignments);
+      console.log("driverToEateryDict ", driverToEateryDict);
     }
+
+    k = nou;
+    for (const driver in driverAssignments) {
+      if (driverAssignments[driver] === nou) {
+        var newPathArray = [];
+        const p = nod - nou;
+        for (let i = 0; i < k+ p; i++) {
+
+          var newPath = 0;
+          var pain = 0;
+          var spawnpoint2 = 0;
+            
+          pain = parseInt(driver.match(/\d+/)[0]);
+          spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
+         
+  
+          newPath = pathFinder.findPath(
+            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
+            point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
+            );
+          newPathArray.push(newPath);
+         
+        }
+        // driverWithMinusOne = driver;
+        console.log(  "ITS MINUS ONE");
+
+        driverToEateryDict[driver] = newPathArray; // path from driver to customer 
+      }
+    }
+
+    console.log("driverToEateryDict2 ", driverToEateryDict);
   
 };
+
 

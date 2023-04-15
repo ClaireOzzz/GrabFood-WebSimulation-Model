@@ -298,7 +298,7 @@ const Map = () => {
       console.log("FOOD PREP TIME ", foodPrepTime);
   
       calculations(nod, nou);
-      secondCalculations(nod, userAssignments);
+      secondCalculations(nod, nou, userAssignments);
       
       drivers = [];
       setDrivers(drivers);
@@ -336,12 +336,13 @@ const Map = () => {
       steps2 = [];
   
       for (let i = 0; i < nod; i++) {
+        console.log("pathobj1 ", drivers[i].pathobj1);
         if (drivers[0].state === FETCHING) {
           prepAnimate(drivers[i].pathobj1, drivers[i].pathobj1.path[0], i)
         };
 
-        console.log("pathobj1 ", drivers[i].pathobj1.path);
-        console.log("pathobj2 ", drivers[i].pathobj2.path);
+        // console.log("pathobj1 ", drivers[i].pathobj1.path);
+        // console.log("pathobj2 ", drivers[i].pathobj2.path);
         console.log("nou ", nou);
         console.log("userAssignments ", userAssignments);
         
