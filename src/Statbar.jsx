@@ -37,7 +37,16 @@ const Statbar = (props) => {
         return [{ ...prevData[0], x: updatedX, y: updatedY }];
       });
     }, 3000);
-  
+
+    document.getElementById('clear').addEventListener('click', () => { 
+      setData((prevData) => {
+        const updatedX = [0];
+        const updatedY = [0];
+        return [{ ...prevData[0], x: updatedX, y: updatedY }];
+      });
+     clearInterval(intervalId);
+    });
+
     return () => clearInterval(intervalId);
   }, [props.servedCustomers, props.totalTime]);
 
@@ -49,6 +58,15 @@ const Statbar = (props) => {
         return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
       });
     }, 3000);
+
+    document.getElementById('clear').addEventListener('click', () => { 
+      setData2((prevData2) => {
+        const updatedX2 = [0];
+        const updatedY2 = [0];
+        return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
+      });
+      clearInterval(intervalId2);
+    });
   
     return () => clearInterval(intervalId2);
   }, [props.occupied,  props.totalTime]);
@@ -92,10 +110,18 @@ const Statbar = (props) => {
                 paper_bgcolor: '#rgba(0,0,0,0)'          
   };
 
-  const handleClear = () => {
-    setData([])
-    setData2([])
-  };
+  // const handleClear = () => {
+  //   setData((prevData) => {
+  //     const updatedX = [0];
+  //     const updatedY = [0];
+  //     return [{ ...prevData[0], x: updatedX, y: updatedY }];
+  //   });
+  //   setData2((prevData2) => {
+  //     const updatedX2 = [0];
+  //     const updatedY2 = [0];
+  //     return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
+  //   });
+  // };
 
   const downloadCsv = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
@@ -122,7 +148,7 @@ const Statbar = (props) => {
     <div id="menu" className="menu" tabIndex="0" > 
     <div  className="statButtonContain">
       <button className="x-icon" onClick={closeStats}  ></button>
-      <button className="downloadButton" onClick={handleClear}>Clear</button>
+      <button className="downloadButton" id= 'clear' >Clear</button>
       <button className="downloadButton" onClick={downloadCsv}>Download CSV</button>
     </div>
     
