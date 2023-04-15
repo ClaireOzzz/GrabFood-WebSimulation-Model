@@ -215,7 +215,6 @@ export function secondCalculations(nod, nou, userAssignments) {
           pain = parseInt(driver.match(/\d+/)[0]);
           spawnpoint2 = [ driverCoordinates[(pain)][0], driverCoordinates[(pain)][1] ];
          
-  
           newPath = pathFinder.findPath(
             point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),
             point([parseFloat(spawnpoint2[0]), parseFloat(spawnpoint2[1])]),

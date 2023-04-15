@@ -52,6 +52,7 @@ const Map = () => {
   const [occupied, setOccupied] = useState(0);
   const [unoccupied, setUnoccupied] = useState(0);
   const [servedCustomers, setServedCustomers] = useState(0);
+  const [totalCustomers, setTotalCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
 
   const IDLE = 0;
@@ -161,6 +162,13 @@ const Map = () => {
     if (event.target.value === "10 - 20") {
       console.log("10 - 20");
       customerInput = 10;
+    }
+  });
+
+  document.getElementById('noc').addEventListener('change', (event) => {
+    if (event.target.value === "20 - 40") {
+      console.log("20 - 40");
+      customerInput = 20;
     }
   });
 
@@ -526,8 +534,6 @@ const Map = () => {
          
           if ( ((drivers[i].pathobj1).path).length < 2) {
             console.log("BUSTED");
-            // animationPoints[i].features[0].geometry.coordinates = drivers[i].location;
-            // map.getSource(`point-${i}`).setData(animationPoints[i]);
             return;
           }
 
@@ -617,8 +623,10 @@ const Map = () => {
                 
                   if (drivers[i].counter === Math.floor(steps2[i])) {
                     // Update the driver state when the second animation is complete
+                  
                     setOccupied(prevOccupied => prevOccupied - 1);
                     setUnoccupied(prevUnoccupied => prevUnoccupied + 1);
+                  
                    
                     drivers[i].state = IDLE;
                     setDrivers(drivers);
@@ -631,6 +639,7 @@ const Map = () => {
         
                     prevCustomerNumber += 1;
                     setServedCustomers((60/sumElapsed).toFixed(3));
+                    setTotalCustomers((elapsedArray.length)/2);
         
                     console.log(`Elapsed time: ${sumElapsed} ms`);
                     console.log(`${i} IDLE`);
@@ -696,7 +705,10 @@ const Map = () => {
 
       <Statbar
         servedCustomers ={servedCustomers}
+        totalCustomers = {totalCustomers}
         totalTime ={totalTime}
+        occupied ={occupied}
+        unoccupied ={unoccupied}
         ></Statbar>
 
         <div id="elapsed-time"></div>
