@@ -119,16 +119,14 @@ const Statbar = (props) => {
 
   useEffect(() => {
 
-    document.getElementById('reset').addEventListener('click', () => { 
-      handleClear();
-    });
-
     setData((prevData) => {
       const updatedY = [...prevData[0].y, props.servedCustomers];
       const updatedX = [...prevData[0].x, props.totalTime];
 
       return [{ ...prevData[0], x: updatedX, y: updatedY }];
     });
+
+
   }, [props.servedCustomers, props.totalTime]);
 
   const layout = { width: 533, height: 400, title: {text:'Number of Customers Served over Time', x:0.05}, font: {color: '#51ba4c', size:14} , gridwidth:1,
@@ -154,6 +152,9 @@ const Statbar = (props) => {
     setData([])
   };
 
+  // document.getElementById('reset').addEventListener('click', () => { 
+  //   handleClear();
+  // });
 
   const downloadCsv = () => {
     const csvContent = "data:text/csv;charset=utf-8," 
