@@ -165,7 +165,9 @@ export function secondCalculations(nod, nou, userAssignments) {
       if (driverIndex !== -1) { // Check if 100 is found in the current array
         index = driverIndex;
         d = driver;
-       totalDistTravelled.push(minDistance2);
+        if (minDistance2 !== Infinity) {
+          totalDistTravelled.push(minDistance2);
+        }
         if (minDistance2 === Infinity) {
           driverAssignments[d] = k;
           k++;

@@ -8,9 +8,13 @@ const Statbar = (props) => {
     {
       x: [] ,
       y: [],
-      type: 'curve',
-      marker: {color: 'orange'},
-      // fill: 'tonexty',
+      type: 'scatter', 
+      line: { 
+        shape: 'spline',  
+        smoothing: 2}, 
+      mode: 'lines+markers',  
+      marker: {color: 'orange'}, 
+      //fill: 'tonexty', 
       name: 'Customers',
     },
     // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},
@@ -21,9 +25,13 @@ const Statbar = (props) => {
     {
       x: [] ,
       y: [],
-      type: 'curve',
-      marker: {color: 'orange'},
-      // fill: 'tonexty',
+      type: 'scatter', 
+      line: { 
+        shape: 'spline',  
+        smoothing: 2}, 
+      mode: 'lines+markers',  
+      marker: {color: 'orange'}, 
+      //fill: 'tonexty', 
       name: 'Drivers',
     },
     // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},          
@@ -32,7 +40,7 @@ const Statbar = (props) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setData((prevData) => {
-        const updatedX = [...prevData[0].x, props.servedCustomers];
+        const updatedX = [...prevData[0].x, props.totalCustomers];
         const updatedY = [...prevData[0].y, props.totalTime];
         return [{ ...prevData[0], x: updatedX, y: updatedY }];
       });
@@ -48,7 +56,7 @@ const Statbar = (props) => {
     });
 
     return () => clearInterval(intervalId);
-  }, [props.servedCustomers, props.totalTime]);
+  }, [props.totalCustomers, props.totalTime]);
 
   useEffect(() => {
     const intervalId2 = setInterval(() => {
