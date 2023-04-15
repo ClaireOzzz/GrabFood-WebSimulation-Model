@@ -19,8 +19,8 @@ const Statbar = (props) => {
 
   const [data2, setData2] = useState([
     {
-      x: [] ,
-      y: [],
+      x2: [] ,
+      y2: [],
       type: 'curve',
       marker: {color: 'orange'},
       fill: 'tonexty',
@@ -43,15 +43,15 @@ const Statbar = (props) => {
 
   useEffect(() => {
     const intervalId2 = setInterval(() => {
-      setData2((prevData2) => {
-        const updatedX2 = [...prevData2[0].x, props.totalTime];
-        const updatedY2 = [...prevData2[0].y, props.occupied];
-        return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
+      setData2((prevData) => {
+        const updatedY2 = [...prevData[0].y2,  (props.occupied / nod)*100];
+        const updatedX2 = [...prevData[0].x2, props.totalTime];
+        return [{ ...prevData[0], x2: updatedX2, y2: updatedY2 }];
       });
     }, 3000);
   
     return () => clearInterval(intervalId2);
-  }, [props.occupied,  props.totalTime]);
+  }, [props.occupied]);
 
 
   const layout = { width: 500, height: 400, title: {text:'Average Customer Waiting Time', x:0.05}, font: {color: '#51ba4c', size:14} , gridwidth:1,
@@ -75,14 +75,14 @@ const Statbar = (props) => {
 
   const layout2 = { width: 500, height: 400, title: {text:'Percentage of Occupied Drivers', x:0.05}, font: {color: '#51ba4c', size:14} , gridwidth:1,
                 xaxis: {
-                  title:"Time (mins)",
+                  title:"Occupied Drivers (%)",
                   linecolor: '#51ba4c',
                   linewidth: 2,
                   gridcolor:'#51ba4c',
                   mirror: true
                 },
                 yaxis: {
-                  title:"Occupied Drivers (%)",
+                  title:"Time (mins)",
                   linecolor: '#51ba4c',
                   linewidth: 2,
                   gridcolor:'#51ba4c',
@@ -137,9 +137,7 @@ const Statbar = (props) => {
         </div>
 
     </div>
-    <div className = 'answer'>
-    {props.occupied} : {props.unoccupied}
-    </div>
+      
    
       <button className="menuButton">
       <div className="title2" onClick={openStats}  >DATA VISUALISATIONS</div>

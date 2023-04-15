@@ -36,16 +36,17 @@ state: complete/waiting/unassigned
 
 TODO: 
 1. Driver moves onto next customer after first job is done
-3, Output 2: occupied to unoccupied driver update
-4. Dynamic graphs for statsbar
+3, run 30 times
 
-5. Option to export data as json/CSV on statsbar
+
+
+
+
 6. Dashboard: checkbox for path viewing
 7. Dashboard: checkbox for icons/points
-9. Make the statsbar slide out when click instead of 
 10. MORE INFO DISPLAYED ON STATS BAR (eg. driver speeds, all distances travelled, total distances travelled. etc )
 
-11. Run 30 times in backend
+
 
 DASHBOARD LAYOUT
 AGENTS:
