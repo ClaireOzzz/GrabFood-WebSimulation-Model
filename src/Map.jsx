@@ -533,7 +533,7 @@ const Map = () => {
               "text-allow-overlap": true,
               'icon-ignore-placement': true,
               'icon-image': 'taxi',
-              'icon-size': 0.1,
+              'icon-size': 0.09,
               'icon-rotate': ['get', 'bearing'],
               'icon-rotation-alignment': 'map',
             }

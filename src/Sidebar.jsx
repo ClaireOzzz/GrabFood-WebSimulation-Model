@@ -121,15 +121,15 @@ const SideBar  = (props) => {
                 <div className='speedContainer'>
                     {/* <div className='speedText'> Speed: </div> */}
                     <div className='speedButtons'>
-                        <button className='speedbutton active' id='1x-speed'>Real time </button>
+                        <button className='speedbutton' id='1x-speed'>Real time </button>
                         <button className='speedbutton' id='8x-speed'>8x </button>
                         <button className='speedbutton' id='16x-speed'>16x </button>
                         <button className='speedbutton' id='32x-speed'>32x </button>
-                        <button className='speedbutton' id='64x-speed'>64x </button>
+                        <button className='speedbutton active' id='64x-speed'>64x </button>
                     </div>
                 </div>
             
-                <button className ="resetbutton" id="reset" onClick={() => { handleReset(); handleResetClick();}}>Simulate</button>
+                <button className ="resetbutton " id="reset" onClick={() => { handleReset(); handleResetClick();}}>Simulate</button>
    
             </ul>
         </div>

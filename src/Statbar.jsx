@@ -16,9 +16,7 @@ const Statbar = (props) => {
       marker: {color: 'orange'}, 
       //fill: 'tonexty', 
       name: 'Customers',
-    },
-    // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},
-                  
+    },            
   ]);
 
   const [data2, setData2] = useState([
@@ -33,8 +31,7 @@ const Statbar = (props) => {
       marker: {color: 'orange'}, 
       //fill: 'tonexty', 
       name: 'Drivers',
-    },
-    // {type: 'scatter',marker: {color: 'orange'}, fill: 'tonexty', name: 'Customers', x: [1, 2, 3, 4], y: [2, 5, 3, 4]},          
+    },       
   ]);
 
   useEffect(() => {
