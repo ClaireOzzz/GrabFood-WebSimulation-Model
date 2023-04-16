@@ -203,8 +203,7 @@ select{
   margin: 10px 0px 10px 40px
 }
 
-.overlay button.active,
-.overlay button:focus {
+.speedbutton.active {
   background-color: #3da338;
 }
 
