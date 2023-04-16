@@ -39,6 +39,7 @@ var maxSpeed;
 var meanSpeed;
 var nou;
 var minInput;
+var customercount = 0;
 
 export var nod; 
 export var customerInput = 5;
@@ -82,6 +83,8 @@ const Map = () => {
     setUnoccupied(0);
     setServedCustomers(0);
     prevCustomerNumber = 0;
+    setTotalCustomers(0);
+    customercount = 0;
   };
   
 
@@ -653,6 +656,7 @@ const Map = () => {
                     setDrivers(drivers);
                     elapsed2 = (timeDelta2);
                     elapsedArray.push(elapsed2);
+                    customercount++;
                     console.log("elapsed2 ", elapsed2);
                     console.log("elapsedArray ", elapsedArray);
                     var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
@@ -660,7 +664,7 @@ const Map = () => {
         
                     prevCustomerNumber += 1;
                     setServedCustomers((60/sumElapsed).toFixed(3));
-                    setTotalCustomers((elapsedArray.length)/2);
+                    setTotalCustomers(customercount);
         
                     console.log(`Elapsed time: ${sumElapsed} ms`);
                     console.log(`${i} IDLE`);
