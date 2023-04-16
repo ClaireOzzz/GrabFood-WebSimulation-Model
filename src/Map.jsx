@@ -641,7 +641,11 @@ const Map = () => {
                   if (drivers[i].counter === Math.floor(steps2[i])) {
                     // Update the driver state when the second animation is complete
                   
-                    setOccupied(prevOccupied => prevOccupied - 1);
+                    setOccupied(prevOccupied => {
+                      const newOccupied = prevOccupied - 1;
+                      return newOccupied < 0 ? 0 : newOccupied;
+                    });
+                    
                     setUnoccupied(prevUnoccupied => prevUnoccupied + 1);
                   
                    
