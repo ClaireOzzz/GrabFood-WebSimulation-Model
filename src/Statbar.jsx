@@ -199,6 +199,11 @@ const Statbar = (props) => {
             <td>Total Number of Customers </td>
             <td>{props.nou}</td>
           </tr>
+
+          <tr>
+            <td>Number of Customers Served </td>
+            <td>{props.minInput}</td>
+          </tr>
       
         </tbody>
       </table>

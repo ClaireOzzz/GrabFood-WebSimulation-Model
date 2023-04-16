@@ -38,6 +38,7 @@ var minSpeed;
 var maxSpeed;
 var meanSpeed;
 var nou;
+var minInput;
 
 export var nod; 
 export var customerInput = 5;
@@ -234,7 +235,7 @@ const Map = () => {
     generate_number_of_customers()
     console.log("number_of_customers ", number_of_customers);
     nou = number_of_customers;
-    var minInput = Math.min(nod, nou);
+    minInput = Math.min(nod, nou);
     var maxInput = Math.max(nod, nou);
     setOccupied(minInput);
     setUnoccupied(nod-minInput);
@@ -659,17 +660,12 @@ const Map = () => {
         
                     console.log(`Elapsed time: ${sumElapsed} ms`);
                     console.log(`${i} IDLE`);
-                     
-                    // if (prevOccupied > 0) {
-                    //   setOccupied(prevOccupied => prevOccupied - 1);
-                    // }
-                    // var userAssignments2 = userAssignments;
+  
                     // delete userAssignments[`${Object.keys(userAssignments)[[driverAssignments[`driver${i}`]]]}`];
-                    // console.log("userAssignments2 ", userAssignments);
-                    // console.log("userAssignments ", userAssignments);
         
-                    // secondCalculations(1, userAssignments);
+                    // secondCalculations(1, nou, userAssignments);
                     // restart(1, nou);
+                    // animateFetching(i);
                     
                   }; 
                 };
@@ -731,6 +727,7 @@ const Map = () => {
         meanSpeed={meanSpeed}
         distElapsed={distElapsed}
         nou={nou}
+        minInput={minInput}
       
         ></Statbar>
 
