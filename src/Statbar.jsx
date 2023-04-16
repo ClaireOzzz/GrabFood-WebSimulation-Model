@@ -45,9 +45,9 @@ const Statbar = (props) => {
 
     document.getElementById('clear').addEventListener('click', () => { 
       setData((prevData) => {
-        const updatedX = [0];
-        const updatedY = [0];
-        return [{ ...prevData[0], x: updatedX, y: updatedY }];
+        const X = [];
+        const Y = [];
+        return [{ ...prevData[0], x: X, y: Y }];
       });
      clearInterval(intervalId);
     });
@@ -64,11 +64,11 @@ const Statbar = (props) => {
       });
     }, 100);
 
-    document.getElementById('clear').addEventListener('click', () => { 
+    document.getElementById('clear').addEventListener('click', () => {
       setData2((prevData2) => {
-        const updatedX2 = [0];
-        const updatedY2 = [0];
-        return [{ ...prevData2[0], x: updatedX2, y: updatedY2 }];
+        const X2 = [];
+        const Y2 = [];
+        return [{ ...prevData2[0], x: X2, y: Y2 }];
       });
       clearInterval(intervalId2);
     });
@@ -77,38 +77,38 @@ const Statbar = (props) => {
   }, [props.occupied,  props.totalTime]);
 
 
-  const layout = { width: 500, height: 400, title: {text:'Average Customer Waiting Time', x:0.05}, font: {color: '#51ba4c', size:14} , gridwidth:1,
+  const layout = { width: 500, height: 400, title: {text:'Average Customer Waiting Time', x:0.05}, font: {color: '#ffffff', size:14} , gridwidth:1,
                 xaxis: {
                   title:"Number Of Customers",
-                  linecolor: '#51ba4c',
+                  linecolor: '#ffffff',
                   linewidth: 2,
-                  gridcolor:'#51ba4c',
+                  gridcolor:'#ffffff',
                   mirror: true
                 },
                 yaxis: {
                   title:"Average Time per Customer (mins)",
-                  linecolor: '#51ba4c',
+                  linecolor: '#ffffff',
                   linewidth: 2,
-                  gridcolor:'#51ba4c',
+                  gridcolor:'#ffffff',
                   mirror: true
                 },
-                plot_bgcolor: '#rgba(84, 145, 81,0.5)',
+                plot_bgcolor:'#rgba(84, 145, 81,0.5)',
                 paper_bgcolor: '#rgba(0,0,0,0)'          
   };
 
-  const layout2 = { width: 500, height: 400, title: {text:'Percentage of Occupied Drivers', x:0.05}, font: {color: '#51ba4c', size:14} , gridwidth:1,
+  const layout2 = { width: 500, height: 400, title: {text:'Percentage of Occupied Drivers', x:0.05}, font: {color: '#ffffff', size:14} , gridwidth:1,
                 xaxis: {
                   title:"Time (mins)",
-                  linecolor: '#51ba4c',
+                  linecolor: '#ffffff',
                   linewidth: 2,
-                  gridcolor:'#51ba4c',
+                  gridcolor:'#ffffff',
                   mirror: true
                 },
                 yaxis: {
                   title:"Occupied Drivers (%)",
-                  linecolor: '#51ba4c',
+                  linecolor: '#ffffff',
                   linewidth: 2,
-                  gridcolor:'#51ba4c',
+                  gridcolor:'#ffffff',
                   mirror: true
                 },
                 plot_bgcolor: '#rgba(84, 145, 81,0.5)',

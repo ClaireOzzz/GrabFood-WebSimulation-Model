@@ -40,8 +40,8 @@ TODO:
 
 
 
-
-
+2. add max, mean speed
+3. making them unique
 6. Dashboard: checkbox for path viewing
 7. Dashboard: checkbox for icons/points
 10. MORE INFO DISPLAYED ON STATS BAR (eg. driver speeds, all distances travelled, total distances travelled. etc )
