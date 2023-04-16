@@ -351,7 +351,7 @@ body {
   display: flex;
   flex-direction: row;
   flex: 2;
-  margin-top: 3%;
+  margin-top: 1%;
   gap: 1%; 
   padding-left: 2%;
 }

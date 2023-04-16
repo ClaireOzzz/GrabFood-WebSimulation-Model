@@ -92,7 +92,7 @@ const Statbar = (props) => {
                   gridcolor:'#51ba4c',
                   mirror: true
                 },
-                plot_bgcolor: '#rgba(0,0,0,0)',
+                plot_bgcolor: '#rgba(84, 145, 81,0.5)',
                 paper_bgcolor: '#rgba(0,0,0,0)'          
   };
 
@@ -111,7 +111,7 @@ const Statbar = (props) => {
                   gridcolor:'#51ba4c',
                   mirror: true
                 },
-                plot_bgcolor: '#rgba(0,0,0,0)',
+                plot_bgcolor: '#rgba(84, 145, 81,0.5)',
                 paper_bgcolor: '#rgba(0,0,0,0)'          
   };
 
@@ -157,7 +157,7 @@ const Statbar = (props) => {
         </div>
 
     </div>
-    <div className='item' style={{position: 'absolute', textAlign: 'right', right: '3%', fontWeight: 'bold', textDecoration: 'underline'}}>
+    <div className='item' style={{textAlign: 'center', fontWeight: 'bold', textDecoration: 'underline'}}>
      Current Simulation Run Information
     </div>
 
