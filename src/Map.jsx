@@ -35,6 +35,9 @@ var foodPrepTime = randomValue;
 var prevCustomerNumber = 0;
 var distElapsed;
 var minSpeed;
+var maxSpeed;
+var meanSpeed;
+var nou;
 
 export var nod; 
 export var customerInput = 5;
@@ -230,7 +233,7 @@ const Map = () => {
     nod = userInput; // NOD = number of drivers
     generate_number_of_customers()
     console.log("number_of_customers ", number_of_customers);
-    var nou = number_of_customers;
+    nou = number_of_customers;
     var minInput = Math.min(nod, nou);
     var maxInput = Math.max(nod, nou);
     setOccupied(minInput);
@@ -246,7 +249,9 @@ const Map = () => {
     var animationPoints2 = [];    // for the second part of the cycle
     var steps2 = [];
     minSpeed = Math.min.apply(Math, all_drivers_speeds);
-    
+    maxSpeed = Math.max.apply(Math, all_drivers_speeds);
+    meanSpeed= (all_drivers_speeds.reduce((accumulator, currentValue) => accumulator + currentValue, 0))/nod;
+
     function prepAnimate(path, begin, i) {
       var point2 = {
         'type': 'FeatureCollection',
@@ -722,7 +727,10 @@ const Map = () => {
         unoccupied ={unoccupied}
         foodPrepTime={foodPrepTime}
         minSpeed={minSpeed}
+        maxSpeed={maxSpeed}
+        meanSpeed={meanSpeed}
         distElapsed={distElapsed}
+        nou={nou}
       
         ></Statbar>
 

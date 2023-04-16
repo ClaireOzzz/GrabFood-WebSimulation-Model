@@ -157,36 +157,52 @@ const Statbar = (props) => {
         </div>
 
     </div>
-    <div className='item' style={{position: 'absolute', textAlign: 'right', right: '6%', fontWeight: 'bold', textDecoration: 'underline'}}>
+    <div className='item' style={{position: 'absolute', textAlign: 'right', right: '3%', fontWeight: 'bold', textDecoration: 'underline'}}>
      Current Simulation Run Information
     </div>
 
-    <table style={{ marginTop: '5%' }}>
-    <tbody>
-      <tr>
-        <td>Food Preperation Time (mins)</td>
-        <td>{props.foodPrepTime}</td>
-      </tr>
-    </tbody>
-    </table>
+    <div className='bigTable' >
+      <table >
+        <tbody>
+          <tr >
+            <td>Min Driver Speed (km/h)</td>
+            <td>{props.minSpeed}</td>
+          </tr>
+          <tr >
+            <td>Max Driver Speed (km/h)</td>
+            <td>{props.maxSpeed}</td>
+          </tr>
+          <tr >
+            <td>Mean Driver Speed (km/h)</td>
+            <td>{props.meanSpeed}</td>
+          </tr>
+        </tbody>
+      </table>
 
-    <table>
-    <tbody>
-      <tr>
-        <td> Min Driver Speed (km/h)</td>
-        <td>{props.minSpeed}</td>
-      </tr>
-      </tbody>
-    </table>
+      <table >
+        <tbody>
+          <tr >
+            <td>Food Preperation Time (mins)</td>
+            <td>{props.foodPrepTime}</td>
+          </tr>
+          <tr>
+            <td>Total Distance Travelled (km)</td>
+            <td>{props.distElapsed}</td>
+          </tr>
 
-    <table>
-    <tbody>
-      <tr>
-        <td> Total Distance Travelled (km)</td>
-        <td>{props.distElapsed}</td>
-      </tr>
-      </tbody>
-    </table>
+          <tr>
+            <td>Total Number of Eateries </td>
+            <td>73</td>
+          </tr>
+
+          <tr>
+            <td>Total Number of Customers </td>
+            <td>{props.nou}</td>
+          </tr>
+      
+        </tbody>
+      </table>
+    </div>
    
       <button className="menuButton">
       <div className="title2" onClick={openStats}  >DATA VISUALISATIONS</div>
