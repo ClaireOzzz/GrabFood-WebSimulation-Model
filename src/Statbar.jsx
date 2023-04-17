@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PlotComponent from 'react-plotly.js';
 import{nod} from './Map';
-import SideBar from './Sidebar';
 
 
 const Statbar = (props) => {
@@ -9,6 +8,8 @@ const Statbar = (props) => {
 
   function handleClear() {
     setClearCount((prevClearCount) => prevClearCount + 1);
+    setData([{ x: [], y: [], type: 'scatter', line: { shape: 'spline', smoothing: 2 }, mode: 'lines+markers', marker: { color: 'orange' }, name: 'Customers' }]);
+    setData2([{ x: [], y: [], type: 'scatter', line: { shape: 'spline', smoothing: 2 }, mode: 'lines+markers', marker: { color: 'orange' }, name: 'Drivers' }]);
   }
 
 
@@ -52,14 +53,14 @@ const Statbar = (props) => {
       });
     }, 100);
 
-    document.getElementById('clear').addEventListener('click', () => { 
-      setData((prevData) => {
-        const X = [];
-        const Y = [];
-        return [{ ...prevData[0], x: X, y: Y }];
-      });
-     clearInterval(intervalId);
-    });
+    // document.getElementById('clear').addEventListener('click', () => { 
+    //   setData((prevData) => {
+    //     const X = [];
+    //     const Y = [];
+    //     return [{ ...prevData[0], x: X, y: Y }];
+    //   });
+    //  clearInterval(intervalId);
+    // });
 
     return () => clearInterval(intervalId);
   }, [props.totalCustomers, props.totalTime, clearCount]);
@@ -74,14 +75,14 @@ const Statbar = (props) => {
       });
     }, 100);
 
-    document.getElementById('clear').addEventListener('click', () => {
-      setData2((prevData2) => {
-        const X2 = [];
-        const Y2 = [];
-        return [{ ...prevData2[0], x: X2, y: Y2 }];
-      });
-      clearInterval(intervalId2);
-    });
+    // document.getElementById('clear').addEventListener('click', () => {
+    //   setData2((prevData2) => {
+    //     const X2 = [];
+    //     const Y2 = [];
+    //     return [{ ...prevData2[0], x: X2, y: Y2 }];
+    //   });
+    //   clearInterval(intervalId2);
+    // });
   
     return () => clearInterval(intervalId2);
   }, [props.occupied,  props.totalTime, clearCount ]);
