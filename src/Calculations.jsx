@@ -109,6 +109,7 @@ export function secondCalculations(nod, nou, userAssignments) {
   driverToEateryDict ={}
   driverFullDist = {};
   driverAssignments = {};
+  totalDistTravelled = [];
   
   ////////////////////////////////////////////////////////////////////////////////////////////////
   var ptE;

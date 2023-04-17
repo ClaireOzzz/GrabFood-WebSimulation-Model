@@ -34,7 +34,7 @@ const SideBar  = (props) => {
                 <div className="optionSection">
                     <div className="option">
                     <label htmlFor="number"> Number of Drivers:</label>
-                    <input type="number" name="number" id="number" min="1" max="100"  ref={props.inputRef} value={inputValue} onChange={handleInputChange} />
+                    <input type="number" name="number" id="number" min="1" max="36"  ref={props.inputRef} value={inputValue} onChange={handleInputChange} />
                     </div>
 
                     <div className="option" >

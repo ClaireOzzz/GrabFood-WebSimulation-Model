@@ -36,11 +36,7 @@ state: complete/waiting/unassigned
 
 TODO: 
 1. Driver moves onto next customer after first job is done
-3, run 30 times
 
-
-
-2. add max, mean speed
 3. making them unique
 6. Dashboard: checkbox for path viewing
 7. Dashboard: checkbox for icons/points
