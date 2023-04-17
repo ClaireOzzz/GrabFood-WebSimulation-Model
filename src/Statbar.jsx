@@ -206,7 +206,7 @@ const Statbar = (props) => {
 
           <tr>
             <td>Total Number of Eateries </td>
-            <td>23</td>
+            <td>39</td>
           </tr>
 
           <tr>
