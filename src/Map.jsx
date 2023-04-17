@@ -16,6 +16,7 @@ import generate_number_of_customers, {number_of_customers} from './CustomerInput
 //icons
 import motoIcon from './icons/moto.png'; 
 import userIcon from './icons/user.png'; 
+import userIcon2 from './icons/userON.png'; 
 import restaurantIcon from './icons/restaurant.png'; 
 
 //geojson
@@ -61,6 +62,7 @@ const Map = () => {
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [resetCount, setResetCount] = useState(0);
   const [mapStyle, setMapStyle] = useState('streets-v10');
+  const [iconStyle, setIconStyle] = useState(userIcon);
 
   const IDLE = 0;
   const FETCHING = 1;   // GETTING THE FOOD FROM THE EATERY
@@ -126,6 +128,7 @@ const Map = () => {
     if (event.target.value === 'Morning') {
       conditions[0] = 'morning';
       changeMapStyle('streets-v10');
+      setIconStyle(userIcon)
       console.log(conditions);
     }
   });
@@ -134,6 +137,7 @@ const Map = () => {
     if (event.target.value === 'Afternoon') {
       conditions[0] = 'afternoon';
       changeMapStyle('streets-v10');
+      setIconStyle(userIcon)
       console.log(conditions);
     }
   });
@@ -142,6 +146,7 @@ const Map = () => {
     if (event.target.value === 'Night') {
       conditions[0] = 'night';
       changeMapStyle('dark-v10');
+      setIconStyle(userIcon2)
       console.log(conditions);
     }
   });
@@ -150,6 +155,7 @@ const Map = () => {
     if (event.target.value === 'Midnight') {
       conditions[0] = 'midnight';
       changeMapStyle('dark-v10');
+      setIconStyle(userIcon2)
       console.log(conditions);
     }
   });
@@ -429,7 +435,7 @@ const Map = () => {
     // CUSTOMER ICONS //////////////////////////////////////////////////////////////////////////////////////////////////////////
     map.on("load", function () {
       // Add an image to use as a custom marker
-      map.loadImage(userIcon, (error, image) => {
+      map.loadImage(iconStyle, (error, image) => {
         if (error) throw error;
         map.addImage("custom-marker", image);
     
