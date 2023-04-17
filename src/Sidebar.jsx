@@ -98,7 +98,7 @@ const SideBar  = (props) => {
                     Average Waiting Time:
                     </div>
                     <div className = 'answer'>
-                    {props.totalTime} minutes
+                    {props.averageTime} minutes
                     </div>
                     <div className = 'output'>
                     Occupied to Unoccupied Drivers:

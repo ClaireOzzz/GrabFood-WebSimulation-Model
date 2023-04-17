@@ -41,6 +41,8 @@ var meanSpeed;
 var nou;
 var minInput;
 var customercount = 0;
+var sumElapsed = 0;
+var averageSumElapsed = 0;
 
 export var nod; 
 export var customerInput = 5;
@@ -56,6 +58,7 @@ const Map = () => {
   const inputRef = useRef(null);
   const inputRef2 = useRef(null);
   const [totalTime, setTotalTime] = useState(0);
+  const [averageTime, setAverageTime] = useState(0);
   const [occupied, setOccupied] = useState(0);
   const [unoccupied, setUnoccupied] = useState(0);
   const [servedCustomers, setServedCustomers] = useState(0);
@@ -87,6 +90,9 @@ const Map = () => {
     prevCustomerNumber = 0;
     setTotalCustomers(0);
     customercount = 0;
+    sumElapsed = 0;
+    averageSumElapsed = 0;
+    setAverageTime(0);
   };
   
 
@@ -605,7 +611,7 @@ const Map = () => {
               console.log(`done for - ${i}`);
               elapsed = (timeDelta);
               console.log("elapsed ", elapsed);
-              elapsedArray.push(elapsed);
+              //elapsedArray.push(elapsed);
               console.log("elapsedArray ", elapsedArray);
               setTimeout(() => {
                 drivers[i].counter = 0;
@@ -665,11 +671,15 @@ const Map = () => {
                     customercount++;
                     console.log("elapsed2 ", elapsed2);
                     console.log("elapsedArray ", elapsedArray);
-                    var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
+                    //var sumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/nod) + foodPrepTime;
+                    sumElapsed = Math.floor(((elapsedArray[elapsedArray.length - 1]))*(currentSpeed/60000)) + foodPrepTime;
                     setTotalTime(sumElapsed);
+
+                    averageSumElapsed = Math.floor(((elapsedArray.reduce((accumulator, currentValue) => accumulator + currentValue, 0))*(currentSpeed/60000))/customercount) + foodPrepTime;
+                    setAverageTime(averageSumElapsed);
         
                     prevCustomerNumber += 1;
-                    setServedCustomers((60/sumElapsed).toFixed(3));
+                    setServedCustomers((60/averageSumElapsed).toFixed(3));
                     setTotalCustomers(customercount);
         
                     console.log(`Elapsed time: ${sumElapsed} ms`);
@@ -721,7 +731,8 @@ const Map = () => {
     <div>
       <SideBar 
         servedCustomers ={servedCustomers}
-        totalTime ={totalTime}
+        //totalTime ={totalTime}
+        averageTime ={averageTime}
         occupied ={occupied}
         unoccupied ={unoccupied}
         handleResetClick={handleResetClick}
@@ -733,6 +744,7 @@ const Map = () => {
         servedCustomers ={servedCustomers}
         totalCustomers = {totalCustomers}
         totalTime ={totalTime}
+        averageTime ={averageTime}
         occupied ={occupied}
         unoccupied ={unoccupied}
         foodPrepTime={foodPrepTime}

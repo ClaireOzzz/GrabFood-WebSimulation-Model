@@ -50,7 +50,7 @@ const Statbar = (props) => {
     const intervalId = setInterval(() => {
       setData((prevData) => {
         const updatedX = [...prevData[0].x, props.totalCustomers];
-        const updatedY = [...prevData[0].y, props.totalTime];
+        const updatedY = [...prevData[0].y, props.averageTime];
         return [{ ...prevData[0], x: updatedX, y: updatedY }];
       });
     }, 100);
