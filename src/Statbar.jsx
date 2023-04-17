@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import PlotComponent from 'react-plotly.js';
 import{nod} from './Map';
+import SideBar from './Sidebar';
+
 
 const Statbar = (props) => {
+  const [clearCount, setClearCount] = useState(0);
+
+  function handleClear() {
+    setClearCount((prevClearCount) => prevClearCount + 1);
+  }
+
 
   const [data, setData] = useState([
     {
@@ -21,7 +29,7 @@ const Statbar = (props) => {
 
   const [data2, setData2] = useState([
     {
-      x: [] ,
+      x: [],
       y: [],
       type: 'scatter', 
       line: { 
@@ -35,6 +43,7 @@ const Statbar = (props) => {
   ]);
 
   useEffect(() => {
+   
     const intervalId = setInterval(() => {
       setData((prevData) => {
         const updatedX = [...prevData[0].x, props.totalCustomers];
@@ -53,9 +62,10 @@ const Statbar = (props) => {
     });
 
     return () => clearInterval(intervalId);
-  }, [props.totalCustomers, props.totalTime]);
+  }, [props.totalCustomers, props.totalTime, clearCount]);
 
   useEffect(() => {
+
     const intervalId2 = setInterval(() => {
       setData2((prevData2) => {
         const updatedX2 = [...prevData2[0].x, props.totalTime];
@@ -74,7 +84,7 @@ const Statbar = (props) => {
     });
   
     return () => clearInterval(intervalId2);
-  }, [props.occupied,  props.totalTime]);
+  }, [props.occupied,  props.totalTime, clearCount ]);
 
 
   const layout = { width: 500, height: 400, title: {text:'Average Customer Waiting Time', x:0.05}, font: {color: '#ffffff', size:14} , gridwidth:1,
@@ -142,7 +152,7 @@ const Statbar = (props) => {
     <div id="menu" className="menu" tabIndex="0" > 
     <div  className="statButtonContain">
       <button className="x-icon" onClick={closeStats}  ></button>
-      <button className="downloadButton" id= 'clear' >Clear</button>
+      <button className="downloadButton" id= 'clear' onClick={handleClear} >Clear</button>
       <button className="downloadButton" onClick={() => downloadCsv([data[0], data2[0]], ['graph1.csv', 'graph2.csv'])} >Download CSV</button>
     </div>
     
@@ -153,7 +163,7 @@ const Statbar = (props) => {
         </div>
 
         <div style={{ width: "70%", height: "100%" }}>
-          <PlotComponent data={data2} layout={layout2} />
+          <PlotComponent  data={data2} layout={layout2} />
         </div>
 
     </div>
@@ -192,7 +202,7 @@ const Statbar = (props) => {
 
           <tr>
             <td>Total Number of Eateries </td>
-            <td>73</td>
+            <td>23</td>
           </tr>
 
           <tr>
@@ -212,7 +222,7 @@ const Statbar = (props) => {
       <button className="menuButton">
       <div className="title2" onClick={openStats}  >DATA VISUALISATIONS</div>
       </button>
-
+   
     </div>
   );
 };
