@@ -34,7 +34,7 @@ let currentSpeed = 64;
 var randomValue = Math.floor(Math.random() * 6);
 var foodPrepTime = randomValue;
 var prevCustomerNumber = 0;
-var distElapsed;
+var distElapsed = 0;
 var minSpeed;
 var maxSpeed;
 var meanSpeed;
